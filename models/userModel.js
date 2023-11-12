@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const userModel = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     _id: {
         type: ObjectId,
         required: true,
@@ -44,3 +44,5 @@ const userModel = new mongoose.Schema({
         of: String,
     },
 })
+
+module.exports = mongoose.model('User', userSchema)
