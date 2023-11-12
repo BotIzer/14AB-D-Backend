@@ -2,9 +2,7 @@ const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
     _id: {
-        type: ObjectId,
-        required: true,
-        unique: true,
+        type: mongoose.ObjectId,
     },
     full_name: {
         type: String,
@@ -18,7 +16,6 @@ const userSchema = new mongoose.Schema({
     },
     custom_ui: {
         type: Boolean,
-        required: true,
         default: false,
     },
     roles: {
@@ -31,7 +28,7 @@ const userSchema = new mongoose.Schema({
         min: [2, 'Username should be at least 2 characters!'],
         max: [20, 'Username cannot be longer than 20 characters!'],
     },
-    friends: [ObjectId],
+    friends: [mongoose.ObjectId],
     password: {
         type: String,
         required: true,
