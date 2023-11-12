@@ -31,9 +31,7 @@ const userSchema = new mongoose.Schema({
         min: [2, 'Username should be at least 2 characters!'],
         max: [20, 'Username cannot be longer than 20 characters!'],
     },
-    friends: {
-        type: Object,
-    },
+    friends: [ObjectId],
     password: {
         type: String,
         required: true,
