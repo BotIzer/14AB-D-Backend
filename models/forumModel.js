@@ -4,11 +4,9 @@ const forumSchema = new mongoose.Schema({
     _id: {
         creator: {
             type: ObjectId,
-            required: true,
         },
         forum: {
             type: ObjectId,
-            required: true,
         },
     },
     forum_name: {
@@ -28,7 +26,6 @@ const forumSchema = new mongoose.Schema({
         {
             user_id: {
                 type: ObjectId,
-                required: true,
             },
             is_moderator: {
                 type: Boolean,
@@ -43,7 +40,6 @@ const forumSchema = new mongoose.Schema({
     tags: [String],
     topthread: {
         type: ObjectId,
-        required: true,
     },
 })
 

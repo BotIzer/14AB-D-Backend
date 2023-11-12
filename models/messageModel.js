@@ -4,15 +4,12 @@ const messageSchema = new mongoose.Schema({
     _id: {
         chatroom: {
             type: ObjectId,
-            required: true,
         },
         user: {
             type: ObjectId,
-            required: true,
         },
         message: {
             type: ObjectId,
-            required: true,
         },
         is_reply: {
             type: Boolean,

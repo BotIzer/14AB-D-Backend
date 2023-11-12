@@ -4,15 +4,12 @@ const threadSchema = new mongoose.Schema({
     _id: {
         forum: {
             type: ObjectId,
-            required: true,
         },
         user: {
             type: ObjectId,
-            required: true,
         },
         thread: {
             type: ObjectId,
-            required: true,
         },
     },
     name: {

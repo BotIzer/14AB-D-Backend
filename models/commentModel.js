@@ -4,15 +4,12 @@ const commentSchema = new mongoose.Schema({
     _id: {
         room: {
             type: ObjectId,
-            required: true,
         },
         user: {
             type: ObjectId,
-            required: true,
         },
         message: {
             type: ObjectId,
-            required: true,
         },
     },
 
@@ -23,7 +20,6 @@ const commentSchema = new mongoose.Schema({
     reply_id: {
         parent_comment: {
             type: ObjectId,
-            required: true,
         },
         sequential_number: {
             type: Number,
