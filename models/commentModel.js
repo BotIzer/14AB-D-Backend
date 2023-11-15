@@ -15,7 +15,7 @@ const commentSchema = new mongoose.Schema({
 
     text: {
         type: String,
-        max: [2000, 'A comment cannot be longer than 2000 characters!'],
+        maxlength: [2000, 'A comment cannot be longer than 2000 characters!'],
     },
     reply_id: {
         parent_comment: {

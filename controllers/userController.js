@@ -1,76 +1,50 @@
 const User = require('../models/userModel')
+const asyncWrapper = require('../middlewares/async')
+const { createCustomError } = require('../errors/customError')
+
+const updaterOptions = {
+    new: true,
+    runValidators: true,
+}
 
 const getUserIdFromUrl = (params) => {
     const { userId: userId } = params
     return userId
 }
 
-const createUser = async (req, res) => {
-    try {
-        const newUser = await User.create(req.body)
-        res.status(201).json({ newUser })
-    } catch (error) {
-        res.status(500).json({ msg: error })
-    }
-}
+const createUser = asyncWrapper(async (req, res) => {
+    const newUser = await User.create(req.body)
+    res.status(201).json({ newUser })
+})
 
-const getAllUsers = async (req, res) => {
-    try {
-        const users = await User.find()
-        res.status(201).json({ users })
-    } catch (error) {
-        res.status(500).json({ msg: error })
-    }
-}
+const getAllUsers = asyncWrapper(async (req, res) => {
+    const users = await User.find()
+    res.status(200).json({ users })
+})
 
-const getUserDataById = async (req, res) => {
-    try {
-        const user = await User.findById(getUserIdFromUrl(req.params))
-        if (!user) {
-            return res.status(404).json({
-                msg: `No user found with id: ${getUserIdFromUrl(req.params)}`,
-            })
-        }
-        res.status(200).json({ user })
-    } catch (error) {
-        res.status(500).json({ msg: error })
-    }
-}
+const getUserDataById = asyncWrapper(async (req, res) => {
+    const userId = getUserIdFromUrl(req.params)
+    const user = await User.findById(userId)
+    if (!user)
+        return next(createCustomError(`No user found with id: ${userId}`, 404))
+    res.status(200).json({ user })
+})
 
-const updateUser = async (req, res) => {
-    try {
-        const user = await User.findByIdAndUpdate(
-            getUserIdFromUrl(req.params),
-            req.body,
-            {
-                new: true,
-                runValidators: true,
-            }
-        )
-        if (!user) {
-            return res.status(404).json({
-                msg: `No user found with id: ${getUserIdFromUrl(req.params)}`,
-            })
-        }
-        res.status(200).json({ user })
-    } catch (error) {
-        res.status(500).json({ msg: error })
-    }
-}
+const updateUser = asyncWrapper(async (req, res) => {
+    const userId = getUserIdFromUrl(req.params)
+    const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions)
+    if (!user)
+        return next(createCustomError(`No user found with id: ${userId}`, 404))
+    res.status(200).json({ user })
+})
 
-const deleteUser = async (req, res) => {
-    try {
-        const user = await User.findByIdAndDelete(getUserIdFromUrl(req.params))
-        if (!user) {
-            return res.status(404).json({
-                msg: `No user found with id: ${getUserIdFromUrl(req.params)}`,
-            })
-        }
-        res.status(200).json({ user })
-    } catch (error) {
-        res.status(500).json({ msg: error })
-    }
-}
+const deleteUser = asyncWrapper(async (req, res) => {
+    const userId = getUserIdFromUrl(req.params)
+    const user = await User.findByIdAndDelete(userId)
+    if (!user)
+        return next(createCustomError(`No user found with id: ${userId}`, 404))
+    res.status(200).json({ user })
+})
 
 module.exports = {
     createUser,
