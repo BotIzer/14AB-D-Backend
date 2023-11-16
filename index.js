@@ -4,15 +4,14 @@ const app = express()
 const bff = require('./routes/bff')
 const connectDB = require('./db/connect')
 const errorHandlerMiddleware = require('./middlewares/errorHandler')
-const noMiddleware = require('./middlewares/noMiddlewareError')
+const noMiddlewareFound = require('./middlewares/noMiddlewareFoundError')
 
 app.use(express.json())
 
-//routes
 
 app.use('/apitest', bff)
 app.use(errorHandlerMiddleware)
-app.use(noMiddleware)
+app.use(noMiddlewareFound)
 const port = 3000
 
 const start = async () => {
