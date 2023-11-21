@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema({
         maxlength: [100, 'The fullname cannot be more than 100 characters!'],
         minlength: [5, 'The fullname cannot be less than 5 characters'],
         trim: true,
+        match: [
+            /(^[a-zA-ZÖÜÓÚŐŰÁÉÍöüóőúűáéí\-\']{0,20}[a-zA-ZÖÜÓÚŐŰÁÉÍöüóőúűáéí\-\']{2,20}\s[a-zA-ZÖÜÓÚŐŰÁÉÍöüóőúűáéí]{2,20}[\sa-zA-ZÖÜÓÚŐŰÁÉÍöüóőúűáéí\-\']{0,20}$)/,
+            'Add a valid name!',
+        ],
     },
     profile_image: {
         type: String,
@@ -21,6 +25,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'u',
         trim: true,
+        enum: [
+            'u',
+            'o',
+            'm'
+        ]
     },
     username: {
         type: String,
@@ -35,6 +44,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: [8, 'Password should be at least 8 characters!'],
         trim: true,
+        match: [
+            /^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[!@#$%^&*()\-__+.]){1,}).{8,}$/,
+            'Strong password is required! (Min. 8 characters long, contains uppercase and lowercase letters, spec. character and numerals)'
+        ]
     },
     contacts: {
         type: Map,
