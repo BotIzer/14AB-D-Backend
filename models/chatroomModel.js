@@ -6,16 +6,18 @@ const chatroomSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    users: {
-        id: {
-            type: ObjectId,
-            required: true,
+    users: [
+        {
+            id: {
+                type: ObjectId,
+                required: true,
+            },
+            is_moderator: {
+                type: Boolean,
+                default: false,
+            },
         },
-        is_moderator: {
-            type: Boolean,
-            default: false,
-        },
-    },
+    ],
 
     common_topics: [String],
     owner: {
