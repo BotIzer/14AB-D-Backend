@@ -12,6 +12,14 @@ const userSchema = new mongoose.Schema({
             'Add a valid name!',
         ],
     },
+    email: {
+        type: String,
+        required: [true, 'To add email is required!'],
+        unique: true,
+        match: [
+            /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, 'Please add a valid email address!'
+        ]
+    },
     profile_image: {
         type: String,
         default: 'default',
@@ -25,11 +33,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'u',
         trim: true,
-        enum: [
-            'u',
-            'o',
-            'm'
-        ]
+        enum: ['u', 'o', 'm'],
     },
     username: {
         type: String,
@@ -46,8 +50,12 @@ const userSchema = new mongoose.Schema({
         trim: true,
         match: [
             /^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[!@#$%^&*()\-__+.]){1,}).{8,}$/,
-            'Strong password is required! (Min. 8 characters long, contains uppercase and lowercase letters, spec. character and numerals)'
-        ]
+            'Strong password is required! (Min. 8 characters long, contains uppercase and lowercase letters, spec. character and numerals)',
+        ],
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
     },
     contacts: {
         type: Map,
