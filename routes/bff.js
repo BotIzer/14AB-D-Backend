@@ -8,7 +8,7 @@ const {
     deleteUser,
 } = require('../controllers/userController')
 
-router.route('/user').get(getAllUsers).post(createUser)
-router.route('/user/:userId').get(getUserDataById).patch(updateUser).delete(deleteUser)
+
+router.route('/register').post(createUser)
 
 module.exports = router
