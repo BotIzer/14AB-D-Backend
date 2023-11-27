@@ -1,5 +1,5 @@
 const User = require('../models/userModel')
-const asyncWrapper = require('../middlewares/async')
+const tryCatchWrapper = require('../middlewares/tryCatchWrapper')
 const { createCustomError } = require('../errors/customError')
 
 const updaterOptions = {
@@ -12,17 +12,17 @@ const getUserIdFromUrl = (params) => {
     return userId
 }
 
-const createUser = asyncWrapper(async (req, res) => {
+const createUser = tryCatchWrapper(async (req, res) => {
     const newUser = await User.create(req.body)
     res.status(201).json({ newUser })
 })
 
-const getAllUsers = asyncWrapper(async (req, res) => {
+const getAllUsers = tryCatchWrapper(async (req, res) => {
     const users = await User.find()
     res.status(200).json({ users })
 })
 
-const getUserDataById = asyncWrapper(async (req, res) => {
+const getUserDataById = tryCatchWrapper(async (req, res) => {
     const userId = getUserIdFromUrl(req.params)
     const user = await User.findById(userId)
     if (!user)
@@ -30,7 +30,7 @@ const getUserDataById = asyncWrapper(async (req, res) => {
     res.status(200).json({ user })
 })
 
-const updateUser = asyncWrapper(async (req, res) => {
+const updateUser = tryCatchWrapper(async (req, res) => {
     const userId = getUserIdFromUrl(req.params)
     const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions)
     if (!user)
@@ -38,7 +38,7 @@ const updateUser = asyncWrapper(async (req, res) => {
     res.status(200).json({ user })
 })
 
-const deleteUser = asyncWrapper(async (req, res) => {
+const deleteUser = tryCatchWrapper(async (req, res) => {
     const userId = getUserIdFromUrl(req.params)
     const user = await User.findByIdAndDelete(userId)
     if (!user)
