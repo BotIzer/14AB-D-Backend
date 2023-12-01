@@ -13,6 +13,10 @@ const getUserIdFromUrl = (params) => {
 }
 
 const createUser = tryCatchWrapper(async (req, res) => {
+    if (await User.findOne({ email: req.body.email }))
+        res.status(500).json({
+            message: `User already exists with this email: ${req.body.email}`,
+        })
     const newUser = await User.create(req.body)
     res.status(201).json({ newUser })
 })

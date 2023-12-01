@@ -8,7 +8,7 @@ const {
     deleteUser,
 } = require('../controllers/userController')
 
-
+router.route('/').get(getAllUsers)
 router.route('/register').post(createUser)
 
 module.exports = router
