@@ -17,7 +17,12 @@ const createUser = tryCatchWrapper(async (req, res) => {
         res.status(500).json({
             message: `User already exists with this email: ${req.body.email}`,
         })
-    const newUser = await User.create(req.body)
+    let newUser = new User({
+        email: req.body.email,
+        username: req.body.username,
+    })
+    newUser.password = newUser.generateHash(req.body.password)
+    newUser.save()
     res.status(201).json({ newUser })
 })
 
