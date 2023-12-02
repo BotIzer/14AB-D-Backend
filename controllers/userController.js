@@ -1,6 +1,6 @@
 const User = require('../models/userModel')
 const tryCatchWrapper = require('../middlewares/tryCatchWrapper')
-const { createCustomError } = require('../errors/customError')
+const noUserFoundError = require('../errors/userErrors/noUserFoundError')
 
 const updaterOptions = {
     new: true,
@@ -14,11 +14,12 @@ const getUserIdFromUrl = (params) => {
 /*TODO: CUSTOM ERROR HANDLER!!*/
 const createUser = tryCatchWrapper(async (req, res) => {
     if (await User.findOne({ email: req.body.email })) {
-        res.status(500).json({
+        /*res.status(504).json({
             message: `User already exists with this email: ${req.body.email}`,
         })
-        return
+        return*/
         //return next(createCustomError(`User already exists with this email: ${req.body.email}`, 511))
+        throw new noUserFoundError(`User already exists with this email: ${req.body.email}`)
     }
     let newUser = new User({
         email: req.body.email,
