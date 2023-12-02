@@ -11,14 +11,9 @@ const getUserIdFromUrl = (params) => {
     const { userId: userId } = params
     return userId
 }
-/*TODO: CUSTOM ERROR HANDLER!!*/
+
 const createUser = tryCatchWrapper(async (req, res) => {
     if (await User.findOne({ email: req.body.email })) {
-        /*res.status(504).json({
-            message: `User already exists with this email: ${req.body.email}`,
-        })
-        return*/
-        //return next(createCustomError(`User already exists with this email: ${req.body.email}`, 511))
         throw new noUserFoundError(`User already exists with this email: ${req.body.email}`)
     }
     let newUser = new User({
