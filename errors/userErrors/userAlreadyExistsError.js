@@ -1,11 +1,11 @@
 const CustomAPIError = require('../customError')
 const { StatusCodes } = require('http-status-codes')
 
-class noUserFoundError extends CustomAPIError {
+class userAlreadyExistsError extends CustomAPIError {
     constructor(message) {
         super(message)
-        this.statusCode = StatusCodes.NOT_FOUND
+        this.statusCode = StatusCodes.CONFLICT
     }
 }
 
-module.exports = noUserFoundError
+module.exports = userAlreadyExistsError
