@@ -2,7 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors');
 const app = express()
-const bff = require('./routes/bff')
+const router = require('./routes/router')
 const connectDB = require('./db/connect')
 const errorHandlerMiddleware = require('./middlewares/errorHandler')
 const noMiddlewareFound = require('./middlewares/noMiddlewareFoundError')
@@ -19,9 +19,9 @@ app.use((req, res, next) => {
     next()
 })
 
-app.use('/', bff)
-app.use(errorHandlerMiddleware)
+app.use('/', router)
 app.use(noMiddlewareFound)
+app.use(errorHandlerMiddleware)
 const port = 3000
 
 const start = async () => {

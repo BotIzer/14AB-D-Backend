@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-
+const bcrypt = require('bcrypt')
 const userSchema = new mongoose.Schema({
     full_name: {
         type: String,
@@ -16,8 +16,9 @@ const userSchema = new mongoose.Schema({
         required: [true, 'To add email is required!'],
         unique: true,
         match: [
-            /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, 'Please add a valid email address!'
-        ]
+            /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+            'Please add a valid email address!',
+        ],
     },
     profile_image: {
         type: String,
@@ -54,12 +55,19 @@ const userSchema = new mongoose.Schema({
     },
     created_at: {
         type: Date,
-        default: Date.now
+        default: Date.now,
     },
     contacts: {
         type: Map,
         of: String,
     },
 })
+userSchema.methods.generateHash = (password) => {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
+}
+
+userSchema.methods.validPassword = (password) => {
+    return bcrypt.compareSync(password, this.password)
+}
 
 module.exports = mongoose.model('User', userSchema, 'Users')

@@ -10,5 +10,5 @@ const {
 
 router.route('/').get(getAllUsers)
 router.route('/register').post(createUser)
-router.route('/login').post()
+
 module.exports = router
