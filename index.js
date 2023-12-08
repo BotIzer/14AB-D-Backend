@@ -7,8 +7,10 @@ const connectDB = require('./db/connect')
 const errorHandlerMiddleware = require('./middlewares/errorHandler')
 const noMiddlewareFound = require('./middlewares/noMiddlewareFoundError')
 
+
 app.use(express.json())
 app.use(cors())
+app.use(express.urlencoded({extended: true}))
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader(
