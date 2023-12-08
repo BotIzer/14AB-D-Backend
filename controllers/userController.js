@@ -58,14 +58,15 @@ const deleteUser = tryCatchWrapper(async (req, res) => {
     res.status(200).json({ user })
 })
 
-const loginTest = async (req, res) => {
+const loginTest = tryCatchWrapper(async (req, res) => {
     const user = await User.findOne({ email: req.body.email })
     if (!user) {
         res.status(404).json({ message: `No user found with email: ${req.body.email}` })
         return
     }
     res.status(200).json({ user })
-}
+    return
+})
 
 module.exports = {
     createUser,
