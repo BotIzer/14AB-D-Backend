@@ -64,7 +64,7 @@ const loginTest = tryCatchWrapper(async (req, res) => {
         res.status(404).json({ message: `No user found with email: ${req.body.email}` })
         return
     }
-    res.status(200).json({ user })
+    res.status(200).json({message: "Login was successful!"})
     return
 })
 
