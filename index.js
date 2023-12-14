@@ -1,12 +1,12 @@
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors');
+const morgan = require('morgan');
 const app = express()
 const router = require('./routes/router')
 const connectDB = require('./db/connect')
 const errorHandlerMiddleware = require('./middlewares/errorHandler')
 const noMiddlewareFound = require('./middlewares/noMiddlewareFoundError')
-
 
 app.use(express.json())
 app.use(cors())
@@ -20,7 +20,7 @@ app.use((req, res, next) => {
     // res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
     next()
 })
-
+app.use(morgan('dev'))
 app.use('/', router)
 app.use(noMiddlewareFound)
 app.use(errorHandlerMiddleware)

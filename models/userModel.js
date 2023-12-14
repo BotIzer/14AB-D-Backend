@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt-nodejs')
 const userSchema = new mongoose.Schema({
     full_name: {
         type: String,
@@ -15,10 +15,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'To add email is required!'],
         unique: true,
-        match: [
-            /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-            'Please add a valid email address!',
-        ],
+        match: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, 'Please add a valid email address!'],
     },
     profile_image: {
         type: String,
@@ -66,8 +63,12 @@ userSchema.methods.generateHash = (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
 }
 
-userSchema.methods.validPassword = (password) => {
-    return bcrypt.compareSync(password, this.password)
+userSchema.methods.validPassword = (user, password) => {
+    try {
+        return bcrypt.compareSync(password, user.password)
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 module.exports = mongoose.model('User', userSchema, 'Users')
