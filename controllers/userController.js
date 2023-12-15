@@ -12,7 +12,7 @@ const getUserIdFromUrl = (params) => {
     return userId
 }
 
-const createUser = tryCatchWrapper(async (req, res) => {
+const registerUser = tryCatchWrapper(async (req, res) => {
     if (await User.findOne({ email: req.body.email })) {
         throw new userAlreadyExistsError(`User already exists with this email: ${req.body.email}`)
     }
@@ -55,22 +55,11 @@ const deleteUser = tryCatchWrapper(async (req, res) => {
     res.status(200).json({ user })
 })
 
-const login = tryCatchWrapper(async (req, res) => {
-    const user = await User.findOne({ email: req.body.email })
-    if (!user || !user.validPassword(user, req.body.password)) {
-        res.status(404).json({ message: `Username or password is wrong` })
-        return
-    }
-    res.status(200).json({ message: 'Login was successful!' })
-    return
-    //https://dev.to/m_josh/build-a-jwt-login-and-logout-system-using-expressjs-nodejs-hd2 to be removed later
-})
 
 module.exports = {
-    createUser,
+    registerUser,
     getAllUsers,
     getUserDataById,
     updateUser,
     deleteUser,
-    login,
 }
