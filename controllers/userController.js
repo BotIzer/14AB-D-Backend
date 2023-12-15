@@ -12,20 +12,6 @@ const getUserIdFromUrl = (params) => {
     return userId
 }
 
-const registerUser = tryCatchWrapper(async (req, res) => {
-    if (await User.findOne({ email: req.body.email })) {
-        throw new userAlreadyExistsError(`User already exists with this email: ${req.body.email}`)
-    }
-    let newUser = new User({
-        email: req.body.email,
-        username: req.body.username,
-    })
-    newUser.password = newUser.generateHash(req.body.password)
-    newUser.save()
-    res.status(201).json({ newUser })
-    return
-})
-
 const getAllUsers = tryCatchWrapper(async (req, res) => {
     const users = await User.find()
     if (!users) {
@@ -57,7 +43,6 @@ const deleteUser = tryCatchWrapper(async (req, res) => {
 
 
 module.exports = {
-    registerUser,
     getAllUsers,
     getUserDataById,
     updateUser,
