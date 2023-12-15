@@ -7,10 +7,10 @@ const {
     getUserDataById,
     updateUser,
     deleteUser,
-    loginTest
+    login
 } = require('../controllers/userController')
 
 router.route('/register').post(createUser)
-router.route('/login').post(loginTest)
+router.route('/login').post(login)
 
 module.exports = router

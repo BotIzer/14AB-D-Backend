@@ -55,7 +55,7 @@ const deleteUser = tryCatchWrapper(async (req, res) => {
     res.status(200).json({ user })
 })
 
-const loginTest = tryCatchWrapper(async (req, res) => {
+const login = tryCatchWrapper(async (req, res) => {
     const user = await User.findOne({ email: req.body.email })
     if (!user || !user.validPassword(user, req.body.password)) {
         res.status(404).json({ message: `Username or password is wrong` })
@@ -71,5 +71,5 @@ module.exports = {
     getUserDataById,
     updateUser,
     deleteUser,
-    loginTest,
+    login,
 }
