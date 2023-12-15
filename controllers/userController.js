@@ -63,6 +63,7 @@ const login = tryCatchWrapper(async (req, res) => {
     }
     res.status(200).json({ message: 'Login was successful!' })
     return
+    //https://dev.to/m_josh/build-a-jwt-login-and-logout-system-using-expressjs-nodejs-hd2 to be removed later
 })
 
 module.exports = {
