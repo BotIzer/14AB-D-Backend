@@ -4,7 +4,8 @@ const { getAllUsers, getUserDataById, updateUser, deleteUser } = require('../con
 const loginUser = require('../controllers/loginController')
 const registerUser = require('../controllers/registerController')
 
+
 router.route('/register').post(registerUser)
-router.route('/login').post(loginUser)
+router.route('/login').post(loginUser) //session-ökkel https://www.youtube.com/watch?v=zsOGmMuwhT4&t=200s
 
 module.exports = router

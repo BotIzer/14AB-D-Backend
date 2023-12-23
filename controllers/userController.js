@@ -1,6 +1,6 @@
 const User = require('../models/userModel')
 const tryCatchWrapper = require('../middlewares/tryCatchWrapper')
-const { userAlreadyExistsError, noUserFoundError } = require('../errors/userErrors/userErrors')
+const  noUserFoundError = require('../errors/userErrors/userErrors')
 
 const updaterOptions = {
     new: true,

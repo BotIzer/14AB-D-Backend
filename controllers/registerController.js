@@ -1,5 +1,6 @@
 const User = require('../models/userModel')
 const tryCatchWrapper = require('../middlewares/tryCatchWrapper')
+const userAlreadyExistsError = require('../errors/userErrors/userErrors')
 
 const registerUser = tryCatchWrapper(async (req, res) => {
     if (await User.findOne({ email: req.body.email })) {
