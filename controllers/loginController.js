@@ -1,7 +1,7 @@
 const User = require('../models/userModel')
 const tryCatchWrapper = require('../middlewares/tryCatchWrapper')
 const { StatusCodes } = require('http-status-codes')
-
+const sendTokenResponse = require('../middlewares/sendTokenResponse')
 require('dotenv').config()
 
 const updaterOptions = {
@@ -15,10 +15,7 @@ const loginUser = tryCatchWrapper(async (req, res) => {
         res.status(StatusCodes.UNAUTHORIZED).json({ message: `Username or password is wrong` })
         return
     }
-
-    const token = user.getSignedJwtToken()
-
-    res.status(StatusCodes.ACCEPTED).json({ message: 'Login was successful!', token: token })
+    sendTokenResponse(user, StatusCodes.OK, res)
     return
 })
 
