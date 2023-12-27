@@ -1,6 +1,7 @@
 const User = require('../models/userModel')
 const tryCatchWrapper = require('../middlewares/tryCatchWrapper')
 const userAlreadyExistsError = require('../errors/userErrors/userErrors')
+const { StatusCodes } = require('http-status-codes')
 
 const registerUser = tryCatchWrapper(async (req, res) => {
     if (await User.findOne({ email: req.body.email })) {
@@ -13,7 +14,7 @@ const registerUser = tryCatchWrapper(async (req, res) => {
     newUser.password = newUser.generateHash(req.body.password)
     newUser.save()
     const token = newUser.getSignedJwtToken()
-    res.status(201).json({ newUser: newUser, token: token })
+    res.status(StatusCodes.CREATED).json({ newUser: newUser, token: token })
     return
 })
 
