@@ -1,4 +1,4 @@
-exports.sendTokenResponse = (user, statusCode, res) => {
+const sendTokenResponse = (user, statusCode, res) => {
     const token = user.getSignedJwtToken()
 
     const options = {
@@ -6,6 +6,8 @@ exports.sendTokenResponse = (user, statusCode, res) => {
         httpOnly: true,
         secure: true,
     }
-    res.status(statusCode).cookie('token', token, options).json({ success: true, token })
+    res.status(statusCode).cookie('token', token, options).json({ token })
     return
 }
+
+module.exports = sendTokenResponse
