@@ -12,7 +12,8 @@ const registerUser = tryCatchWrapper(async (req, res) => {
     })
     newUser.password = newUser.generateHash(req.body.password)
     newUser.save()
-    res.status(201).json({ newUser })
+    const token = newUser.getSignedJwtToken()
+    res.status(201).json({ newUser: newUser, token: token })
     return
 })
 
