@@ -1,6 +1,6 @@
-const User = require('../models/userModel')
-const tryCatchWrapper = require('../middlewares/tryCatchWrapper')
-const noUserFoundError = require('../errors/userErrors/userErrors')
+const User = require('../../models/userModel')
+const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
+const noUserFoundError = require('../../errors/userErrors/userErrors')
 const { StatusCodes } = require('http-status-codes')
 
 const updaterOptions = {

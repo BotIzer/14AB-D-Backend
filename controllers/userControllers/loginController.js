@@ -1,7 +1,7 @@
-const User = require('../models/userModel')
-const tryCatchWrapper = require('../middlewares/tryCatchWrapper')
+const User = require('../../models/userModel')
+const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { StatusCodes } = require('http-status-codes')
-const sendTokenResponse = require('../middlewares/sendTokenResponse')
+const sendTokenResponse = require('../../middlewares/sendTokenResponse')
 require('dotenv').config()
 
 const loginUser = tryCatchWrapper(async (req, res) => {
