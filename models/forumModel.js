@@ -43,4 +43,4 @@ const forumSchema = new mongoose.Schema({
     },
 })
 
-module.exports = mongoose.model('Forum', forumSchema)
+module.exports = mongoose.model('Forum', forumSchema, 'Forums')
