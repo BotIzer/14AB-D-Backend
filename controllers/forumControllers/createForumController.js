@@ -1,12 +1,11 @@
 const Forum = require('../../models/forumModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { StatusCodes } = require('http-status-codes')
-const jwt = require('jsonwebtoken')
+const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
 
 const createForum = tryCatchWrapper(async (req, res) => {
     const { forum_name: forumName, banner: banner } = req.body
-    const token = req.headers.authorization.split(' ')[1]
-    const {id: decodedCreatorId} = jwt.verify(token, process.env.JWT_SECRET)
+    const decodedCreatorId = getCreatorIdFromHeaders(req.headers)
     let newForum = new Forum({
         _id: {
             creator: decodedCreatorId,
