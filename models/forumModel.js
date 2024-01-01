@@ -3,10 +3,12 @@ const mongoose = require('mongoose')
 const forumSchema = new mongoose.Schema({
     _id: {
         creator: {
-            type: ObjectId,
+            type: mongoose.ObjectId,
+            required: true,
         },
         forum: {
-            type: ObjectId,
+            type: mongoose.ObjectId,
+            auto: true,
         },
     },
     forum_name: {
@@ -21,11 +23,11 @@ const forumSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    blacklist: [ObjectId],
+    blacklist: [mongoose.ObjectId],
     users: [
         {
             user_id: {
-                type: ObjectId,
+                type: mongoose.ObjectId,
             },
             is_moderator: {
                 type: Boolean,
@@ -39,8 +41,8 @@ const forumSchema = new mongoose.Schema({
     },
     tags: [String],
     topthread: {
-        type: ObjectId,
+        type: mongoose.ObjectId,
     },
 })
 
-module.exports = mongoose.model('Forum', forumSchema)
+module.exports = mongoose.model('Forum', forumSchema, 'Forums')
