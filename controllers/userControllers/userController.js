@@ -2,6 +2,7 @@ const User = require('../../models/userModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const noUserFoundError = require('../../errors/userErrors/userErrors')
 const { StatusCodes } = require('http-status-codes')
+const getUserIdFromToken = require('../../middlewares/getUserIdFromToken')
 
 const updaterOptions = {
     new: true,
@@ -22,8 +23,9 @@ const getAllUsers = tryCatchWrapper(async (req, res) => {
 })
 
 const getUserDataById = tryCatchWrapper(async (req, res) => {
-    const userId = getUserIdFromUrl(req.params)
-    const user = await User.findById(userId)
+    const user = req.user
+    // const userId = getUserIdFromToken(req.headers.authorization.split(' ')[1])
+    // const user = await User.findById(userId)
     if (!user) throw new noUserFoundError(`No user found with id: ${userId}`)
     res.status(StatusCodes.OK).json({ user })
 })

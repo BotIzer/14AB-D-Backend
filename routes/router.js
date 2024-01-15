@@ -8,5 +8,6 @@ const createForum = require('../controllers/forumControllers/createForumControll
 
 router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)
+router.route('/user').post(protectPath, getUserDataById)
 router.route('/createForum').post(protectPath, createForum)
 module.exports = router
