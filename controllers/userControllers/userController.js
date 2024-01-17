@@ -30,6 +30,14 @@ const getUserDataById = tryCatchWrapper(async (req, res) => {
     res.status(StatusCodes.OK).json({ user })
 })
 
+const getUserDataByToken = tryCatchWrapper(async (req, res) => {
+    const token = req.headers.authorization.split(' ')[1]
+    const userId = await jwt.verify(token, process.env.JWT_SECRET)
+    const userInformation = await User.findById(userId)
+    if (!userInformation) throw new noUserFoundError('No user found')
+    res.status(StatusCodes.OK).json({ userInformation })
+})
+
 const updateUser = tryCatchWrapper(async (req, res) => {
     const userId = getUserIdFromUrl(req.params)
     const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions)
@@ -49,4 +57,5 @@ module.exports = {
     getUserDataById,
     updateUser,
     deleteUser,
+    getUserDataByToken,
 }
