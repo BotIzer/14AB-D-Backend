@@ -43,7 +43,16 @@ const getUserInfoFromToken = async (req, res) => {
         `username=${userInformation.username};` +
         `created_at=${userInformation.created_at};` +
         `full_name=${userInformation.full_name}`
-    res.status(StatusCodes.OK).cookie('userInfo', userInfoString).json({ userInfo: userInfoString })
+        const userInfoObject = {
+            email: userInformation.email,
+            profile_image: userInformation.profile_image,
+            custom_ui: userInformation.custom_ui,
+            roles: userInformation.roles,
+            username: userInformation.username,
+            created_at: userInformation.created_at,
+            full_name: userInformation.full_name
+        }
+    res.status(StatusCodes.OK).cookie('userInfo', userInfoString).json({ userInfo: userInfoObject })
 }
 
 const updateUser = tryCatchWrapper(async (req, res) => {
