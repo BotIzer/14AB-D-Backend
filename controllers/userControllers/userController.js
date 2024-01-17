@@ -2,7 +2,7 @@ const User = require('../../models/userModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const noUserFoundError = require('../../errors/userErrors/userErrors')
 const { StatusCodes } = require('http-status-codes')
-const getUserIdFromToken = require('../../middlewares/getUserIdFromToken')
+const jwt = require('jsonwebtoken')
 
 const updaterOptions = {
     new: true,
@@ -30,13 +30,21 @@ const getUserDataById = tryCatchWrapper(async (req, res) => {
     res.status(StatusCodes.OK).json({ user })
 })
 
-const getUserDataByToken = tryCatchWrapper(async (req, res) => {
+const getUserInfoFromToken = async (req, res) => {
     const token = req.headers.authorization.split(' ')[1]
-    const userId = await jwt.verify(token, process.env.JWT_SECRET)
+    const userId = jwt.verify(token, process.env.JWT_SECRET).id
     const userInformation = await User.findById(userId)
     if (!userInformation) throw new noUserFoundError('No user found')
-    res.status(StatusCodes.OK).json({ userInformation })
-})
+    const userInfoString =
+        `email=${userInformation.email};` +
+        `profile_image=${userInformation.profile_image};` +
+        `custom_ui=${userInformation.custom_ui};` +
+        `roles=${userInformation.roles};` +
+        `username=${userInformation.username};` +
+        `created_at=${userInformation.created_at};` +
+        `full_name=${userInformation.full_name}`
+    res.status(StatusCodes.OK).cookie('userInfo', userInfoString).json({ userInfo: userInfoString })
+}
 
 const updateUser = tryCatchWrapper(async (req, res) => {
     const userId = getUserIdFromUrl(req.params)
@@ -57,5 +65,5 @@ module.exports = {
     getUserDataById,
     updateUser,
     deleteUser,
-    getUserDataByToken,
+    getUserInfoFromToken,
 }
