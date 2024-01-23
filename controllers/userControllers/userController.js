@@ -24,13 +24,11 @@ const getAllUsers = tryCatchWrapper(async (req, res) => {
 
 const getUserDataById = tryCatchWrapper(async (req, res) => {
     const user = req.user
-    // const userId = getUserIdFromToken(req.headers.authorization.split(' ')[1])
-    // const user = await User.findById(userId)
     if (!user) throw new noUserFoundError(`No user found with id: ${userId}`)
     res.status(StatusCodes.OK).json({ user })
 })
 
-const getUserInfoFromToken = async (req, res) => {
+const getUserInfoFromToken = tryCatchWrapper(async (req, res) => {
     const token = req.headers.authorization.split(' ')[1]
     const userId = jwt.verify(token, process.env.JWT_SECRET).id
     const userInformation = await User.findById(userId)
@@ -43,17 +41,24 @@ const getUserInfoFromToken = async (req, res) => {
         `username=${userInformation.username};` +
         `created_at=${userInformation.created_at};` +
         `full_name=${userInformation.full_name}`
-        const userInfoObject = {
-            email: userInformation.email,
-            profile_image: userInformation.profile_image,
-            custom_ui: userInformation.custom_ui,
-            roles: userInformation.roles,
-            username: userInformation.username,
-            created_at: userInformation.created_at,
-            full_name: userInformation.full_name
-        }
+    const userInfoObject = {
+        email: userInformation.email,
+        profile_image: userInformation.profile_image,
+        custom_ui: userInformation.custom_ui,
+        roles: userInformation.roles,
+        username: userInformation.username,
+        created_at: userInformation.created_at,
+        full_name: userInformation.full_name,
+    }
     res.status(StatusCodes.OK).cookie('userInfo', userInfoString).json({ userInfo: userInfoObject })
-}
+})
+
+const getUserProfileByUsername = tryCatchWrapper(async (req, res) => {
+    const { username: username } = params
+    const user = await User.findOne({ username: username })
+    if (!user) throw new noUserFoundError(`No user found with username: ${username}`)
+    res.status(StatusCodes.OK).json({ user })
+})
 
 const updateUser = tryCatchWrapper(async (req, res) => {
     const userId = getUserIdFromUrl(req.params)
@@ -75,4 +80,5 @@ module.exports = {
     updateUser,
     deleteUser,
     getUserInfoFromToken,
+    getUserProfileByUsername,
 }
