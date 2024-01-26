@@ -11,6 +11,7 @@ const noMiddlewareFound = require('./middlewares/noMiddlewareFoundError')
 
 app.use(cookieParser())
 app.use(express.json())
+// TODO: Change this origin.
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 app.use(express.urlencoded({extended: true}))
 
