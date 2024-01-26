@@ -10,9 +10,9 @@ const loginUser = tryCatchWrapper(async (req, res) => {
         res.status(StatusCodes.UNAUTHORIZED).json({ message: `Username or password is wrong` })
         return
     }
-    sendTokenResponse(user, StatusCodes.OK, res)
+    res.status(StatusCodes.OK).json({}) //it stoppes here
+    // sendTokenResponse(user, StatusCodes.OK, res)
     return
 })
 
 module.exports = loginUser
-    
