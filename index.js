@@ -11,17 +11,8 @@ const noMiddlewareFound = require('./middlewares/noMiddlewareFoundError')
 
 app.use(cookieParser())
 app.use(express.json())
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 app.use(express.urlencoded({extended: true}))
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader(
-        'Access-Control-Allow-Methods',
-        'GET, POST, PUT, PATCH, DELETE'
-    )
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-    next()
-})
 
 app.use(morgan('dev'))
 app.use('/', router)
