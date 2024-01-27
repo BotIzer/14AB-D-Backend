@@ -2,11 +2,11 @@ const deleteToken = (req,res) => {
     const options = {
         expires: new Date(0),
         httpOnly: true,
-        secure: true,
+        secure: false
     }
-    res.clearCookie('token',options)
-    res.end();
-    return 
+    res.clearCookie('token',options);
+    res.json({success: 'true'})
+    return
 }
 
 module.exports = deleteToken
