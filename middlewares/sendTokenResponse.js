@@ -1,3 +1,5 @@
+const { getUserInfoFromToken } = require("../controllers/userControllers/userController")
+
 const sendTokenResponse = (user, statusCode, res) => {
     const token = user.getSignedJwtToken()
 
@@ -8,6 +10,10 @@ const sendTokenResponse = (user, statusCode, res) => {
     }
     res.status(statusCode).cookie('token', token, options)
     res.json({success: 'true'})
+    // I am. Sorry.
+    // I AM A GENIUS HOLY
+    // I'm a dumbass
+    getUserInfoFromToken(token,res)
     return
 }
 

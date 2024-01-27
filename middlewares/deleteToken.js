@@ -1,6 +1,5 @@
 const deleteToken = (req,res) => {
     const options = {
-        expires: new Date(0),
         httpOnly: true,
         secure: false
     }
