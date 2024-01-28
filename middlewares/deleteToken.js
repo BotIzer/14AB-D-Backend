@@ -4,6 +4,7 @@ const deleteToken = (req,res) => {
         secure: false
     }
     res.clearCookie('token',options);
+    res.clearCookie('userInfo')
     res.json({success: 'true'})
     return
 }

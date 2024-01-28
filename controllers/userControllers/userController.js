@@ -28,18 +28,10 @@ const getUserDataById = tryCatchWrapper(async (req, res) => {
     res.status(StatusCodes.OK).json({ user })
 })
 
-const getUserInfoFromToken = tryCatchWrapper(async (token, res) => {
+const getUserInfoFromToken = (async (token) => {
     const userId = jwt.verify(token, process.env.JWT_SECRET).id
     const userInformation = await User.findById(userId)
     if (!userInformation) throw new noUserFoundError('No user found')
-    const userInfoString =
-        `email=${userInformation.email};` +
-        `profile_image=${userInformation.profile_image};` +
-        `custom_ui=${userInformation.custom_ui};` +
-        `roles=${userInformation.roles};` +
-        `username=${userInformation.username};` +
-        `created_at=${userInformation.created_at};` +
-        `full_name=${userInformation.full_name}`
     const userInfoObject = {
         email: userInformation.email,
         profile_image: userInformation.profile_image,
@@ -49,7 +41,7 @@ const getUserInfoFromToken = tryCatchWrapper(async (token, res) => {
         created_at: userInformation.created_at,
         full_name: userInformation.full_name,
     }
-    y
+    return userInfoObject
 })
 
 const getUserProfileByUsername = tryCatchWrapper(async (req, res) => {
