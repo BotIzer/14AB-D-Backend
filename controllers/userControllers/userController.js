@@ -28,7 +28,7 @@ const getUserDataById = tryCatchWrapper(async (req, res) => {
     res.status(StatusCodes.OK).json({ user })
 })
 
-const getUserInfoFromToken = (async (token) => {
+const getUserInfoFromToken = tryCatchWrapper(async (token) => {
     const userId = jwt.verify(token, process.env.JWT_SECRET).id
     const userInformation = await User.findById(userId)
     if (!userInformation) throw new noUserFoundError('No user found')
