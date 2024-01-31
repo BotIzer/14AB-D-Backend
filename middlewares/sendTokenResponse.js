@@ -12,7 +12,6 @@ const sendTokenResponse = async (user, statusCode, res) => {
     const userInfo = await getUserInfoFromToken(token)
     // {sameSite: 'None', expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000)}
     // we have to set it to sameSite once we have https
-    console.log('this shitarse is '+ userInfo)
     res.cookie('userInfo', JSON.stringify(userInfo), {
         expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
     })
