@@ -17,7 +17,6 @@ const search = tryCatchWrapper(async (req, res) => {
             username: { $regex: searchKeyword, $options: 'i' },
         }).select('username ')
     )
-    console.log(items)
     res.status(StatusCodes.OK).json(items)
     return
 })
