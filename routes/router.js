@@ -13,6 +13,7 @@ const registerUser = require('../controllers/userControllers/registerController'
 const protectPath = require('../middlewares/protectPath')
 const createForum = require('../controllers/forumControllers/createForumController')
 const deleteToken = require('../middlewares/deleteToken')
+const search = require('../controllers/searchController/searchController')
 
 router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)
@@ -21,4 +22,5 @@ router.route('/logout').post(deleteToken)
 router.route('/user').post(protectPath, getUserDataById)
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/createForum').post(protectPath, createForum)
+router.route('/search').post(search)
 module.exports = router
