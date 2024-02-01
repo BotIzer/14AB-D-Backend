@@ -10,12 +10,12 @@ const search = tryCatchWrapper(async (req, res) => {
     items.push(
         await Forum.find({
             forum_name: { $regex: searchKeyword, $options: 'i' },
-        }).select('forum_name banner')
+        }).limit(5).select('forum_name banner')
     )
     items.push(
         await User.find({
             username: { $regex: searchKeyword, $options: 'i' },
-        }).select('username ')
+        }).limit(5).select('username')
     )
     res.status(StatusCodes.OK).json(items)
     return
