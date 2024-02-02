@@ -1,9 +1,12 @@
 const tryCatchWrapper = (fn) => {
-    return async (req, res, next) => {
+    return async (...args) => {
         try {
-            await fn(req, res, next)
+            return await fn(...args)
         } catch (error) {
-            next(error)
+            console.log(error)
+            if (typeof args[args.length - 1] === 'function') {
+                args[args.length - 1](error)
+            }
         }
     }
 }

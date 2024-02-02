@@ -5,6 +5,11 @@ const sendTokenResponse = require('../../middlewares/sendTokenResponse')
 require('dotenv').config()
 
 const loginUser = tryCatchWrapper(async (req, res) => {
+    // checks whether or not the user is logged in
+    if (req.cookies['token']) {
+        res.status(StatusCodes.FORBIDDEN).json({success: false})
+        return
+    }
     const user = await User.findOne({ email: req.body.email })
     if (!user || !user.validPassword(user, req.body.password)) {
         res.status(StatusCodes.UNAUTHORIZED).json({ message: `Username or password is wrong` })

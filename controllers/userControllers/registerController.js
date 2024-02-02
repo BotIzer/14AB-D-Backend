@@ -5,6 +5,13 @@ const { StatusCodes } = require('http-status-codes')
 const sendTokenResponse = require('../../middlewares/sendTokenResponse')
 
 const registerUser = tryCatchWrapper(async (req, res) => {
+    if (req.cookies['token']) {
+        res.status(StatusCodes.FORBIDDEN).json({success: false})
+        return
+    }
+    if (await User.findOne({ username: req.body.username })) {
+        throw new userAlreadyExistsError(`User already exists with this username: ${req.body.username}`)
+    }
     if (await User.findOne({ email: req.body.email })) {
         throw new userAlreadyExistsError(`User already exists with this email: ${req.body.email}`)
     }
