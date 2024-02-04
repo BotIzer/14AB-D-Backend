@@ -12,7 +12,7 @@ const noMiddlewareFound = require('./middlewares/noMiddlewareFoundError')
 app.use(cookieParser())
 app.use(express.json())
 // TODO: Change this origin.
-app.use(cors({ origin: 'https://blitzforfriends.vercel.app/', credentials: true }))
+app.use(cors({ origin: 'https://blitzforfriends.vercel.app', credentials: true }))
 app.use(express.urlencoded({extended: true}))
 
 app.use(morgan('dev'))
