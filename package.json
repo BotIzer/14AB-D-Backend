@@ -6,7 +6,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "npx env-cmd -f .env.dev nodemon index.js",
-        "start": "npx env-cmd -f .env.prod nodemon index.js"
+        "start": "node index.js"
     },
     "repository": {
         "type": "git",
