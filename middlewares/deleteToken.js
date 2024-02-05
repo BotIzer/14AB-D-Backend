@@ -1,7 +1,8 @@
 const deleteToken = (req,res) => {
     const options = {
         httpOnly: true,
-        secure: false
+        secure: true,
+        sameSite: 'None'
     }
     res.clearCookie('token',options);
     res.clearCookie('userInfo')
