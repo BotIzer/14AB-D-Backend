@@ -8,7 +8,10 @@ const createThread = tryCatchWrapper(async (req, res) => {
     const { forum_name: forumName, name: name, content: content } = req.body
     const decodedCreatorId = getCreatorIdFromHeaders(req.headers)
     const forumId = await Forum.getForumIdByName(forumName)
-
+    if (!forumId) {
+        res.status(StatusCodes.NOT_FOUND).json({ success: false })
+        return
+    }
     console.log(forumId)
     let newThread = new Thread({
         _id: {
