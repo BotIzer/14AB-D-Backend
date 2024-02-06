@@ -12,7 +12,6 @@ const createThread = tryCatchWrapper(async (req, res) => {
         res.status(StatusCodes.NOT_FOUND).json({ message: `No forum found with this name: '${forumName}'` })
         return
     }
-    console.log(forumId)
     let newThread = new Thread({
         _id: {
             forum_id: forumId,
