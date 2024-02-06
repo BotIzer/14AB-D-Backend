@@ -2,11 +2,11 @@ const mongoose = require('mongoose')
 
 const forumSchema = new mongoose.Schema({
     _id: {
-        creator: {
+        creator_id: {
             type: mongoose.ObjectId,
             required: true,
         },
-        forum: {
+        forum_id: {
             type: mongoose.ObjectId,
             auto: true,
         },

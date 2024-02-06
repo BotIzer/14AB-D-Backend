@@ -2,14 +2,17 @@ const mongoose = require('mongoose')
 
 const threadSchema = new mongoose.Schema({
     _id: {
-        forum: {
-            type: ObjectId,
+        forum_id: {
+            type: mongoose.ObjectId,
+            required: true
         },
-        user: {
-            type: ObjectId,
+        creator_id: {
+            type: mongoose.ObjectId,
+            required: true
         },
-        thread: {
-            type: ObjectId,
+        thread_id: {
+            type: mongoose.ObjectId,
+            auto: true
         },
     },
     name: {
@@ -24,7 +27,7 @@ const threadSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-    editors: [ObjectId],
+    editors: [mongoose.ObjectId],
     emoticons: [String],
     creation_date: {
         type: Date,
@@ -36,4 +39,4 @@ const threadSchema = new mongoose.Schema({
     },
 })
 
-module.exports = mongoose.model('Thread', threadSchema)
+module.exports = mongoose.model('Thread', threadSchema, 'Threads')

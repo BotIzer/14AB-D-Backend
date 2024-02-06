@@ -1,21 +1,24 @@
-const Forum = require('../../models/forumModel')
+const Thread = require('../../models/threadModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
 
-const createForum = tryCatchWrapper(async (req, res) => {
-    const { forum_name: forumName, banner: banner } = req.body
+const createThread = tryCatchWrapper(async (req, res) => {
+    const { forum_id: forumId, name: name, content: content } = req.body
     const decodedCreatorId = getCreatorIdFromHeaders(req.headers)
-    let newForum = new Forum({
+    let newThread = new Thread({
         _id: {
+            forum_id: forumId,
             creator_id: decodedCreatorId,
         },
-        forum_name: forumName,
-        banner: banner,
+        name: name,
+        content: content,
+        editors: decodedCreatorId,
+        creation_date: Date.now(),
     })
-    newForum.save()
+    newThread.save()
     res.status(StatusCodes.CREATED).json({ success: true })
     return
 })
 
-module.exports = createForum
+module.exports = createThread
