@@ -15,7 +15,7 @@ const forumSchema = new mongoose.Schema({
     forum_name: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     creation_date: {
         type: Date,
@@ -47,13 +47,20 @@ const forumSchema = new mongoose.Schema({
     },
 })
 
-forumSchema.statics.getForumIdByName = tryCatchWrapper(async function(forumName) {
-    const id = await this.aggregate([
+forumSchema.statics.getForumIdByName = tryCatchWrapper(async function (forumName) {
+    const Forum = mongoose.model('Forum', forumSchema, 'Forums')
+    const id = await Forum.aggregate([
         {
             $match: { forum_name: forumName },
         },
-
+        {
+            $project: {
+                _id: 0,
+                forum_id: '$_id.forum_id',
+            },
+        },
     ])
-}) //does not work yet, do not use!!
+    return id[0].forum_id
+})
 
 module.exports = mongoose.model('Forum', forumSchema, 'Forums')

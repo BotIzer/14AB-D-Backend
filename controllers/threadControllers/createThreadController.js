@@ -6,8 +6,10 @@ const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeade
 
 const createThread = tryCatchWrapper(async (req, res) => {
     const { forum_name: forumName, name: name, content: content } = req.body
-    const decodedCreatorId = getCreatorIdFromHeaders(req.headers) /*'657b7d6d0064424d0daad81a'*/
-    const forumId = (await Forum.findOne({ forum_name: forumName }))._id.forum_id //aggregate needed in model
+    const decodedCreatorId = getCreatorIdFromHeaders(req.headers)
+    const forumId = await Forum.getForumIdByName(forumName)
+
+    console.log(forumId)
     let newThread = new Thread({
         _id: {
             forum_id: forumId,
