@@ -14,6 +14,7 @@ const forumSchema = new mongoose.Schema({
     forum_name: {
         type: String,
         required: true,
+        unique: true
     },
     creation_date: {
         type: Date,
