@@ -22,5 +22,5 @@ router.route('/user').post(protectPath, getUserDataById)
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/forum/create').post(protectPath, createForum)
 router.route('/search').post(search)
-router.route('/thread/create').post(protectPath, createThread)
+router.route('/thread/create').post(/*protectPath, */createThread) //PROTECTED PATH NEEDED LATER
 module.exports = router

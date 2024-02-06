@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const tryCatchWrapper = require('../middlewares/tryCatchWrapper')
 
 const forumSchema = new mongoose.Schema({
     _id: {
@@ -45,5 +46,14 @@ const forumSchema = new mongoose.Schema({
         type: mongoose.ObjectId,
     },
 })
+
+forumSchema.statics.getForumIdByName = tryCatchWrapper(async function(forumName) {
+    const id = await this.aggregate([
+        {
+            $match: { forum_name: forumName },
+        },
+
+    ])
+}) //does not work yet, do not use!!
 
 module.exports = mongoose.model('Forum', forumSchema, 'Forums')
