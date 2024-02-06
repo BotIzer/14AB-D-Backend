@@ -9,7 +9,7 @@ const createThread = tryCatchWrapper(async (req, res) => {
     const decodedCreatorId = getCreatorIdFromHeaders(req.headers)
     const forumId = await Forum.getForumIdByName(forumName)
     if (!forumId) {
-        res.status(StatusCodes.NOT_FOUND).json({ success: false })
+        res.status(StatusCodes.NOT_FOUND).json({ message: `No forum found with this name: '${forumName}'` })
         return
     }
     console.log(forumId)
