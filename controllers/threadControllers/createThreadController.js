@@ -4,7 +4,7 @@ const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
 
 const createThread = tryCatchWrapper(async (req, res) => {
-    const { forum_id: forumId, name: name, content: content } = req.body
+    const { forum_name: forumName, name: name, content: content } = req.body
     const decodedCreatorId = getCreatorIdFromHeaders(req.headers)
     let newThread = new Thread({
         _id: {
