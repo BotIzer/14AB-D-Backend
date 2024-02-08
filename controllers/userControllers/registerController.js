@@ -10,10 +10,10 @@ const registerUser = tryCatchWrapper(async (req, res) => {
         return
     }
     if (await User.findOne({ username: req.body.username })) {
-        throw new userAlreadyExistsError(`User already exists with this username: ${req.body.username}`)
+        throw new userAlreadyExistsError(req.body.username)
     }
     if (await User.findOne({ email: req.body.email })) {
-        throw new userAlreadyExistsError(`User already exists with this email: ${req.body.email}`)
+        throw new userAlreadyExistsError(req.body.email)
     }
     let newUser = new User({
         email: req.body.email,

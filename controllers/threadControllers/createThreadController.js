@@ -3,14 +3,14 @@ const Forum = require('../../models/forumModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
+const { noForumFoundError }= require('../../errors/forumErrors/forumErrors')
 
 const createThread = tryCatchWrapper(async (req, res) => {
     const { forum_name: forumName, name: name, content: content } = req.body
     const decodedCreatorId = getCreatorIdFromHeaders(req.headers)
     const forumId = await Forum.getForumIdByName(forumName)
     if (!forumId) {
-        res.status(StatusCodes.NOT_FOUND).json({ message: `No forum found with this name: '${forumName}'` })
-        return
+        throw new noForumFoundError(forumName)
     }
     let newThread = new Thread({
         _id: {

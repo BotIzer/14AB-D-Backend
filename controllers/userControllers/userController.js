@@ -17,21 +17,21 @@ const getUserIdFromUrl = (params) => {
 const getAllUsers = tryCatchWrapper(async (req, res) => {
     const users = await User.find()
     if (!users) {
-        throw new noUserFoundError(`User already exists with this email: ${req.body.email}`)
+        res.status(StatusCodes.NOT_FOUND).json({message: 'No user found'})
     }
     res.status(StatusCodes.OK).json({ users })
 })
 
 const getUserDataById = tryCatchWrapper(async (req, res) => {
     const user = req.user
-    if (!user) throw new noUserFoundError(`No user found with id: ${userId}`)
+    if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })
 })
 
 const getUserInfoFromToken = tryCatchWrapper(async (token) => {
     const userId = jwt.verify(token, process.env.JWT_SECRET).id
     const userInformation = await User.findById(userId)
-    if (!userInformation) throw new noUserFoundError('No user found')
+    if (!userInformation) throw new noUserFoundError(userId)
     const userInfoObject = {
         email: userInformation.email,
         profile_image: userInformation.profile_image,
@@ -47,21 +47,21 @@ const getUserInfoFromToken = tryCatchWrapper(async (token) => {
 const getUserProfileByUsername = tryCatchWrapper(async (req, res) => {
     const { username: username } = req.params
     const user = await User.findOne({ username: username })
-    if (!user) throw new noUserFoundError(`No user found with username: ${username}`)
+    if (!user) throw new noUserFoundError(username)
     res.status(StatusCodes.OK).json({ user })
 })
 
 const updateUser = tryCatchWrapper(async (req, res) => {
     const userId = getUserIdFromUrl(req.params)
     const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions)
-    if (!user) throw new noUserFoundError(`No user found with id: ${userId}`)
+    if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })
 })
 
 const deleteUser = tryCatchWrapper(async (req, res) => {
     const userId = getUserIdFromUrl(req.params)
     const user = await User.findByIdAndDelete(userId)
-    if (!user) throw new noUserFoundError(`No user found with id: ${userId}`)
+    if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })
 })
 

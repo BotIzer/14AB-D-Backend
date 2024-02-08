@@ -9,7 +9,7 @@ const protectPath = tryCatchWrapper(async (req, res, next) => {
         token = req.headers.authorization.split(' ')[1]
     }
     if (!token) {
-        throw new noPermissionToUsePathError(`You have no permission to use path: ${req.originalUrl}`)
+        throw new noPermissionToUsePathError(req.originalUrl)
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
