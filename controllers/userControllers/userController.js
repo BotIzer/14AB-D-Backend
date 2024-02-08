@@ -1,6 +1,6 @@
 const User = require('../../models/userModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
-const noUserFoundError = require('../../errors/userErrors/userErrors')
+const { noUserFoundError } = require('../../errors/userErrors/userErrors')
 const { StatusCodes } = require('http-status-codes')
 const jwt = require('jsonwebtoken')
 
@@ -47,7 +47,7 @@ const getUserInfoFromToken = tryCatchWrapper(async (token) => {
 const getUserProfileByUsername = tryCatchWrapper(async (req, res) => {
     const { username: username } = req.params
     const user = await User.findOne({ username: username })
-    if (!user) res.status(StatusCodes.NOT_FOUND).json({message: `No user found with username: ${username}`})
+    if (!user) throw new noUserFoundError(`No user found with username: ${username}`)
     res.status(StatusCodes.OK).json({ user })
 })
 
