@@ -2,14 +2,17 @@ const mongoose = require('mongoose')
 
 const chatroomSchema = new mongoose.Schema({
     _id: {
-        type: ObjectId,
+        type: mongoose.ObjectId,
+        auto: true,
+    },
+    name: {
+        type: String,
         required: true,
-        unique: true,
     },
     users: [
         {
-            id: {
-                type: ObjectId,
+            user_id: {
+                type: mongoose.ObjectId,
                 required: true,
             },
             is_moderator: {
@@ -21,7 +24,7 @@ const chatroomSchema = new mongoose.Schema({
 
     common_topics: [String],
     owner: {
-        type: ObjectId,
+        type: mongoose.ObjectId,
         required: true,
     },
     time_to_live: {
