@@ -9,7 +9,7 @@ const createChat = tryCatchWrapper(async (req, res) => {
     const decodedCreatorId = getCreatorIdFromHeaders(req.headers)
     let expirationDate = null
     if (isTtl) {
-        if (!(daysToDie >= 1)) {
+        if (daysToDie < 1 && !Number.isInteger(daysToDie)) {
             throw new daysToDieError()
         }
         expirationDate = new Date()
