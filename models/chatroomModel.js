@@ -28,9 +28,15 @@ const chatroomSchema = new mongoose.Schema({
         required: true,
     },
     time_to_live: {
-        type: Number,
-        required: true,
+        is_ttl: {
+            type: Boolean,
+            required: true,
+        },
+        expiration: {
+            type: Date,
+            default: null,
+        },
     },
 })
 
-module.exports = mongoose.model('Chatroom', chatroomSchema)
+module.exports = mongoose.model('Chatroom', chatroomSchema, 'Chatrooms')

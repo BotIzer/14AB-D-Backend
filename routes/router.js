@@ -14,6 +14,8 @@ const protectPath = require('../middlewares/protectPath')
 const createForum = require('../controllers/forumControllers/createForumController')
 const search = require('../controllers/searchController/searchController')
 const createThread = require('../controllers/threadControllers/createThreadController')
+const createChat = require('../controllers/chatControllers/createChat')
+
 
 router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)
@@ -24,5 +26,6 @@ router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/forum/create').post(protectPath, createForum)
 router.route('/thread/create').post(protectPath, createThread)
 router.route('/chat/:roomid').get(protectPath)
-router.route('/chat/:roomid').post(protectPath)
+router.route('/chat/create').post(/*protectPath, */createChat)
+
 module.exports = router
