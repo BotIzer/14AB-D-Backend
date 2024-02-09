@@ -1,20 +1,22 @@
 const express = require('express')
 const router = express.Router()
 const {
-    getAllUsers,
-    getUserDataById,
-    updateUser,
-    deleteUser,
-    getUserInfoFromToken,
-    getUserProfileByUsername,
-} = require('../controllers/userControllers/userController')
-const loginUser = require('../controllers/userControllers/loginController')
-const registerUser = require('../controllers/userControllers/registerController')
+    loginUser,
+    registerUser,
+    userController: {
+        getAllUsers,
+        getUserDataById,
+        updateUser,
+        deleteUser,
+        getUserInfoFromToken,
+        getUserProfileByUsername,
+    },
+} = require('../controllers/userControllers/userControllers')
 const protectPath = require('../middlewares/protectPath')
-const createForum = require('../controllers/forumControllers/createForumController')
+const { createForum } = require('../controllers/forumControllers/forumControllers')
 const search = require('../controllers/searchController/searchController')
-const createThread = require('../controllers/threadControllers/createThreadController')
-const createChat = require('../controllers/chatControllers/createChat')
+const { createThread }= require('../controllers/threadControllers/threadControllers')
+const { createChat } = require('../controllers/chatControllers/chatControllers')
 
 
 router.route('/register').post(registerUser)
@@ -25,7 +27,7 @@ router.route('/user').post(protectPath, getUserDataById)
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/forum/create').post(protectPath, createForum)
 router.route('/thread/create').post(protectPath, createThread)
-router.route('/chat/:roomid').get(protectPath)
+router.route('/chat/:roomId').get(protectPath)
 router.route('/chat/create').post(protectPath, createChat)
 
 module.exports = router
