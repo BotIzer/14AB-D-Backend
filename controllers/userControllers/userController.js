@@ -33,7 +33,6 @@ const getUserInfoFromToken = tryCatchWrapper(async (token) => {
     const userInformation = await User.findById(userId)
     if (!userInformation) throw new noUserFoundError(userId)
     const userInfoObject = {
-        email: userInformation.email,
         profile_image: userInformation.profile_image,
         custom_ui: userInformation.custom_ui,
         roles: userInformation.roles,
