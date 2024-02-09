@@ -2,7 +2,7 @@ const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const Chat = require('../../models/chatroomModel')
 const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
-const daysToDieError = require('../../errors/chatErrors/daysToDieError')
+const { daysToDieError } = require('../../errors/chatErrors/daysToDieError')
 
 const createChat = tryCatchWrapper(async (req, res) => {
     const { name: name, is_ttl: isTtl, time_to_live_days: daysToDie } = req.body
