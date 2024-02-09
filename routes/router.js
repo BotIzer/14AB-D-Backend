@@ -26,6 +26,6 @@ router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/forum/create').post(protectPath, createForum)
 router.route('/thread/create').post(protectPath, createThread)
 router.route('/chat/:roomid').get(protectPath)
-router.route('/chat/create').post(/*protectPath, */createChat)
+router.route('/chat/create').post(protectPath, createChat)
 
 module.exports = router
