@@ -1,6 +1,5 @@
 const Forum = require('../../models/forumModel')
 const User = require('../../models/userModel')
-const mongoose = require('mongoose')
 const { StatusCodes } = require('http-status-codes')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 
