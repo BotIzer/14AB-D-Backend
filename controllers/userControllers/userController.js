@@ -17,9 +17,11 @@ const getUserIdFromUrl = (params) => {
 const getAllUsers = tryCatchWrapper(async (req, res) => {
     const users = await User.find()
     if (!users) {
-        res.status(StatusCodes.NOT_FOUND).json({message: 'No user found'})
+        res.status(StatusCodes.NOT_FOUND).json({ message: 'No user found' })
+        return
     }
     res.status(StatusCodes.OK).json({ users })
+    return
 })
 
 const getUserDataById = tryCatchWrapper(async (req, res) => {
@@ -48,6 +50,7 @@ const getUserProfileByUsername = tryCatchWrapper(async (req, res) => {
     const user = await User.findOne({ username: username })
     if (!user) throw new noUserFoundError(username)
     res.status(StatusCodes.OK).json({ user })
+    return
 })
 
 const updateUser = tryCatchWrapper(async (req, res) => {
@@ -55,6 +58,7 @@ const updateUser = tryCatchWrapper(async (req, res) => {
     const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions)
     if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })
+    return
 })
 
 const deleteUser = tryCatchWrapper(async (req, res) => {
@@ -62,6 +66,7 @@ const deleteUser = tryCatchWrapper(async (req, res) => {
     const user = await User.findByIdAndDelete(userId)
     if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })
+    return
 })
 
 module.exports = {
