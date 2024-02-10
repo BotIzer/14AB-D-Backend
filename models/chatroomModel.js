@@ -21,7 +21,6 @@ const chatroomSchema = new mongoose.Schema({
             },
         },
     ],
-
     common_topics: [String],
     owner: {
         type: mongoose.ObjectId,
@@ -37,6 +36,13 @@ const chatroomSchema = new mongoose.Schema({
             default: null,
         },
     },
+})
+
+chatroomSchema.virtual('comments', {
+    ref: 'Comment',
+    localField: '_id',
+    foreignField: '_id.room',
+    justOne: false,
 })
 
 module.exports = mongoose.model('Chatroom', chatroomSchema, 'Chatrooms')

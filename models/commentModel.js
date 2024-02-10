@@ -3,13 +3,17 @@ const mongoose = require('mongoose')
 const commentSchema = new mongoose.Schema({
     _id: {
         room: {
-            type: ObjectId,
+            type: mongoose.ObjectId,
+            ref: 'Chatroom',
+            required: true,
         },
         user: {
-            type: ObjectId,
+            type: mongoose.ObjectId,
+            required: true,
         },
         message: {
-            type: ObjectId,
+            type: mongoose.ObjectId,
+            auto: true,
         },
     },
 
@@ -19,7 +23,7 @@ const commentSchema = new mongoose.Schema({
     },
     reply_id: {
         parent_comment: {
-            type: ObjectId,
+            type: mongoose.ObjectId,
         },
         sequential_number: {
             type: Number,
@@ -42,4 +46,4 @@ const commentSchema = new mongoose.Schema({
     emoticons: [String],
 })
 
-module.exports = mongoose.model('Comment', commentSchema)
+module.exports = mongoose.model('Comment', commentSchema, 'Comments')
