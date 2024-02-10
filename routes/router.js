@@ -17,6 +17,7 @@ const { createForum } = require('../controllers/forumControllers/forumController
 const search = require('../controllers/searchController/searchController')
 const { createThread } = require('../controllers/threadControllers/threadControllers')
 const { createChat, getChatDataById } = require('../controllers/chatControllers/chatControllers')
+const { createComment } = require('../controllers/commentControllers/commentControllers')
 
 router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)

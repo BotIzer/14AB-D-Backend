@@ -2,16 +2,16 @@ const mongoose = require('mongoose')
 
 const commentSchema = new mongoose.Schema({
     _id: {
-        room: {
+        room_id: {
             type: mongoose.ObjectId,
             ref: 'Chatroom',
             required: true,
         },
-        user: {
+        creator_id: {
             type: mongoose.ObjectId,
             required: true,
         },
-        message: {
+        message_id: {
             type: mongoose.ObjectId,
             auto: true,
         },
@@ -20,10 +20,16 @@ const commentSchema = new mongoose.Schema({
     text: {
         type: String,
         maxlength: [2000, 'A comment cannot be longer than 2000 characters!'],
+        required: true,
     },
-    reply_id: {
-        parent_comment: {
+    reply: {
+        is_reply: {
+            type: Boolean,
+            default: false,
+        },
+        parent_comment_id: {
             type: mongoose.ObjectId,
+            default: null,
         },
         sequential_number: {
             type: Number,
