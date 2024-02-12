@@ -10,7 +10,7 @@ const chatroomSchema = new mongoose.Schema({
         required: true,
     },
     is_private: {
-        type: Boolena,
+        type: Boolean,
         required: true,
     },
     users: [
