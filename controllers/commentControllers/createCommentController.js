@@ -7,7 +7,7 @@ const { noChatFoundError } = require('../../errors/chatErrors/chatErrors')
 const { parentCommentDoesNotExistError, tooLongCommentError } = require('../../errors/commentErrors/commentErrors')
 
 const createComment = tryCatchWrapper(async (req, res) => {
-    const {
+    let {
         room_id: roomId,
         text: text,
         is_reply: isReply,
@@ -28,7 +28,7 @@ const createComment = tryCatchWrapper(async (req, res) => {
         parentCommentId = null
         sequentialNumber = 0
     }
-    let newChatroom = new Chatroom({
+    let newComment = new Comment({
         _id: {
             room_id: roomId,
             creator_id: decodedCreatorId,
@@ -40,7 +40,7 @@ const createComment = tryCatchWrapper(async (req, res) => {
             sequential_number: sequentialNumber,
         },
     })
-    newChatroom.save()
+    newComment.save()
     res.status(StatusCodes.CREATED).json({ success: true })
     return
 })
