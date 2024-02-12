@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
             'Add a valid name!',
         ],
     },
+    chats: [{
+        type: mongoose.ObjectId,
+        ref: 'Chatroom'
+    }],
     email: {
         type: String,
         required: [true, 'To add email is required!'],

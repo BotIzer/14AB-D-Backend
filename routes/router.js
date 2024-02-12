@@ -3,6 +3,7 @@ const router = express.Router()
 const {
     loginUser,
     registerUser,
+    getUsersChats,
     userController: {
         getAllUsers,
         getUserDataById,
@@ -30,5 +31,6 @@ router.route('/thread/create').post(protectPath, createThread)
 router.route('/chat/:chatId').get(protectPath, getChatDataById)
 router.route('/chat/create').post(protectPath, createChat)
 router.route('/comment/createComment').post(protectPath, createComment)
+router.route('/chats').get(protectPath, getUsersChats)
 
 module.exports = router

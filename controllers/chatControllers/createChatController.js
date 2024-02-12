@@ -1,5 +1,6 @@
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const Chat = require('../../models/chatroomModel')
+const User = require('../../models/userModel')
 const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
 const { daysToDieError } = require('../../errors/chatErrors/daysToDieError')
@@ -25,6 +26,9 @@ const createChat = tryCatchWrapper(async (req, res) => {
         is_private: isPrivate,
     })
     newChat.save()
+    let creatorUser = await User.findById(decodedCreatorId)
+    creatorUser.chats.push(newChat._id)
+    creatorUser.save()
     res.status(StatusCodes.CREATED).json({ roomId: newChat._id })
     return
 })
