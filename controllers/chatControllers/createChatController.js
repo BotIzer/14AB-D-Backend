@@ -6,7 +6,7 @@ const { daysToDieError } = require('../../errors/chatErrors/daysToDieError')
 
 const createChat = tryCatchWrapper(async (req, res) => {
     const { name: name, is_ttl: isTtl, time_to_live_days: daysToDie, is_private: isPrivate } = req.body
-    const decodedCreatorId = getCreatorIdFromHeaders(req.headers)
+    const decodedCreatorId = await getCreatorIdFromHeaders(req.headers)
     let expirationDate = null
     if (isTtl) {
         if (daysToDie < 1 && !Number.isInteger(daysToDie)) {

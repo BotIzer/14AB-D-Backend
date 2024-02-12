@@ -23,7 +23,7 @@ const createComment = tryCatchWrapper(async (req, res) => {
     if (text.length > 2000) {
         throw new tooLongCommentError(text.length)
     }
-    const decodedCreatorId = getCreatorIdFromHeaders(req.headers)
+    const decodedCreatorId = await getCreatorIdFromHeaders(req.headers)
     if (!isReply) {
         parentCommentId = null
         sequentialNumber = 0

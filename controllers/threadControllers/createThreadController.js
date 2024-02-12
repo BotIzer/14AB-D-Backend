@@ -7,7 +7,7 @@ const { noForumFoundError }= require('../../errors/forumErrors/forumErrors')
 
 const createThread = tryCatchWrapper(async (req, res) => {
     const { forum_name: forumName, name: name, content: content } = req.body
-    const decodedCreatorId = getCreatorIdFromHeaders(req.headers)
+    const decodedCreatorId = await getCreatorIdFromHeaders(req.headers)
     const forumId = await Forum.getForumIdByName(forumName)
     if (!forumId) {
         throw new noForumFoundError(forumName)

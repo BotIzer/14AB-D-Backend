@@ -8,7 +8,7 @@ const createForum = tryCatchWrapper(async (req, res) => {
     const { forum_name: forumName, banner: banner } = req.body
     if (await Forum.findOne({forum_name: forumName}))
         throw new forumAlreadyExistsError(forumName)
-    const decodedCreatorId = getCreatorIdFromHeaders(req.headers)
+    const decodedCreatorId = await getCreatorIdFromHeaders(req.headers)
     let newForum = new Forum({
         _id: {
             creator_id: decodedCreatorId,
