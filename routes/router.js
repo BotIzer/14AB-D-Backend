@@ -27,7 +27,7 @@ router.route('/user').post(protectPath, getUserDataById)
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/forum/create').post(protectPath, createForum)
 router.route('/thread/create').post(protectPath, createThread)
-router.route('/chat/:chatId').get(getChatDataById)
+router.route('/chat/:chatId').get(protectPath, getChatDataById)
 router.route('/chat/create').post(protectPath, createChat)
 router.route('/comment/createComment').post(protectPath, createComment)
 
