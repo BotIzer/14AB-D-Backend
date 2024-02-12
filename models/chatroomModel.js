@@ -9,6 +9,10 @@ const chatroomSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    is_private: {
+        type: Boolena,
+        required: true,
+    },
     users: [
         {
             user_id: {

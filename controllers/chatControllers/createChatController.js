@@ -5,7 +5,7 @@ const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeade
 const { daysToDieError } = require('../../errors/chatErrors/daysToDieError')
 
 const createChat = tryCatchWrapper(async (req, res) => {
-    const { name: name, is_ttl: isTtl, time_to_live_days: daysToDie } = req.body
+    const { name: name, is_ttl: isTtl, time_to_live_days: daysToDie, is_private: isPrivate } = req.body
     const decodedCreatorId = getCreatorIdFromHeaders(req.headers)
     let expirationDate = null
     if (isTtl) {
@@ -22,6 +22,7 @@ const createChat = tryCatchWrapper(async (req, res) => {
             is_ttl: isTtl,
             expiration: expirationDate,
         },
+        is_private: isPrivate,
     })
     newChat.save()
     res.status(StatusCodes.CREATED).json({ success: true })
