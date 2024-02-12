@@ -25,7 +25,7 @@ const createChat = tryCatchWrapper(async (req, res) => {
         is_private: isPrivate,
     })
     newChat.save()
-    res.status(StatusCodes.CREATED).json({ success: true })
+    res.status(StatusCodes.CREATED).json({ roomId: newChat._id })
     return
 })
 
