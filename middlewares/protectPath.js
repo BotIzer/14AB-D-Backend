@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const noPermissionToUsePathError = require('../errors/userErrors/noPermissionToUsePathError')
+const { noPermissionToUsePathError } = require('../errors/userErrors/userErrors')
 const User = require('../models/userModel')
 const tryCatchWrapper = require('../middlewares/tryCatchWrapper')
 
