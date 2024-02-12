@@ -14,6 +14,7 @@ const createChat = tryCatchWrapper(async (req, res) => {
         other_user_name: otherUserName,
     } = req.body
     //If those 2 users already have the private chat, don't create another one should be implemented!
+    //MEG KÉNE OLDANI 1 CONTROLLERREL AMI 2 FELÉ ÁGAZIK EL, DE AHHOZ NEKEM BELE KELL NYÚLNOM A FORONTENDBE
     const decodedCreatorId = await getCreatorIdFromHeaders(req.headers)
     let expirationDate = setExpirationDate(isTtl, daysToDie)
     let newChat = new Chat({
