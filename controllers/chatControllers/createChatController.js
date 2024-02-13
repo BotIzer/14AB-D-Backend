@@ -3,19 +3,17 @@ const Chat = require('../../models/chatroomModel')
 const User = require('../../models/userModel')
 const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
-const { daysToDieError } = require('../../errors/chatErrors/daysToDieError')
+const { daysToDieError } = require('../../errors/chatErrors/chatErrors')
 
 const createChat = tryCatchWrapper(async (req, res) => {
-    const {
+    const decodedCreatorId = await getCreatorIdFromHeaders(req.headers)
+    let {
         name: name,
         is_ttl: isTtl,
-        time_to_live_days: daysToDie,
+        days_to_die: daysToDie,
         is_private: isPrivate,
         other_user_name: otherUserName,
     } = req.body
-    //If those 2 users already have the private chat, don't create another one should be implemented!
-    //MEG KÉNE OLDANI 1 CONTROLLERREL AMI 2 FELÉ ÁGAZIK EL, DE AHHOZ NEKEM BELE KELL NYÚLNOM A FORONTENDBE
-    const decodedCreatorId = await getCreatorIdFromHeaders(req.headers)
     let expirationDate = setExpirationDate(isTtl, daysToDie)
     let newChat = new Chat({
         name: name,
@@ -27,6 +25,7 @@ const createChat = tryCatchWrapper(async (req, res) => {
         is_private: isPrivate,
     })
     newChat.save()
+
     let creatorUser = await User.findById(decodedCreatorId)
     creatorUser.chats.push(newChat._id)
     creatorUser.save()
