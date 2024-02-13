@@ -3,6 +3,7 @@ const noUserFoundError = require('./noUserFoundError')
 const userIsAlreadyLoggedInError = require('./userIsAlreadyLoggedInError')
 const wrongLoginDataError = require('./wrongLoginDataError')
 const noPermissionToUsePathError = require('./noPermissionToUsePathError')
+const userDoesNotHaveChatsYetError = require('./userDoesNotHaveChatsYetError')
 
 module.exports = {
     userAlreadyExistsError,
@@ -10,4 +11,5 @@ module.exports = {
     userIsAlreadyLoggedInError,
     wrongLoginDataError,
     noPermissionToUsePathError,
+    userDoesNotHaveChatsYetError,
 }
