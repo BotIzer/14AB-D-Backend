@@ -6,7 +6,7 @@ const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeade
 const { daysToDieError } = require('../../errors/chatErrors/chatErrors')
 
 const createChat = tryCatchWrapper(async (req, res) => {
-    const decodedCreatorId = await getCreatorIdFromHeaders(req.headers)
+    const decodedCreatorId = await getCreatorIdFromHeaders(req.headers) /*'65ca57bf7b4f2295c385b4f2'*/
     let {
         name: name,
         is_ttl: isTtl,
@@ -14,16 +14,18 @@ const createChat = tryCatchWrapper(async (req, res) => {
         is_private: isPrivate,
         other_user_name: otherUserName,
     } = req.body
-    let expirationDate = setExpirationDate(isTtl, daysToDie)
+    const expirationDate = await setExpirationDate(isTtl, daysToDie)
     let newChat = new Chat({
         name: name,
         owner: decodedCreatorId,
         time_to_live: {
             is_ttl: isTtl,
-            expiration: expirationDate,
         },
         is_private: isPrivate,
     })
+    if (expirationDate != null) {
+        newChat.time_to_live.expiration = expirationDate
+    }
     newChat.save()
 
     let creatorUser = await User.findById(decodedCreatorId)
@@ -33,13 +35,15 @@ const createChat = tryCatchWrapper(async (req, res) => {
         let otherUser = await User.findOne({ username: otherUserName })
         otherUser.chats.push(newChat._id)
         otherUser.save()
+        newChat.users.push({ user_id: otherUser._id, is_moderator: true })
+        newChat.save()
     }
     res.status(StatusCodes.CREATED).json({ roomId: newChat._id })
     return
 })
 
 const setExpirationDate = tryCatchWrapper((ttl, daysToDie) => {
-    if (ttl) {
+    if (ttl === true) {
         if (daysToDie < 1 && !Number.isInteger(daysToDie)) {
             throw new daysToDieError()
         }

@@ -37,7 +37,7 @@ const chatroomSchema = new mongoose.Schema({
         },
         expiration: {
             type: Date,
-            default: null,
+            default: '2999-01-01',
         },
     },
 })

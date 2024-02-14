@@ -6,10 +6,14 @@ const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeade
 
 const getUsersChats = tryCatchWrapper(async (req, res) => {
     const id = await getCreatorIdFromHeaders(req.headers)
-    const chats = await User.findById(id).populate('chats')
-    if (chats.chats.length === 0) {
+    let chats = await User.findById(id).populate('chats').select('chats -_id')
+    if (!chats) {
         throw new userDoesNotHaveChatsYetError()
     }
+    chats = chats.chats.map((chat) => ({
+        _id: chat._id,
+        name: chat.name,
+    }))
     res.status(StatusCodes.OK).json({ chats })
     return
 })
