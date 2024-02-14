@@ -5,8 +5,8 @@ const { userDoesNotHaveChatsYetError } = require('../../errors/userErrors/userEr
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
 
 const getUsersChats = tryCatchWrapper(async (req, res) => {
-    const id = /*await getCreatorIdFromHeaders(req.headers)*/'65ca57bf7b4f2295c385b4f2' //to sajtostaller chats sould be added!
-    const chats = await User.findById(id).populate('chats').select('chats -_id')
+    const id = await getCreatorIdFromHeaders(req.headers)
+    const chats = await User.findById(id).populate('chats')
     if (chats.chats.length === 0) {
         throw new userDoesNotHaveChatsYetError()
     }
