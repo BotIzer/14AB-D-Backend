@@ -13,6 +13,7 @@ const getUsersChats = tryCatchWrapper(async (req, res) => {
     chats = chats.chats.map((chat) => ({
         _id: chat._id,
         name: chat.name,
+        is_private: chat.is_private,
     }))
     res.status(StatusCodes.OK).json({ chats })
     return

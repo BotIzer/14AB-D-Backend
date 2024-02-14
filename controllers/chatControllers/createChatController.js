@@ -6,7 +6,7 @@ const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeade
 const { daysToDieError } = require('../../errors/chatErrors/chatErrors')
 
 const createChat = tryCatchWrapper(async (req, res) => {
-    const decodedCreatorId = await getCreatorIdFromHeaders(req.headers) /*'65ca57bf7b4f2295c385b4f2'*/
+    const decodedCreatorId = await getCreatorIdFromHeaders(req.headers)
     let {
         name: name,
         is_ttl: isTtl,
