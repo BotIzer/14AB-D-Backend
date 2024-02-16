@@ -6,13 +6,16 @@ const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeade
 
 const privateChat = tryCatchWrapper(async (req, res) => {
     let { friend: friendName, chat_id: chatId } = req.body
-    friendName = 'random'
-    if (chatId) { //van chat elvileg
-        //leellenőriz, hogy tényleg van-e
-        //van
+    chatId = '65ccf605e0f98a044855f299' //with a real id it'll work but for testing purposes I'll use this
+    console.log(friendName)
+    if (chatId) {
+        if (!(await Chat.findById(chatId))) {
+            throw new chatShallBeCreatedError()
+        }
         const id = await getCreatorIdFromHeaders(req.headers)
         const myFriends = (await User.findById(id).select('chats -_id')).chats
-        const friend = await User.findOne({ username: friendName }).select('_id')
+        const friend = await User.findOne({ username: friendName })
+        console.log(friend)
         if (friend) {
             if (myFriends.includes(friend._id)) {
                 //Van közös chat
