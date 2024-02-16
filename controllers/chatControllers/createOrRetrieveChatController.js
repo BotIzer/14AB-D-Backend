@@ -27,7 +27,7 @@ const createOrRetrieveChatController = tryCatchWrapper(async (req, res) => {
             throw new noUserFoundError(friendName)
         }
     }
-    throw new noChatFoundError(chatId)
+    throw new chatShallBeCreatedError()
 })
 
 module.exports = createOrRetrieveChatController
