@@ -13,9 +13,6 @@ const getUsersChats = tryCatchWrapper(async (req, res) => {
     const privateChats = []
     const publicChats = []
 
-
-
-
     for (const element of chats.chats) {
         if (element.is_private) {
             privateChats.push({
