@@ -14,6 +14,7 @@ const createComment = tryCatchWrapper(async (req, res) => {
         parent_comment_id: parentCommentId,
         sequential_number: sequentialNumber,
     } = req.body
+    // roomId = '65cfac68204afe2cd1e6faa6' //just in case
     if (!(await Chatroom.findById(roomId))) {
         throw new noChatFoundError(roomId)
     }
@@ -23,7 +24,7 @@ const createComment = tryCatchWrapper(async (req, res) => {
     if (text.length > 2000) {
         throw new tooLongCommentError(text.length)
     }
-    const decodedCreatorId = await getCreatorIdFromHeaders(req.headers)
+    const decodedCreatorId = await getCreatorIdFromHeaders(req.headers) /*'65ca57bf7b4f2295c385b4f2'*/
     if (!isReply) {
         parentCommentId = null
         sequentialNumber = 0
