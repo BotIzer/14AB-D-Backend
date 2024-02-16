@@ -1,7 +1,7 @@
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const Chat = require('../../models/chatroomModel')
 const User = require('../../models/userModel')
-const { chatShallBeCreatedError } = require('../../errors/chatErrors/chatErrors')
+const { chatShallBeCreatedError, noChatFoundError } = require('../../errors/chatErrors/chatErrors')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
 const { youHaveNoFriendWithThisNameError, noUserFoundError } = require('../../errors/userErrors/userErrors')
 
@@ -27,7 +27,7 @@ const createOrRetrieveChatController = tryCatchWrapper(async (req, res) => {
             throw new noUserFoundError(friendName)
         }
     }
-    return
+    throw new noChatFoundError(chatId)
 })
 
 module.exports = createOrRetrieveChatController
