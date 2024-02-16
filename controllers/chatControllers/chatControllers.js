@@ -1,9 +1,9 @@
-const privateChatController = require('./privateChatController')
+const createOrRetrieveChatController = require('./createOrRetrieveChatController')
 const getChatDataByIdController = require('./getChatDataByIdController')
 const createChatController = require('./createChatController')
 
 module.exports = {
-    privateChat: privateChatController,
+    createOrRetrieveChat: createOrRetrieveChatController,
     getChatDataById: getChatDataByIdController,
     createChat: createChatController,
 }
