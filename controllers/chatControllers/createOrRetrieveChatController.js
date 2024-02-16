@@ -1,7 +1,7 @@
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const Chat = require('../../models/chatroomModel')
 const User = require('../../models/userModel')
-const { chatShallBeCreatedError, noChatFoundError } = require('../../errors/chatErrors/chatErrors')
+const { chatShallBeCreatedError } = require('../../errors/chatErrors/chatErrors')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
 const { youHaveNoFriendWithThisNameError, noUserFoundError } = require('../../errors/userErrors/userErrors')
 
