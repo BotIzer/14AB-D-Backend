@@ -5,7 +5,7 @@ const { chatShallBeCreatedError } = require('../../errors/chatErrors/chatErrors'
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
 const { youHaveNoFriendWithThisNameError, noUserFoundError } = require('../../errors/userErrors/userErrors')
 
-const checkMutualChat = async (req, res, next) => {
+const checkMutualChat = tryCatchWrapper(async (req, res, next) => {
     const { friend: friendName } = req.body
     const myId = await getCreatorIdFromHeaders(req.headers)
     const myFriends = (await User.findById(myId).select('chats -_id')).chats
@@ -37,7 +37,7 @@ const checkMutualChat = async (req, res, next) => {
         req.friendId = friend._id // Attach friend's ID to request object
     }
     next()
-}
+})
 
 const createOrRetrieveChatController = tryCatchWrapper(async (req, res) => {
     let { friend: friendName, chat_id: chatId } = req.body
