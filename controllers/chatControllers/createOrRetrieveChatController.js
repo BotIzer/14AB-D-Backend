@@ -4,6 +4,7 @@ const User = require('../../models/userModel')
 const { chatShallBeCreatedError } = require('../../errors/chatErrors/chatErrors')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
 const { youHaveNoFriendWithThisNameError, noUserFoundError } = require('../../errors/userErrors/userErrors')
+const mongoose = require('mongoose')
 
 const checkMutualChat = tryCatchWrapper(async (req, res, next) => {
     const { friend: friendName } = req.body
@@ -25,8 +26,14 @@ const checkMutualChat = tryCatchWrapper(async (req, res, next) => {
             $match: {
                 is_private: true,
                 $or: [
-                    { owner: myId, users: [friend._id] },
-                    { owner: friend._id, users: [myId] },
+                    {
+                        owner: new mongoose.Types.ObjectId(myId),
+                        users: { $elemMatch: { user_id: new mongoose.Types.ObjectId(friend._id) } },
+                    },
+                    {
+                        owner: new mongoose.Types.ObjectId(friend._id),
+                        users: { $elemMatch: { user_id: new mongoose.Types.ObjectId(myId) } },
+                    },
                 ],
             },
         },
@@ -39,7 +46,7 @@ const checkMutualChat = tryCatchWrapper(async (req, res, next) => {
     next()
 })
 
-const createOrRetrieveChatController = tryCatchWrapper(async (req, res) => {
+const createOrRetrieveChatController = tryCatchWrapper(async (req, res, next) => {
     let { friend: friendName, chat_id: chatId } = req.body
     if (chatId) {
         if (!(await Chat.findById(chatId))) {
@@ -57,13 +64,13 @@ const createOrRetrieveChatController = tryCatchWrapper(async (req, res) => {
         }
 
         // If mutual chat exists, send its information
-        console.log(req.mutualChat)
         if (req.mutualChat) {
             return res.json(req.mutualChat)
         }
     }
     throw new chatShallBeCreatedError()
-    //create a chat
 })
+
+
 
 module.exports = { createOrRetrieveChatController, checkMutualChat }
