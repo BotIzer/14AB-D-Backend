@@ -23,6 +23,7 @@ const checkMutualChat = async (req, res, next) => {
     const mutualChat = await Chat.aggregate([
         {
             $match: {
+                is_private: true,
                 $or: [
                     { owner: myId, users: [friend._id] },
                     { owner: friend._id, users: [myId] },
@@ -58,7 +59,7 @@ const createOrRetrieveChatController = tryCatchWrapper(async (req, res) => {
         // If mutual chat exists, send its information
         console.log(req.mutualChat)
         if (req.mutualChat) {
-            return res.json(req.mutualChat )
+            return res.json(req.mutualChat)
         }
     }
     throw new chatShallBeCreatedError()
