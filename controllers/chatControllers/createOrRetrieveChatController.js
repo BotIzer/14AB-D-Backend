@@ -5,6 +5,7 @@ const { chatShallBeCreatedError } = require('../../errors/chatErrors/chatErrors'
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
 const { youHaveNoFriendWithThisNameError, noUserFoundError } = require('../../errors/userErrors/userErrors')
 const mongoose = require('mongoose')
+const { StatusCodes } = require('http-status-codes')
 
 const checkMutualChat = tryCatchWrapper(async (req, res, next) => {
     const { friend: friendName } = req.body
@@ -65,12 +66,10 @@ const createOrRetrieveChatController = tryCatchWrapper(async (req, res, next) =>
 
         // If mutual chat exists, send its information
         if (req.mutualChat) {
-            return res.json(req.mutualChat)
+            return res.status(StatusCodes.OK).json(req.mutualChat)
         }
     }
     throw new chatShallBeCreatedError()
 })
-
-
 
 module.exports = { createOrRetrieveChatController, checkMutualChat }
