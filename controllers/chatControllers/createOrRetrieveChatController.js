@@ -11,9 +11,9 @@ const checkMutualChat = tryCatchWrapper(async (req, res, next) => {
     const { friend: friendName } = req.body
 
     const myId = await getCreatorIdFromHeaders(req.headers)
-    const myFriends = (await User.findById(myId).select('chats -_id')).chats
+    const myFriends = (await User.findById(myId).select('friends -_id')).friends
     const friend = await User.findOne({ username: friendName })
-    console.log(myFriends) //TODO: itt más az id mint aminek kéne lennie
+
     if (!friend) {
         throw new noUserFoundError(friendName)
     }
@@ -40,39 +40,8 @@ const checkMutualChat = tryCatchWrapper(async (req, res, next) => {
             },
         },
     ])
-    if (mutualChat) {
-        req.mutualChat = mutualChat // Attach mutual chat to request object
-    } else {
-        req.friendId = friend._id // Attach friend's ID to request object
-    }
-    next()
+
+    return res.status(StatusCodes.OK).json(mutualChat)
 })
 
-const createOrRetrieveChatController = tryCatchWrapper(async (req, res, next) => {
-    let { friend: friendName, chat_id: chatId } = req.body
-
-    
-    if (chatId) {
-        if (!(await Chat.findById(chatId))) {
-            throw new chatShallBeCreatedError()
-        }
-        const myId = await getCreatorIdFromHeaders(req.headers)
-        const myFriends = (await User.findById(myId).select('chats -_id')).chats
-        const searchedFriend = await User.findOne({ username: friendName })
-        if (!searchedFriend) {
-            throw new noUserFoundError(friendName)
-        }
-
-        if (!myFriends.includes(searchedFriend._id)) {
-            throw new youHaveNoFriendWithThisNameError(friendName)
-        }
-
-        // If mutual chat exists, send its information
-        if (req.mutualChat) {
-            return res.status(StatusCodes.OK).json(req.mutualChat)
-        }
-    }
-    throw new chatShallBeCreatedError()
-})
-
-module.exports = { createOrRetrieveChatController, checkMutualChat }
+module.exports = { checkMutualChat }
