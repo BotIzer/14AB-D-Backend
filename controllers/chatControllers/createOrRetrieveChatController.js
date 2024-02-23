@@ -41,7 +41,7 @@ const checkMutualChat = tryCatchWrapper(async (req, res, next) => {
         },
     ])
 
-    return res.status(StatusCodes.OK).json(mutualChat)
+    return res.status(StatusCodes.OK).json(mutualChat[0])
 })
 
 module.exports = { checkMutualChat }
