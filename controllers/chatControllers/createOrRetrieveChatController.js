@@ -9,10 +9,11 @@ const { StatusCodes } = require('http-status-codes')
 
 const checkMutualChat = tryCatchWrapper(async (req, res, next) => {
     const { friend: friendName } = req.body
+
     const myId = await getCreatorIdFromHeaders(req.headers)
     const myFriends = (await User.findById(myId).select('chats -_id')).chats
     const friend = await User.findOne({ username: friendName })
-
+    console.log(myFriends) //TODO: itt más az id mint aminek kéne lennie
     if (!friend) {
         throw new noUserFoundError(friendName)
     }
@@ -49,6 +50,8 @@ const checkMutualChat = tryCatchWrapper(async (req, res, next) => {
 
 const createOrRetrieveChatController = tryCatchWrapper(async (req, res, next) => {
     let { friend: friendName, chat_id: chatId } = req.body
+
+    
     if (chatId) {
         if (!(await Chat.findById(chatId))) {
             throw new chatShallBeCreatedError()
