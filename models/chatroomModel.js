@@ -15,6 +15,7 @@ const chatroomSchema = new mongoose.Schema({
     },
     users: [
         {
+            _id: false,
             user_id: {
                 type: mongoose.ObjectId,
                 required: true,

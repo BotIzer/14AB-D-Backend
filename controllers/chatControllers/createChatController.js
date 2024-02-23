@@ -15,7 +15,7 @@ const createChat = tryCatchWrapper(async (req, res) => {
     } = req.body
     const decodedCreatorId = await getCreatorIdFromHeaders(req.headers) /*'65ca57bf7b4f2295c385b4f2'*/
     let otherUser = await User.findOne({ username: otherUserName })
-    if (hasMutualPrivateChat(decodedCreatorId, otherUser._id)) {
+    if (await hasMutualPrivateChat(decodedCreatorId, otherUser._id)) {
         throw new usersAlreadyHaveMutualPrivateChatroomError()
     }
     const expirationDate = await setExpirationDate(isTtl, daysToDie)
@@ -30,10 +30,9 @@ const createChat = tryCatchWrapper(async (req, res) => {
     if (expirationDate != null) {
         newChat.time_to_live.expiration = expirationDate
     }
-    newChat.save()
+    await newChat.save()
 
     let creatorUser = await User.findById(decodedCreatorId)
-    console.log(creatorUser)
     creatorUser.chats.push(newChat._id)
     creatorUser.save()
     if (isPrivate) {
@@ -62,8 +61,6 @@ const hasMutualPrivateChat = tryCatchWrapper(async (decodedCreatorId, otherUserI
     const myChats = (await User.findById(decodedCreatorId).select('chats -_id')).chats
     const otherChats = (await User.findById(otherUserId).select('chats -_id')).chats
 
-    console.log(myChats)
-    console.log(otherChats)
     for (const chatId of myChats) {
         if (otherChats.includes(chatId)) {
             return true
