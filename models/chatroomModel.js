@@ -46,7 +46,7 @@ const chatroomSchema = new mongoose.Schema({
 chatroomSchema.virtual('comments', {
     ref: 'Comment',
     localField: '_id',
-    foreignField: '_id.room',
+    foreignField: '_id.room_id',
     justOne: false,
 })
 
