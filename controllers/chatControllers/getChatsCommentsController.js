@@ -9,7 +9,7 @@ const getChatsComments = tryCatchWrapper(async (req, res) => {
     if (!chat) {
         throw new noChatFoundError(req.params.chatId)
     }
-    const comments = await Comment.find({ '_id.room_id': chat._id })
+    const comments = await Comment.find({ '_id.room_id': chat._id }).select('-_id.creator_id')
     res.status(StatusCodes.OK).json({ comments })
     return
 })
