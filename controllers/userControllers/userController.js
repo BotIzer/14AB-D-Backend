@@ -15,7 +15,7 @@ const getUserIdFromUrl = (params) => {
 }
 
 const getAllUsers = tryCatchWrapper(async (req, res) => {
-    const users = await User.find()
+    const users = await User.find().select('-email -_id')
     if (!users) {
         res.status(StatusCodes.NOT_FOUND).json({ message: 'No user found' })
         return
@@ -47,7 +47,7 @@ const getUserInfoFromToken = tryCatchWrapper(async (token) => {
 
 const getUserProfileByUsername = tryCatchWrapper(async (req, res) => {
     const { username: username } = req.params
-    const user = await User.findOne({ username: username })
+    const user = await User.findOne({ username: username }).select('-email -_id')
     if (!user) throw new noUserFoundError(username)
     res.status(StatusCodes.OK).json({ user })
     return
@@ -55,7 +55,7 @@ const getUserProfileByUsername = tryCatchWrapper(async (req, res) => {
 
 const updateUser = tryCatchWrapper(async (req, res) => {
     const userId = getUserIdFromUrl(req.params)
-    const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions)
+    const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions).select('-email -_id')
     if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })
     return
