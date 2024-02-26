@@ -1,4 +1,8 @@
 const mongoose = require('mongoose')
+const tryCatchWrapper = require('../middlewares/tryCatchWrapper')
+const Comment = require('./commentModel')
+const Chatroom = require('./chatroomModel')
+const User = require('./userModel')
 
 const chatroomSchema = new mongoose.Schema({
     _id: {
