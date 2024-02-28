@@ -43,6 +43,9 @@ const getChatsComments = tryCatchWrapper(async (req, res) => {
                 },
             },
         },
+        {
+            $limit: 5
+        }
     ])
     res.status(StatusCodes.OK).json({ comments })
     return
