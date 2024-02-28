@@ -13,7 +13,9 @@ const noMiddlewareFound = require('./middlewares/noMiddlewareFoundError')
 
 const app = express()
 const server = http.createServer(app)
-const io = socketIo(server)
+const io = socketIo(server, {
+    cors: { origin: process.env.FRONTEND_URL, credentials: true },
+})
 
 app.use(cookieParser())
 app.use(express.json())
