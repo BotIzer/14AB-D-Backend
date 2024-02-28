@@ -48,15 +48,15 @@ const startServer = async () => {
     }
 }
 
-// Start the server
-startServer()
-
 // Socket.IO logic
 io.on('connection', (socket) => {
-    console.log('A user connected')
-
-    // Handle disconnection
+    console.log(`A user connected with socket id: ${socket.id}`)
+    socket.on('message', (data) => {
+        io.emit('message', `${socket.id.substring(0, 5)}: ${data}`)
+    })
     socket.on('disconnect', () => {
         console.log('User disconnected')
     })
 })
+// Start the server
+startServer()
