@@ -39,6 +39,8 @@ const startServer = async () => {
             console.log('Change detected in Comments collection:', change)
             // Emit the change to connected clients
             io.emit('commentChange', change)
+            //TODO: Send comment data!
+            io.emit("message",{message_id: change.fullDocument._id.message_id, text: change.fullDocument.text})
         })
         // Start the server after MongoDB connection is established
         server.listen(port, () => console.log(`Server is listening on port: ${port}...`))
@@ -50,10 +52,12 @@ const startServer = async () => {
 
 // Socket.IO logic
 io.on('connection', (socket) => {
-    console.log(`A user connected with socket id: ${socket.id}`)
-    socket.on('message', (data) => {
-        io.emit('message', `${socket.id.substring(0, 5)}: ${data}`)
-    })
+    // console.log(`A user connected with socket id: ${socket.id}`)
+    // socket.on('message', (data) => {
+    //     console.log(data);
+    //     console.log("MULATÁSI");
+    //     io.emit('message', `${data}`)
+    // })
     socket.on('disconnect', () => {
         console.log('User disconnected')
     })
