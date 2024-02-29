@@ -10,6 +10,7 @@ const Comment = require('./models/commentModel')
 const router = require('./routes/router')
 const errorHandlerMiddleware = require('./middlewares/errorHandler')
 const noMiddlewareFound = require('./middlewares/noMiddlewareFoundError')
+const User = require('./models/userModel')
 
 const app = express()
 const server = http.createServer(app)
@@ -35,11 +36,11 @@ const startServer = async () => {
         // Set up MongoDB change stream for Comments collection
         const commentChangeStream = Comment.watch()
         // Start listening to changes in the Comments collection
-        commentChangeStream.on('change', (change) => {
+        commentChangeStream.on('change', async (change) => {
             // Emit the change to connected clients
             io.emit('commentChange', change)
-            // console.log(createEmitResponse(change))
-            io.emit('message', createEmitResponse(change))
+            // console.log(await createEmitResponse(change))
+            io.emit('message', await createEmitResponse(change))
         })
         // Start the server after MongoDB connection is established
         server.listen(port, () => console.log(`Server is listening on port: ${port}...`))
@@ -58,7 +59,7 @@ io.on('connection', (socket) => {
 // Start the server
 startServer()
 
-const createEmitResponse = (change) => {
+const createEmitResponse = async (change) => {
     return {
         _id: { message_id: change.fullDocument._id.message_id, room_id: change.fullDocument._id.room_id },
         text: change.fullDocument.text,
@@ -67,5 +68,6 @@ const createEmitResponse = (change) => {
         diskiles: change.fullDocument.diskiles,
         emoticons: change.fullDocument.emotions,
         creation_date: change.fullDocument.creation_date,
+        creator_name: (await User.findById(change.fullDocument._id.creator_id).select('username -_id')).username,
     }
 }
