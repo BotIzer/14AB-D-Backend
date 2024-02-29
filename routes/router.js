@@ -28,9 +28,7 @@ const { createComment } = require('../controllers/commentControllers/commentCont
 
 router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)
-router.route('/getUserInfo').get(protectPath, getUserInfoFromToken)
 router.route('/search').post(search)
-router.route('/user').post(protectPath, getUserDataById)
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/forum').post(protectPath, createForum)
 router.route('/thread').post(protectPath, createThread)
