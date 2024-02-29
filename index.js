@@ -36,11 +36,10 @@ const startServer = async () => {
         const commentChangeStream = Comment.watch()
         // Start listening to changes in the Comments collection
         commentChangeStream.on('change', (change) => {
-            console.log('Change detected in Comments collection:', change)
             // Emit the change to connected clients
             io.emit('commentChange', change)
-            //TODO: Send comment data!
-            io.emit("message",{message_id: change.fullDocument._id.message_id, text: change.fullDocument.text})
+            // console.log(createEmitResponse(change))
+            io.emit('message', createEmitResponse(change))
         })
         // Start the server after MongoDB connection is established
         server.listen(port, () => console.log(`Server is listening on port: ${port}...`))
@@ -52,15 +51,21 @@ const startServer = async () => {
 
 // Socket.IO logic
 io.on('connection', (socket) => {
-    // console.log(`A user connected with socket id: ${socket.id}`)
-    // socket.on('message', (data) => {
-    //     console.log(data);
-    //     console.log("MULATÁSI");
-    //     io.emit('message', `${data}`)
-    // })
     socket.on('disconnect', () => {
         console.log('User disconnected')
     })
 })
 // Start the server
 startServer()
+
+const createEmitResponse = (change) => {
+    return {
+        _id: { message_id: change.fullDocument._id.message_id, room_id: change.fullDocument._id.room_id },
+        text: change.fullDocument.text,
+        reply: change.fullDocument.reply,
+        likes: change.fullDocument.likes,
+        diskiles: change.fullDocument.diskiles,
+        emoticons: change.fullDocument.emotions,
+        creation_date: change.fullDocument.creation_date,
+    }
+}
