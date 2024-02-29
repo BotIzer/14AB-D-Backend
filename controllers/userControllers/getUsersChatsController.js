@@ -7,6 +7,8 @@ const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeade
 const getUsersChats = tryCatchWrapper(async (req, res) => {
     const id = await getCreatorIdFromHeaders(req.headers)
     let chats = await User.findById(id).populate('chats').select('chats -_id')
+    const myName = (await User.findById(id)).username
+    console.log(myName);
     if (!chats) {
         throw new userDoesNotHaveChatsYetError()
     }
@@ -19,7 +21,10 @@ const getUsersChats = tryCatchWrapper(async (req, res) => {
                 _id: element._id,
                 name: element.name,
                 is_private: element.is_private,
-                friend_user_name: (await User.findById(element.users[0].user_id)).username,
+                friend_user_name:
+                    (await User.findById(element.users[0].user_id)).username != myName
+                        ? (await User.findById(element.users[0].user_id)).username
+                        : (await User.findById(element.owner)).username,
             })
         } else {
             publicChats.push({
