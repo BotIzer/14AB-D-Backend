@@ -15,7 +15,7 @@ const {
     },
 } = require('../controllers/userControllers/userControllers')
 const protectPath = require('../middlewares/protectPath')
-const { createForum } = require('../controllers/forumControllers/forumControllers')
+const { createForum, getAllThreads } = require('../controllers/forumControllers/forumControllers')
 const search = require('../controllers/searchController/searchController')
 const { createThread } = require('../controllers/threadControllers/threadControllers')
 const {
@@ -41,6 +41,7 @@ router.route('/user').put(protectPath, updateUser).delete(protectPath, deleteUse
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/user/addHobby').post(protectPath, addHobby)
 router.route('/forum').post(protectPath, createForum)
+router.route('/forum/getAllThreads/:forumId').get(getAllThreads)
 router.route('/thread').post(protectPath, createThread)
 router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)
 router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPath, deleteChat)
