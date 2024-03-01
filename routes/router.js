@@ -41,7 +41,7 @@ router.route('/user').put(protectPath, updateUser).delete(protectPath, deleteUse
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/user/addHobby').post(protectPath, addHobby)
 router.route('/forum').post(protectPath, createForum)
-router.route('/forum/getAllThreads/:forumId').get(getAllThreads)
+router.route('/forum/getAllThreads/:forumId').get(getAllThreads) //NOT TESTED!
 router.route('/thread').post(protectPath, createThread)
 router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)
 router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPath, deleteChat)
