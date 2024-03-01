@@ -4,15 +4,15 @@ const threadSchema = new mongoose.Schema({
     _id: {
         forum_id: {
             type: mongoose.ObjectId,
-            required: true
+            required: true,
         },
         creator_id: {
             type: mongoose.ObjectId,
-            required: true
+            required: true,
         },
         thread_id: {
             type: mongoose.ObjectId,
-            auto: true
+            auto: true,
         },
     },
     name: {
@@ -37,6 +37,7 @@ const threadSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    image_array: [String],
 })
 
 module.exports = mongoose.model('Thread', threadSchema, 'Threads')
