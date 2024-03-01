@@ -30,6 +30,7 @@ const {
     deleteFriend,
     makeFriendRequest,
     acceptFriendRequest,
+    addFriendToChat,
 } = require('../controllers/friendControllers/friendControllers')
 
 router.route('/register').post(registerUser)
@@ -40,10 +41,10 @@ router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/forum').post(protectPath, createForum)
 router.route('/thread').post(protectPath, createThread)
 router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)
-router.route('/chat/:chatId').get(protectPath, getChatDataById)
+router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPath, deleteChat)
+router.route('/chat/addFriend/').post(protectPath, addFriendToChat) //NOT TESTED!
 router.route('/createOrRetrieveChat').post(protectPath, checkMutualChat)
 router.route('/chat').post(protectPath, createChat)
-router.route('/chat/:chatId').delete(protectPath, deleteChat)
 router.route('/comment').post(protectPath, createComment)
 router.route('/chats').get(protectPath, getUsersChats)
 router.route('/friends').get(protectPath, getFriends)
