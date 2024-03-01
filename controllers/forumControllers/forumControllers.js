@@ -23,13 +23,7 @@ const createForum = tryCatchWrapper(async (req, res) => {
 })
 
 const getAllThreads = tryCatchWrapper(async (req, res) => {
-     const threads = await Thread.aggregate([
-         {
-             $match: {
-                 '_id.forum_id': mongoose.Types.ObjectId(req.params.forumId),
-             },
-         },
-     ])
+     const threads = await Thread.find({'_id.forum_id': req.params.forumId})
     if (!threads) {
         res.status(StatusCodes.NOT_FOUND).json({
             message: 'No threads found',
