@@ -3,6 +3,7 @@ const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { noUserFoundError } = require('../../errors/userErrors/userErrors')
 const { StatusCodes } = require('http-status-codes')
 const jwt = require('jsonwebtoken')
+const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
 
 const updaterOptions = {
     new: true,
@@ -54,7 +55,7 @@ const getUserProfileByUsername = tryCatchWrapper(async (req, res) => {
 })
 
 const updateUser = tryCatchWrapper(async (req, res) => {
-    const userId = getUserIdFromUrl(req.params)
+    const userId = getCreatorIdFromHeaders(req.headers)
     const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions).select('-email -_id')
     if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })
@@ -62,7 +63,7 @@ const updateUser = tryCatchWrapper(async (req, res) => {
 })
 
 const deleteUser = tryCatchWrapper(async (req, res) => {
-    const userId = getUserIdFromUrl(req.params)
+    const userId = getCreatorIdFromHeaders(req.headers)
     const user = await User.findByIdAndDelete(userId)
     if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })
