@@ -1,0 +1,65 @@
+const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
+const User = require('../../models/userModel')
+const { StatusCodes } = require('http-status-codes')
+const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
+
+const getFriends = tryCatchWrapper(async (req, res) => {
+    const id = await getCreatorIdFromHeaders(req.headers) /*'65ca57bf7b4f2295c385b4f2'*/
+    const friendIds = await User.findById(id).select('friends -_id')
+    if (!friendIds) {
+        res.status(StatusCodes.NOT_FOUND).json({ message: 'No friends found' })
+    }
+    const friends = []
+    for (const id of friendIds.friends) {
+        const friend = await User.findById(id)
+        friends.push({
+            username: friend.username,
+        })
+    }
+    res.status(StatusCodes.OK).json( friends )
+    return
+})
+
+const deleteFriend = tryCatchWrapper(async (req, res) => {
+    const id = await getCreatorIdFromHeaders(req.headers)
+    const friend = await User.findOne({ username: req.params.friendName })
+    if (!friend) {
+        res.status(StatusCodes.NOT_FOUND).json({ message: 'No friend found!' })
+    }
+    const deletersProfile = await User.findById(id)
+    deletersProfile.friends.pull(friend._id)
+    await deletersProfile.save()
+    friend.friends.pull(id)
+    await friend.save()
+    res.status(StatusCodes.OK).json({ message: 'Friend deleted' })
+    return
+})
+
+const makeFriendRequest = tryCatchWrapper(async (req, res) => {
+    const id = await getCreatorIdFromHeaders(req.headers)
+    const sender = await User.findById(id)
+    const user = await User.findOne({ username: req.params.friendName })
+    if (!user) {
+        res.status(StatusCodes.NOT_FOUND).json({ message: 'No user found to send friend request to!' })
+    }
+    user.friend_requests.push(sender.username)
+    await user.save()
+    res.status(StatusCodes.OK).json({ message: 'Friend request sent' })
+    return
+})
+
+const acceptFriendRequest = tryCatchWrapper(async (req, res) => {
+    const id = await getCreatorIdFromHeaders(req.headers)
+    const accepter = await User.findById(id)
+    const friend = await User.findOne({ username: req.params.requestCreatorName })
+
+    accepter.friends.push(friend._id)
+    accepter.friend_requests.pull(req.params.requestCreatorName)
+    await accepter.save()
+    friend.friends.push(accepter._id)
+    await friend.save()
+    res.status(StatusCodes.OK).json({ message: 'Friend request accepted' })
+    return
+})
+
+module.exports = { getFriends, deleteFriend, makeFriendRequest, acceptFriendRequest }

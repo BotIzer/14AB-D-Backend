@@ -57,6 +57,7 @@ const userSchema = new mongoose.Schema({
             'Strong password is required! (Min. 8 characters long, contains uppercase and lowercase letters, spec. character and numerals)',
         ],
     },
+    friend_requests: [String],
     created_at: {
         type: Date,
         default: Date.now,

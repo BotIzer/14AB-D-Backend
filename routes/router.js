@@ -25,6 +25,12 @@ const {
     deleteChat,
 } = require('../controllers/chatControllers/chatControllers')
 const { createComment } = require('../controllers/commentControllers/commentControllers')
+const {
+    getFriends,
+    deleteFriend,
+    makeFriendRequest,
+    acceptFriendRequest,
+} = require('../controllers/friendControllers/friendControllers')
 
 router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)
@@ -40,5 +46,7 @@ router.route('/chat').post(protectPath, createChat)
 router.route('/chat/:chatId').delete(protectPath, deleteChat)
 router.route('/comment').post(protectPath, createComment)
 router.route('/chats').get(protectPath, getUsersChats)
-
+router.route('/friends').get(protectPath, getFriends)
+router.route('/friend/:friendName').post(protectPath, makeFriendRequest).delete(protectPath, deleteFriend)
+router.route('/acceptFriendRequest/:requestCreatorName').post(protectPath, acceptFriendRequest)
 module.exports = router
