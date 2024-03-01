@@ -66,6 +66,7 @@ const userSchema = new mongoose.Schema({
         type: Map,
         of: String,
     },
+    hobbies: [String],
     reset_password_token: String,
     reset_password_expire: Date,
 })

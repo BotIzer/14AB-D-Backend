@@ -70,6 +70,19 @@ const deleteUser = tryCatchWrapper(async (req, res) => {
     return
 })
 
+const addHobby = tryCatchWrapper(async (req, res) => {
+    const userId = getCreatorIdFromHeaders(req.headers)
+    const user = await User.findById(userId)
+    if (!user) throw new noUserFoundError(userId)
+    const hobbies = req.body.hobbies.split(' ')
+    for (const hobby of hobbies) {
+        user.hobbies.push(hobby)
+    }
+    await user.save()
+    res.status(StatusCodes.OK).json({ message: 'Hobby or hobbies added' })
+    return
+})
+
 module.exports = {
     getAllUsers,
     getUserDataById,
@@ -77,4 +90,5 @@ module.exports = {
     deleteUser,
     getUserInfoFromToken,
     getUserProfileByUsername,
+    addHobby,
 }

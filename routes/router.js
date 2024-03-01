@@ -11,6 +11,7 @@ const {
         deleteUser,
         getUserInfoFromToken,
         getUserProfileByUsername,
+        addHobby,
     },
 } = require('../controllers/userControllers/userControllers')
 const protectPath = require('../middlewares/protectPath')
@@ -38,6 +39,7 @@ router.route('/login').post(loginUser)
 router.route('/search').post(search)
 router.route('/user').put(protectPath, updateUser).delete(protectPath, deleteUser)
 router.route('/user/:username').get(getUserProfileByUsername)
+router.route('/user/addHobby').post(protectPath, addHobby)
 router.route('/forum').post(protectPath, createForum)
 router.route('/thread').post(protectPath, createThread)
 router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)
