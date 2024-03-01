@@ -1,13 +1,14 @@
 const mongoose = require('mongoose')
+const cannotConnectToDatabaseError = require('../errors/databaseErrors/cannotConnectToDatabaseError')
 
-const connectDB = (url) => {
+const connectDB = async (url) => {
     try {
-        mongoose.connect(url)
-        console.log("Database is connected!");
+        await mongoose.connect(url)
+        console.log('Database is connected!')
     } catch (error) {
-        console.log(error);
-        
+        console.error(error)
+        throw new cannotConnectToDatabaseError(error)
     }
-    
 }
+
 module.exports = connectDB

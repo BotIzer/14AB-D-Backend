@@ -1,8 +1,9 @@
 const User = require('../../models/userModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
-const noUserFoundError = require('../../errors/userErrors/userErrors')
+const { noUserFoundError } = require('../../errors/userErrors/userErrors')
 const { StatusCodes } = require('http-status-codes')
 const jwt = require('jsonwebtoken')
+const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
 
 const updaterOptions = {
     new: true,
@@ -15,25 +16,26 @@ const getUserIdFromUrl = (params) => {
 }
 
 const getAllUsers = tryCatchWrapper(async (req, res) => {
-    const users = await User.find()
+    const users = await User.find().select('-email -_id')
     if (!users) {
-        throw new noUserFoundError(`User already exists with this email: ${req.body.email}`)
+        res.status(StatusCodes.NOT_FOUND).json({ message: 'No user found' })
+        return
     }
     res.status(StatusCodes.OK).json({ users })
+    return
 })
 
 const getUserDataById = tryCatchWrapper(async (req, res) => {
     const user = req.user
-    if (!user) throw new noUserFoundError(`No user found with id: ${userId}`)
+    if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })
 })
 
 const getUserInfoFromToken = tryCatchWrapper(async (token) => {
     const userId = jwt.verify(token, process.env.JWT_SECRET).id
     const userInformation = await User.findById(userId)
-    if (!userInformation) throw new noUserFoundError('No user found')
+    if (!userInformation) throw new noUserFoundError(userId)
     const userInfoObject = {
-        email: userInformation.email,
         profile_image: userInformation.profile_image,
         custom_ui: userInformation.custom_ui,
         roles: userInformation.roles,
@@ -45,24 +47,27 @@ const getUserInfoFromToken = tryCatchWrapper(async (token) => {
 })
 
 const getUserProfileByUsername = tryCatchWrapper(async (req, res) => {
-    const { username: username } = params
-    const user = await User.findOne({ username: username })
-    if (!user) throw new noUserFoundError(`No user found with username: ${username}`)
+    const { username: username } = req.params
+    const user = await User.findOne({ username: username }).select('-email -_id')
+    if (!user) throw new noUserFoundError(username)
     res.status(StatusCodes.OK).json({ user })
+    return
 })
 
 const updateUser = tryCatchWrapper(async (req, res) => {
-    const userId = getUserIdFromUrl(req.params)
-    const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions)
-    if (!user) throw new noUserFoundError(`No user found with id: ${userId}`)
+    const userId = getCreatorIdFromHeaders(req.headers)
+    const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions).select('-email -_id')
+    if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })
+    return
 })
 
 const deleteUser = tryCatchWrapper(async (req, res) => {
-    const userId = getUserIdFromUrl(req.params)
+    const userId = getCreatorIdFromHeaders(req.headers)
     const user = await User.findByIdAndDelete(userId)
-    if (!user) throw new noUserFoundError(`No user found with id: ${userId}`)
+    if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })
+    return
 })
 
 module.exports = {

@@ -1,6 +1,5 @@
 const Forum = require('../../models/forumModel')
 const User = require('../../models/userModel')
-const mongoose = require('mongoose')
 const { StatusCodes } = require('http-status-codes')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 
@@ -19,7 +18,7 @@ const search = tryCatchWrapper(async (req, res) => {
             username: { $regex: searchKeyword, $options: 'i' },
         })
             .limit(5)
-            .select('username')
+            .select('username -_id')
     )
     res.status(StatusCodes.OK).json(items)
     return

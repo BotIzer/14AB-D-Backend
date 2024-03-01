@@ -2,24 +2,34 @@ const mongoose = require('mongoose')
 
 const commentSchema = new mongoose.Schema({
     _id: {
-        room: {
-            type: ObjectId,
+        room_id: {
+            type: mongoose.ObjectId,
+            ref: 'Chatroom',
+            required: true,
         },
-        user: {
-            type: ObjectId,
+        creator_id: {
+            type: mongoose.ObjectId,
+            required: true,
         },
-        message: {
-            type: ObjectId,
+        message_id: {
+            type: mongoose.ObjectId,
+            auto: true,
         },
     },
 
     text: {
         type: String,
         maxlength: [2000, 'A comment cannot be longer than 2000 characters!'],
+        required: true,
     },
-    reply_id: {
-        parent_comment: {
-            type: ObjectId,
+    reply: {
+        is_reply: {
+            type: Boolean,
+            default: false,
+        },
+        parent_comment_id: {
+            type: mongoose.ObjectId,
+            default: null,
         },
         sequential_number: {
             type: Number,
@@ -42,4 +52,4 @@ const commentSchema = new mongoose.Schema({
     emoticons: [String],
 })
 
-module.exports = mongoose.model('Comment', commentSchema)
+module.exports = mongoose.model('Comment', commentSchema, 'Comments')

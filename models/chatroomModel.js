@@ -1,15 +1,27 @@
 const mongoose = require('mongoose')
+const tryCatchWrapper = require('../middlewares/tryCatchWrapper')
+const Comment = require('./commentModel')
+const Chatroom = require('./chatroomModel')
+const User = require('./userModel')
 
 const chatroomSchema = new mongoose.Schema({
     _id: {
-        type: ObjectId,
+        type: mongoose.ObjectId,
+        auto: true,
+    },
+    name: {
+        type: String,
         required: true,
-        unique: true,
+    },
+    is_private: {
+        type: Boolean,
+        required: true,
     },
     users: [
         {
-            id: {
-                type: ObjectId,
+            _id: false,
+            user_id: {
+                type: mongoose.ObjectId,
                 required: true,
             },
             is_moderator: {
@@ -18,16 +30,28 @@ const chatroomSchema = new mongoose.Schema({
             },
         },
     ],
-
     common_topics: [String],
     owner: {
-        type: ObjectId,
+        type: mongoose.ObjectId,
         required: true,
     },
     time_to_live: {
-        type: Number,
-        required: true,
+        is_ttl: {
+            type: Boolean,
+            required: true,
+        },
+        expiration: {
+            type: Date,
+            default: '2999-01-01',
+        },
     },
 })
 
-module.exports = mongoose.model('Chatroom', chatroomSchema)
+chatroomSchema.virtual('comments', {
+    ref: 'Comment',
+    localField: '_id',
+    foreignField: '_id.room_id',
+    justOne: false,
+})
+
+module.exports = mongoose.model('Chatroom', chatroomSchema, 'Chatrooms')
