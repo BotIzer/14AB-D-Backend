@@ -21,6 +21,7 @@ const {
     getAllThreads,
     getAllForums,
     searchForumByTag,
+    deleteForum,
 } = require('../controllers/forumControllers/forumControllers')
 const search = require('../controllers/searchController/searchController')
 const { createThread } = require('../controllers/threadControllers/threadControllers')
@@ -47,7 +48,7 @@ router.route('/user').put(protectPath, updateUser).delete(protectPath, deleteUse
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/user/addHobby').post(protectPath, addHobby)
 router.route('/user/friendRequests').get(protectPath, getUserRequests) //NOT TESTED!
-router.route('/forum').get(getAllForums).post(protectPath, createForum)
+router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(protectPath, deleteForum) //DELETEFORUM NOT TESTED
 router.route('/forum/getAllThreads/:forumId').get(getAllThreads)
 router.route('/forum/getForumsByTag/:tag').get(searchForumByTag)
 router.route('/thread').post(protectPath, createThread)

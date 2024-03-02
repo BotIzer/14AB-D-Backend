@@ -58,4 +58,26 @@ const searchForumByTag = tryCatchWrapper(async (req, res) => {
     return
 })
 
-module.exports = { createForum, getAllThreads, getAllForums, searchForumByTag }
+const deleteForum = tryCatchWrapper(async (req, res) => {
+    const forum = await Forum.findOne({ forum_name: req.params.forumName })
+    if (!forum) {
+        res.status(StatusCodes.NOT_FOUND).json({
+            message: 'No forum found',
+        })
+        return
+    }
+    const id = await getCreatorIdFromHeaders(req.headers)
+    if (id!== forum._id.creator_id) {
+        res.status(StatusCodes.UNAUTHORIZED).json({
+            message: 'You are not authorized to delete this forum',
+        })
+        return
+    }
+    await Forum.findByIdAndDelete(forum._id)
+    res.status(StatusCodes.OK).json({
+        message: 'Forum deleted',
+    })
+    return
+})
+
+module.exports = { createForum, getAllThreads, getAllForums, searchForumByTag, deleteForum }
