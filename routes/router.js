@@ -24,7 +24,7 @@ const {
     deleteForum,
 } = require('../controllers/forumControllers/forumControllers')
 const search = require('../controllers/searchController/searchController')
-const { createThread } = require('../controllers/threadControllers/threadControllers')
+const { createThread, deleteThreadConroller } = require('../controllers/threadControllers/threadControllers')
 const {
     getChatDataById,
     createChat,
@@ -52,6 +52,7 @@ router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(p
 router.route('/forum/getAllThreads/:forumId').get(getAllThreads)
 router.route('/forum/getForumsByTag/:tag').get(searchForumByTag)
 router.route('/thread').post(protectPath, createThread)
+router.route('/thread/:threadId').delete(protectPath, deleteThreadConroller) //NOT TESTED
 router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)
 router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPath, deleteChat)
 router.route('/chat/addFriend/').post(protectPath, addFriendToChat) //NOT TESTED!
