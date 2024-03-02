@@ -65,8 +65,11 @@ const updateUser = tryCatchWrapper(async (req, res) => {
 const deleteUser = tryCatchWrapper(async (req, res) => {
     const userId = getCreatorIdFromHeaders(req.headers)
     const user = await User.findByIdAndDelete(userId)
-    if (!user) throw new noUserFoundError(userId)
-    res.status(StatusCodes.OK).json({ user })
+    if (!user.validPassword(user, req.headers.password)) {
+        res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Wrong password' })
+    }
+    await User.deleteOne({ _id: userId })
+    res.status(StatusCodes.OK).json({ message: 'User deleted successfully' })
     return
 })
 
