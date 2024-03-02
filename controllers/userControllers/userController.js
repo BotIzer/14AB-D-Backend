@@ -83,6 +83,15 @@ const addHobby = tryCatchWrapper(async (req, res) => {
     return
 })
 
+const getUserRequests = tryCatchWrapper(async (req, res) => {
+    const userId = getCreatorIdFromHeaders(req.headers)
+    const user = await User.findById(userId)
+    if (!user) throw new noUserFoundError(userId)
+    const requests = user.friendRequests
+    res.status(StatusCodes.OK).json({ requests })
+    return
+})
+
 module.exports = {
     getAllUsers,
     getUserDataById,
@@ -91,4 +100,5 @@ module.exports = {
     getUserInfoFromToken,
     getUserProfileByUsername,
     addHobby,
+    getUserRequests,
 }
