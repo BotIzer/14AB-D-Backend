@@ -63,12 +63,25 @@ const updateUser = tryCatchWrapper(async (req, res) => {
 })
 
 const deleteUser = tryCatchWrapper(async (req, res) => {
-    const userId = getCreatorIdFromHeaders(req.headers)
-    const user = await User.findByIdAndDelete(userId)
+    const userId = /*getCreatorIdFromHeaders(req.headers)*/ '65e349dc216708c90bcbe311'
+    const user = await User.findById(userId)
+    if (!user) throw new noUserFoundError(userId)
     if (!user.validPassword(user, req.headers.password)) {
         res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Wrong password' })
+        return
     }
-    await User.deleteOne({ _id: userId })
+    const deletedUsername =
+        'deletedUser_' + ((await User.find({ username: { $regex: `^deletedUser`, $options: 'i' } })).length + 1)
+    user.username = deletedUsername
+    user.generateHash(generateRandomString(10) + 'Pass12345%!')
+    user.full_name = 'Deleted User'
+    user.profile_image = ''
+    user.custom_ui = false
+    user.email = deletedUsername + '@' + deletedUsername + '.com'
+    user.friend_requests = []
+    user.contacts = []
+    user.hobbies = []
+    await user.save()
     res.status(StatusCodes.OK).json({ message: 'User deleted successfully' })
     return
 })
@@ -94,6 +107,18 @@ const getUserRequests = tryCatchWrapper(async (req, res) => {
     res.status(StatusCodes.OK).json({ requests })
     return
 })
+
+function generateRandomString(length) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()'
+    const specialChar = chars[Math.floor(Math.random() * (chars.length - 10)) + 52] // Choose a special character
+    let password = ''
+    for (let i = 0; i < length - 1; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length))
+    }
+    password += specialChar // Add the special character
+    return password
+}
+
 
 module.exports = {
     getAllUsers,
