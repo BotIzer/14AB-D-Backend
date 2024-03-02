@@ -8,6 +8,9 @@ const registerUser = tryCatchWrapper(async (req, res) => {
     if (req.cookies['token']) {
         throw new userIsAlreadyLoggedInError()
     }
+    if (req.body.username.split('_')[0] === 'deletedUser') {
+        res.status(StatusCodes.CONFLICT).json({ message: 'You cannot register with deletedUser username' })
+    }
     if (await User.findOne({ username: req.body.username })) {
         throw new userAlreadyExistsError(req.body.username)
     }
