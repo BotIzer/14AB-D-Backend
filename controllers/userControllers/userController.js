@@ -63,7 +63,7 @@ const updateUser = tryCatchWrapper(async (req, res) => {
 })
 
 const deleteUser = tryCatchWrapper(async (req, res) => {
-    const userId = /*getCreatorIdFromHeaders(req.headers)*/ '65e349dc216708c90bcbe311'
+    const userId = getCreatorIdFromHeaders(req.headers)
     const user = await User.findById(userId)
     if (!user) throw new noUserFoundError(userId)
     if (!user.validPassword(user, req.headers.password)) {
