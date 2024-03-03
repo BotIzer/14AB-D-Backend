@@ -49,7 +49,7 @@ router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/user/addHobby').post(protectPath, addHobby)
 router.route('/user/friendRequests').get(protectPath, getUserRequests) //NOT TESTED!
 router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(protectPath, deleteForum) //DELETEFORUM NOT TESTED
-router.route('/forum/getAllThreads/:forumId').get(getAllThreads)
+router.route('/forum/getAllThreads/:forumId').get(checkWetherBannedFromForum, getAllThreads)
 router.route('/forum/getForumsByTag/:tag').get(searchForumByTag)
 router.route('/thread').post(protectPath, createThread)
 router.route('/thread/:threadId').delete(protectPath, deleteThreadConroller) //NOT TESTED
