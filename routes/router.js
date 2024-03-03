@@ -16,12 +16,15 @@ const {
     },
 } = require('../controllers/userControllers/userControllers')
 const protectPath = require('../middlewares/protectPath')
+const checkWetherBannedFromForum = require('../middlewares/checkWetherBannedFromForum')
 const {
     createForum,
     getAllThreads,
     getAllForums,
     searchForumByTag,
     deleteForum,
+    banUserFromForum,
+    unbanUserFromForum,
 } = require('../controllers/forumControllers/forumControllers')
 const search = require('../controllers/searchController/searchController')
 const { createThread, deleteThreadConroller } = require('../controllers/threadControllers/threadControllers')
@@ -51,6 +54,7 @@ router.route('/user/friendRequests').get(protectPath, getUserRequests) //NOT TES
 router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(protectPath, deleteForum) //DELETEFORUM NOT TESTED
 router.route('/forum/getAllThreads/:forumId').get(checkWetherBannedFromForum, getAllThreads)
 router.route('/forum/getForumsByTag/:tag').get(searchForumByTag)
+router.route('/forum/ban/').post(protectPath, banUserFromForum).put(protectPath, unbanUserFromForum) //NOT TESTED
 router.route('/thread').post(protectPath, createThread)
 router.route('/thread/:threadId').delete(protectPath, deleteThreadConroller) //NOT TESTED
 router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)
