@@ -90,7 +90,7 @@ const addHobby = tryCatchWrapper(async (req, res) => {
     const userId = getCreatorIdFromHeaders(req.headers)
     const user = await User.findById(userId)
     if (!user) throw new noUserFoundError(userId)
-    const hobbies = req.body.hobbies.split(' ')
+    const hobbies = req.body.hobbies
     for (const hobby of hobbies) {
         user.hobbies.push(hobby)
     }
