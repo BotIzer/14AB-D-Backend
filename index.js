@@ -12,6 +12,7 @@ const errorHandlerMiddleware = require('./middlewares/errorHandler')
 const noMiddlewareFound = require('./middlewares/noMiddlewareFoundError')
 const User = require('./models/userModel')
 const mongoSanitize = require('express-mongo-sanitize')
+const helmet = require('helmet')
 
 const app = express()
 const server = http.createServer(app)
@@ -24,6 +25,9 @@ app.use(express.json())
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }))
 app.use(express.urlencoded({ extended: true }))
 app.use(mongoSanitize())
+app.use(helmet({
+    crossOriginResourcePolicy: false,
+}))
 app.use(morgan('dev'))
 app.use('/', router)
 app.use(noMiddlewareFound)
