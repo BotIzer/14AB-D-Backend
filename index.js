@@ -14,6 +14,8 @@ const User = require('./models/userModel')
 const mongoSanitize = require('express-mongo-sanitize')
 const helmet = require('helmet')
 const xss = require('xss-clean')
+const rateLimit = require('express-rate-limit')
+const hpp = require('hpp')
 
 const app = express()
 const server = http.createServer(app)
@@ -30,6 +32,12 @@ app.use(xss())
 app.use(helmet({
     crossOriginResourcePolicy: false,
 }))
+const limiter = rateLimit({
+    windowMs: 1000,         // 1000 ms = 1 second
+    max: 100,
+})
+app.use(limiter)
+app.use(hpp())
 app.use(morgan('dev'))
 app.use('/', router)
 app.use(noMiddlewareFound)
