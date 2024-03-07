@@ -103,7 +103,7 @@ const getUserRequests = tryCatchWrapper(async (req, res) => {
     const userId = await getCreatorIdFromHeaders(req.headers)
     const user = await User.findById(userId)
     if (!user) throw new noUserFoundError(userId)
-    const requests = user.friendRequests
+    const requests = user.friend_requests
     res.status(StatusCodes.OK).json({ requests })
     return
 })
