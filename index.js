@@ -16,6 +16,8 @@ const helmet = require('helmet')
 const xss = require('xss-clean')
 const rateLimit = require('express-rate-limit')
 const hpp = require('hpp')
+const swaggerUi = require('swagger-ui-express')
+const swaggerOutput = require('./swagger_output.json')
 
 const app = express()
 const server = http.createServer(app)
@@ -40,11 +42,11 @@ app.use(limiter)
 app.use(hpp())
 app.use(morgan('dev'))
 app.use('/', router)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerOutput))
 app.use(noMiddlewareFound)
 app.use(errorHandlerMiddleware)
 
 const port = process.env.PORT || 3000
-
 const startServer = async () => {
     try {
         await connectDB(process.env.DB)
