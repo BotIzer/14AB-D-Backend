@@ -44,7 +44,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "User registered successfully",
                         "content": {
                             "application/json": {
@@ -134,10 +134,97 @@
         },
         "/login": {
             "post": {
-                "description": "",
+                "description": "Login user with email and password",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "sanyi@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "StrongPassword1234!"
+                                    }
+                                },
+                                "required": ["email", "password"]
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "User logged in successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "userInfo": {
+                                            "type": "object",
+                                            "properties": {
+                                                "username": {
+                                                    "type": "string",
+                                                    "example": "pista"
+                                                },
+                                                "full_name": {
+                                                    "type": "string",
+                                                    "example": "Kiss Pista"
+                                                },
+                                                "profile_image": {
+                                                    "type": "string",
+                                                    "example": "https://i.imgur.com/pLh571N.png"
+                                                },
+                                                "custom_ui": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "roles": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "user"
+                                                    }
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-02-12T17:39:11.060+00:00"
+                                                }
+                                            }
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Username or password is wrong"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
