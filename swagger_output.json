@@ -231,10 +231,66 @@
         },
         "/search": {
             "post": {
-                "description": "",
+                "description": "Search after forums and users",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "keyword": {
+                                        "type": "string",
+                                        "example": "pista",
+                                        "minLength": 1
+                                    }
+                                },
+                                "required": ["keyword"]
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "Returned search results, can be empty array",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "forums_array": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "forum_name": {
+                                                        "type": "string",
+                                                        "example": "Motorsports and everything"
+                                                    },
+                                                    "banner": {
+                                                        "type": "string",
+                                                        "example": "cars"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "users_array": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "username": {
+                                                        "type": "string",
+                                                        "example": "pista"
+                                                    }
+                    
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
