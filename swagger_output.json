@@ -25,22 +25,20 @@
                                     "username": {
                                         "type": "string",
                                         "example": "sanyi",
-                                        "minlength": 2,
-                                        "maxlength": 20,
-                                        "required": true
+                                        "minLength": 2,
+                                        "maxLength": 20
                                     },
                                     "email": {
                                         "type": "string",
-                                        "example": "sanyi@gmail.com",
-                                        "required": true
+                                        "example": "sanyi@gmail.com"
                                     },
                                     "password": {
                                         "type": "string",
                                         "example": "RandomPassword1234!",
-                                        "minlength": 8,
-                                        "required": true
+                                        "minLength": 8
                                     }
-                                }
+                                },
+                                "required": ["username", "email", "password"]
                             }
                         }
                     }
@@ -84,8 +82,9 @@
                                                     }
                                                 },
                                                 "created_at": {
-                                                    "type": "Date",
-                                                    "example": "2020-01-20T17:30:13.225Z"
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-02-12T17:39:11.060+00:00"
                                                 }
                                             }
                                         },
