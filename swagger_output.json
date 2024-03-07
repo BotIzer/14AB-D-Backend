@@ -1,290 +1,369 @@
 {
-  "openapi": "3.0.0",
-  "info": {
-    "version": "v1.0.0",
-    "title": "Swagger Demo Project",
-    "description": "Implementation of Swagger with TypeScript"
-  },
-  "servers": [
-    {
-      "url": "http://localhost:3000",
-      "description": ""
+    "openapi": "3.0.0",
+    "info": {
+        "version": "v1.0.0",
+        "title": "Swagger Demo Project",
+        "description": "Implementation of Swagger with TypeScript"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000",
+            "description": ""
+        }
+    ],
+    "paths": {
+        "/register": {
+            "post": {
+                "description": "Register user with username, email and strong password",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "sanyi",
+                                        "minlength": 2,
+                                        "maxlength": 20,
+                                        "required": true
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "sanyi@gmail.com",
+                                        "required": true
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "alma1234",
+                                        "minlength": 8,
+                                        "required": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "userInfo": {
+                                            "type": "object",
+                                            "properties": {
+                                                "username": {
+                                                    "type": "string",
+                                                    "example": "pista"
+                                                },
+                                                "full_name": {
+                                                    "type": "string",
+                                                    "example": "Kiss Pista"
+                                                },
+                                                "profile_image": {
+                                                    "type": "string",
+                                                    "example": "https://i.imgur.com/pLh571N.png"
+                                                },
+                                                "custom_ui": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "roles": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "user"
+                                                    }
+                                                },
+                                                "created_at": {
+                                                    "type": "Date",
+                                                    "example": "2020-01-20T17:30:13.225Z"
+                                                }
+                                            }
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "description": "",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/search": {
+            "post": {
+                "description": "",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/user/{username}": {
+            "get": {
+                "description": "",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/user/addHobby": {
+            "post": {
+                "description": "",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/forum/getAllThreads/{forumId}": {
+            "get": {
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "forumId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/forum/getForumsByTag/{tag}": {
+            "get": {
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "tag",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/thread": {
+            "post": {
+                "description": "",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/chat/{chatId}/comments": {
+            "get": {
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "chatId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/chat/{chatId}": {
+            "get": {
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "chatId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "chatId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/createOrRetrieveChat": {
+            "post": {
+                "description": "",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/chat": {
+            "post": {
+                "description": "",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/comment": {
+            "post": {
+                "description": "",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/chats": {
+            "get": {
+                "description": "",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/friends": {
+            "get": {
+                "description": "",
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/friend/{friendName}": {
+            "post": {
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "friendName",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "friendName",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/acceptFriendRequest/{requestCreatorName}": {
+            "post": {
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "requestCreatorName",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
     }
-  ],
-  "paths": {
-    "/register": {
-      "post": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/login": {
-      "post": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/search": {
-      "post": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/user/{username}": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/user/addHobby": {
-      "post": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/forum/getAllThreads/{forumId}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "forumId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/forum/getForumsByTag/{tag}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "tag",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/thread": {
-      "post": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/chat/{chatId}/comments": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "chatId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/chat/{chatId}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "chatId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "chatId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/createOrRetrieveChat": {
-      "post": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/chat": {
-      "post": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/comment": {
-      "post": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/chats": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/friends": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/friend/{friendName}": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "friendName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "friendName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/acceptFriendRequest/{requestCreatorName}": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "requestCreatorName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
-      }
-    }
-  }
 }
