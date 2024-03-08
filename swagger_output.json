@@ -795,13 +795,34 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /thread"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
         "/chat/{chatId}/comments": {
             "get": {
-                "description": "",
+                "description": "Returns the chats comments by chatroom id",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "parameters": [
                     {
                         "name": "chatId",
@@ -813,8 +834,110 @@
                     }
                 ],
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "Chat comments returned",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "_id": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "room_id": {
+                                                        "type": "string",
+                                                        "example": "65dc8b87ea70db4fabe4adb6"
+                                                    },
+                                                    "message_id": {
+                                                        "type": "string",
+                                                        "example": "65df007759a021381425863f"
+                                                    }
+                                                }
+                                            },
+                                            "text":{
+                                                "type": "string",
+                                                "example": "Hi!"
+                                            },
+                                            "reply": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "is_reply": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    },
+                                                    "parent_comment_id": {
+                                                        "type": "string",
+                                                        "example": null
+                                                    },
+                                                    "sequential_number": {
+                                                        "type": "number",
+                                                        "example": 0
+                                                    }
+                                                }
+                                            },
+                                            "likes": {
+                                                "type": "number",
+                                                "example": 2
+                                            },
+                                            "dislikes": {
+                                                "type": "number",
+                                                "example": 0
+                                            },
+                                            "emoticons": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "example": "😀"
+                                                }
+                                            },
+                                            "creation_date": {
+                                                "type": "string",
+                                                "example": "2021-04-13T14:37:45.263Z",
+                                                "format": "date-time"
+                                            },
+                                            "creator_name": {
+                                                "type": "string",
+                                                "example": "sanyi"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Chat not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No chat found with id: 65df007759a021381425863f"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /chat/65dc8b87ea70db4fabe4adb6/comments"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
