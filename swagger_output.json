@@ -944,7 +944,12 @@
         },
         "/chat/{chatId}": {
             "get": {
-                "description": "",
+                "description": "Returns the data of the chat by id",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "parameters": [
                     {
                         "name": "chatId",
@@ -956,13 +961,112 @@
                     }
                 ],
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "Chat data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "_id": {
+                                            "type": "string",
+                                            "example": "65df007759a021381425863f"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Chit-chat"
+                                        },
+                                        "is_private": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "users": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "user_id": {
+                                                        "type": "string",
+                                                        "example": "65dc8b87ea70db4fabe4adb6"
+                                                    },
+                                                    "is_moderator": {
+                                                        "type": "boolean",
+                                                        "example": true
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "common_topics": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "football"
+                                            }
+                                        },
+                                        "owner": {
+                                            "type": "string",
+                                            "example": "65dc8b87ea70db4fabe4adb6"
+                                        },
+                                        "time_to_live": {
+                                            "type": "object",
+                                            "properties": {
+                                                "is_ttl": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "expiration": {
+                                                    "type": "string",
+                                                    "example": "2999-01-01",
+                                                    "format": "date-time"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Chat not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No chat found with id: 65df007759a021381425863f"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /chat/65dc8b87ea70db4fabe4adb6"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
             "delete": {
                 "description": "",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "parameters": [
                     {
                         "name": "chatId",
@@ -974,8 +1078,53 @@
                     }
                 ],
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "Chat deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Chat deleted successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You are not allowed to delete this chat"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Chat not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No chat found with id: 65df007759a021381425863f"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
