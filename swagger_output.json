@@ -726,10 +726,75 @@
         },
         "/thread": {
             "post": {
-                "description": "",
+                "description": "Create thread",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "forum_name": {
+                                        "type": "string",
+                                        "example": "Chit-chat99"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Thread 1"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "Some random content"
+                                    },
+                                    "images": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "example": "https://i.imgur.com/0y3b11j.jpg"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "404": {
+                        "description": "No forum found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No forum found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Thread created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
