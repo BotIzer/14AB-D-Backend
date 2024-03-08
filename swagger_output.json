@@ -11,6 +11,15 @@
             "description": "Developement localhsot"
         }
     ],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
     "paths": {
         "/register": {
             "post": {
@@ -283,7 +292,6 @@
                                                         "type": "string",
                                                         "example": "pista"
                                                     }
-                    
                                                 }
                                             }
                                         }
@@ -377,7 +385,7 @@
                         }
                     },
                     "404": {
-                        "description": "Returns and object containing all the user's information except email and _id",
+                        "description": "No user found error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -397,10 +405,79 @@
         },
         "/user/addHobby": {
             "post": {
-                "description": "",
+                "description": "Add hobbies to the user",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "hobbies": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "example": "sports"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "Hobbies added to user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Hobby or hobbies added"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "When you are not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /user/addHobby"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -619,14 +696,6 @@
                         "description": ""
                     }
                 }
-            }
-        }
-    },
-    "components": {
-        "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer"
             }
         }
     }
