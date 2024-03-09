@@ -1483,9 +1483,58 @@
         "/chats": {
             "get": {
                 "description": "",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "The chats of the caller user retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "_id": {
+                                                "type": "string",
+                                                "example": "65ca57ef7b4f2295c385b4f9"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Random chat"
+                                            },
+                                            "is_private": {
+                                                "type": "boolean",
+                                                "example": false
+                                            },
+                                            "friend_user_name": {
+                                                "type": "string",
+                                                "example": "Random user"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No user found with this id, or user does not have any chats yet error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User does not have any chats yet!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
