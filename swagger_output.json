@@ -1264,10 +1264,93 @@
         },
         "/chat": {
             "post": {
-                "description": "",
+                "description": "Create a new chat",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "random chat"
+                                    },
+                                    "is_ttl": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "days_to_die": {
+                                        "type": "number",
+                                        "example": 30
+                                    },
+                                    "is_private": {
+                                        "type": "boolean",
+                                        "example": false
+                                    },
+                                    "other_user_name": {
+                                        "type": "string",
+                                        "example": "sanyi"
+                                    }
+                                },
+                                "required": ["name", "is_private", "other_user_name"]
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "roomId": {
+                                            "type": "string",
+                                            "example": "65ca57ef7b4f2295c385b4f9"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "You have no friend with name",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No user found with this name: sanyi"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Users already have a chat with this user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Users already have mutual private chatroom"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
