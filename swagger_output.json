@@ -856,7 +856,7 @@
                                                     }
                                                 }
                                             },
-                                            "text":{
+                                            "text": {
                                                 "type": "string",
                                                 "example": "Hi!"
                                             },
@@ -1131,10 +1131,133 @@
         },
         "/createOrRetrieveChat": {
             "post": {
-                "description": "",
+                "description": "Retrieves the mutual chats between the caller user and another one",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "friend": {
+                                        "type": "string",
+                                        "example": "sanyi"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "Chats retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "chats": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "_id": {
+                                                        "type": "string",
+                                                        "example": "65df007759a021381425863f"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "sanyi"
+                                                    },
+                                                    "is_private": {
+                                                        "type": "boolean",
+                                                        "example": true
+                                                    },
+                                                    "common_topics": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string",
+                                                            "example": "sport"
+                                                        }
+                                                    },
+                                                    "owner": {
+                                                        "type": "string",
+                                                        "example": "65ca57bf7b4f2295c385b4f2"
+                                                    },
+                                                    "time_to_live": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "is_ttl": {
+                                                                "type": "boolean",
+                                                                "example": false
+                                                            },
+                                                            "expiration": {
+                                                                "type": "string",
+                                                                "example": "2999-01-01T00:00:00.000Z",
+                                                                "format": "date-time"
+                                                            }
+                                                        }
+                                                    },
+                                                    "users": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "user_id": {
+                                                                    "type": "string",
+                                                                    "example": "65ca57ef7b4f2295c385b4f9"
+                                                                },
+                                                                "is_moderator": {
+                                                                    "type": "boolean",
+                                                                    "example": true
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /createOrRetrieveChat"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "You have no friend with name, or no user user found error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no friend with name: sanyi"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
