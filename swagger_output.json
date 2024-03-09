@@ -1320,6 +1320,22 @@
                             }
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /thread"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "You have no friend with name",
                         "content": {
@@ -1357,10 +1373,109 @@
         },
         "/comment": {
             "post": {
-                "description": "",
+                "description": "Create comment",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "room_id": {
+                                        "type": "string",
+                                        "example": "65ca57ef7b4f2295c385b4f9"
+                                    },
+                                    "text": {
+                                        "type": "string",
+                                        "example": "Hello!"
+                                    },
+                                    "is_reply": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "parent_comment_id": {
+                                        "type": "string",
+                                        "example": "65ca57ef7b4f2295c385b4f9"
+                                    },
+                                    "sequential_number": {
+                                        "type": "number",
+                                        "example": 1
+                                    }
+                                },
+                                "required": ["room_id", "text", "is_reply"]
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /comment"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No chat found with id or parent comment does not exist with this id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Parent comment does not exist with this id: 65ca57ef7b4f2295c385b4f9"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "413": {
+                        "description": "Comment text is too long (more than 2000 characters)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Too many characters in the comment (2114).The max comment length is 2000 characters!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
