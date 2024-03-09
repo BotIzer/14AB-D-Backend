@@ -1329,7 +1329,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "You have no permission to use path: /thread"
+                                            "example": "You have no permission to use path: /chat"
                                         }
                                     }
                                 }
@@ -1514,6 +1514,22 @@
                                                 "type": "string",
                                                 "example": "Random user"
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /chats"
                                         }
                                     }
                                 }
