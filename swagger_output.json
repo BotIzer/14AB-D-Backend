@@ -472,7 +472,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "You have no permission to use path: /user/addHobby"
+                                            "example": "You have no permission to use path: POST /user/addHobby"
                                         }
                                     }
                                 }
@@ -602,6 +602,22 @@
                                         "message": {
                                             "type": "string",
                                             "example": "You are banned from forum"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "When you are not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: GET /user/addHobby"
                                         }
                                     }
                                 }
@@ -805,7 +821,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "You have no permission to use path: /thread"
+                                            "example": "You have no permission to use path: POST /thread"
                                         }
                                     }
                                 }
@@ -932,7 +948,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "You have no permission to use path: /chat/65dc8b87ea70db4fabe4adb6/comments"
+                                            "example": "You have no permission to use path: GET /chat/65dc8b87ea70db4fabe4adb6/comments"
                                         }
                                     }
                                 }
@@ -1051,7 +1067,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "You have no permission to use path: /chat/65dc8b87ea70db4fabe4adb6"
+                                            "example": "You have no permission to use path: GET /chat/65dc8b87ea70db4fabe4adb6"
                                         }
                                     }
                                 }
@@ -1088,6 +1104,22 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Chat deleted successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: DELETE /chat/65dc8b87ea70db4fabe4adb6"
                                         }
                                     }
                                 }
@@ -1236,7 +1268,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "You have no permission to use path: /createOrRetrieveChat"
+                                            "example": "You have no permission to use path: POST /createOrRetrieveChat"
                                         }
                                     }
                                 }
@@ -1329,7 +1361,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "You have no permission to use path: /chat"
+                                            "example": "You have no permission to use path: POST /chat"
                                         }
                                     }
                                 }
@@ -1438,7 +1470,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "You have no permission to use path: /comment"
+                                            "example": "You have no permission to use path: POST /comment"
                                         }
                                     }
                                 }
@@ -1529,7 +1561,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "You have no permission to use path: /chats"
+                                            "example": "You have no permission to use path: GET /chats"
                                         }
                                     }
                                 }
@@ -1592,7 +1624,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "You have no permission to use path: /friends"
+                                            "example": "You have no permission to use path: GET /friends"
                                         }
                                     }
                                 }
@@ -1662,7 +1694,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "You have no permission to use path: /friend/:friendName"
+                                            "example": "You have no permission to use path: POST /friend/:friendName"
                                         }
                                     }
                                 }
@@ -1688,7 +1720,12 @@
                 }
             },
             "delete": {
-                "description": "",
+                "description": "Delete friend",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "parameters": [
                     {
                         "name": "friendName",
@@ -1700,8 +1737,53 @@
                     }
                 ],
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "Friend deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Friend deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: DELETE /friend/:friendName"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No friend found error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No friend found!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
