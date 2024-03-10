@@ -49,18 +49,18 @@ router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)
 router.route('/search').post(search)
 router.route('/user').put(protectPath, updateUser).delete(protectPath, deleteUser) //DELETEUSER NOT TESTED
-router.route('/user/friendRequests').get(protectPath, getUserRequests) //NOT TESTED!
+router.route('/user/friendRequests').get(protectPath, getUserRequests) //NOT TESTED!                                                    SWAGGER
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/user/addHobby').post(protectPath, addHobby)
-router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(protectPath, deleteForum) //DELETEFORUM NOT TESTED
+router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(protectPath, deleteForum) //DELETEFORUM NOT TESTED       SWAGGER
 router.route('/forum/getAllThreads/:forumId').get(checkWetherBannedFromForum, getAllThreads)
 router.route('/forum/getForumsByTag/:tag').get(searchForumByTag)
-router.route('/forum/ban/').post(protectPath, banUserFromForum).put(protectPath, unbanUserFromForum) //NOT TESTED
+router.route('/forum/ban/').post(protectPath, banUserFromForum).put(protectPath, unbanUserFromForum) //NOT TESTED                       SWAGGER
 router.route('/thread').post(protectPath, createThread)
-router.route('/thread/:threadId').delete(protectPath, deleteThreadConroller) //NOT TESTED
+router.route('/thread/:threadId').delete(protectPath, deleteThreadConroller) //NOT TESTED                                               SWAGGER
 router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)
 router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPath, deleteChat)
-router.route('/chat/addFriend/').post(protectPath, addFriendToChat) //NOT TESTED!
+router.route('/chat/addFriend/').post(protectPath, addFriendToChat) //NOT TESTED!                                                       SWAGGER
 router.route('/createOrRetrieveChat').post(protectPath, checkMutualChat)
 router.route('/chat').post(protectPath, createChat)
 router.route('/comment').post(protectPath, createComment)
