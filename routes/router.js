@@ -41,6 +41,7 @@ const {
     deleteFriend,
     makeFriendRequest,
     acceptFriendRequest,
+    declineFriendRequest,
     addFriendToChat,
 } = require('../controllers/friendControllers/friendControllers')
 
@@ -67,4 +68,5 @@ router.route('/chats').get(protectPath, getUsersChats)
 router.route('/friends').get(protectPath, getFriends)
 router.route('/friend/:friendName').post(protectPath, makeFriendRequest).delete(protectPath, deleteFriend)
 router.route('/acceptFriendRequest/:requestCreatorName').post(protectPath, acceptFriendRequest)
+router.route('/declineFriendRequest/:requestCreatorName').post(protectPath, declineFriendRequest)
 module.exports = router

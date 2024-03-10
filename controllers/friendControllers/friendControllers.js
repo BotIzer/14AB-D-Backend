@@ -63,6 +63,15 @@ const acceptFriendRequest = tryCatchWrapper(async (req, res) => {
     return
 })
 
+const declineFriendRequest = tryCatchWrapper(async (req, res) => {
+    const id = await getCreatorIdFromHeaders(req.headers)
+    const decliner = await User.findById(id)
+    decliner.friend_requests.pull(req.params.requestCreatorName)
+    await decliner.save()
+    res.status(StatusCodes.OK).json({ message: 'Friend request declined' })
+    return
+})
+
 const addFriendToChat = tryCatchWrapper(async (req, res) => {
     const { friend_name: friendName, chat_id: chatId } = req.body
     const id = await getCreatorIdFromHeaders(req.headers)
@@ -92,4 +101,4 @@ const addFriendToChat = tryCatchWrapper(async (req, res) => {
     return
 })
 
-module.exports = { getFriends, deleteFriend, makeFriendRequest, acceptFriendRequest, addFriendToChat }
+module.exports = { getFriends, deleteFriend, makeFriendRequest, acceptFriendRequest, declineFriendRequest, addFriendToChat }
