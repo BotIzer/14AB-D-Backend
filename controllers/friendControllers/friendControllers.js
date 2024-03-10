@@ -5,7 +5,7 @@ const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeade
 const Chatroom = require('../../models/chatroomModel')
 
 const getFriends = tryCatchWrapper(async (req, res) => {
-    const id = await getCreatorIdFromHeaders(req.headers) /*'65ca57bf7b4f2295c385b4f2'*/
+    const id = await getCreatorIdFromHeaders(req.headers)
     const friendIds = await User.findById(id).select('friends -_id')
     if (!friendIds) {
         res.status(StatusCodes.NOT_FOUND).json({ message: 'No friends found' })

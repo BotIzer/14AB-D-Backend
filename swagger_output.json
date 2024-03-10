@@ -11,6 +11,15 @@
             "description": "Developement localhsot"
         }
     ],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
     "paths": {
         "/register": {
             "post": {
@@ -283,7 +292,6 @@
                                                         "type": "string",
                                                         "example": "pista"
                                                     }
-                    
                                                 }
                                             }
                                         }
@@ -377,7 +385,7 @@
                         }
                     },
                     "404": {
-                        "description": "Returns and object containing all the user's information except email and _id",
+                        "description": "No user found error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -397,67 +405,424 @@
         },
         "/user/addHobby": {
             "post": {
-                "description": "",
+                "description": "Add hobbies to the user",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "hobbies": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "example": "sports"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "Hobbies added to user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Hobby or hobbies added"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "When you are not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /user/addHobby"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
         "/forum/getAllThreads/{forumId}": {
             "get": {
-                "description": "",
+                "description": "Get all threads in a specific forum",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "parameters": [
                     {
                         "name": "forumId",
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "65c1e3930ed4497f8cafdac0"
                         }
                     }
                 ],
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "Returns the forum searched by a specific forum_id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "_id": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "forum_id": {
+                                                        "type": "string",
+                                                        "example": "65c1e3930ed4497f8cafdac0"
+                                                    },
+                                                    "creator_id": {
+                                                        "type": "string",
+                                                        "example": "62c433910ed4497f8cafbbe4"
+                                                    },
+                                                    "thread_id": {
+                                                        "type": "string",
+                                                        "example": "62c433910ed4497f8cafbbe4"
+                                                    }
+                                                }
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "1999 Acura Integra"
+                                            },
+                                            "likes": {
+                                                "type": "number",
+                                                "example": 5324
+                                            },
+                                            "dislikes": {
+                                                "type": "number",
+                                                "example": 23
+                                            },
+                                            "editors": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "example": "62c433910ed4497f8cafbbe4"
+                                                }
+                                            },
+                                            "emoticons": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "example": "62c433910ed4497f8cafbbe4"
+                                                }
+                                            },
+                                            "creation_date": {
+                                                "type": "string",
+                                                "example": "2021-09-29T14:36:44.526Z",
+                                                "format": "date-time"
+                                            },
+                                            "content": {
+                                                "type": "string",
+                                                "example": "Random text"
+                                            },
+                                            "image_array": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "example": "62c433910ed4497f8cafbbe4"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No forum or user found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No forum found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Banned from forum",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You are banned from forum"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
         "/forum/getForumsByTag/{tag}": {
             "get": {
-                "description": "",
+                "description": "Search forums by tag",
                 "parameters": [
                     {
                         "name": "tag",
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "fun"
                         }
                     }
                 ],
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "List of forums searched by tags",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "_id": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "creator_id": {
+                                                        "type": "string",
+                                                        "example": "657b7d6d0064424d0daad81a"
+                                                    },
+                                                    "forum_id": {
+                                                        "type": "string",
+                                                        "example": "65c1e3930ed4497f8cafdac0"
+                                                    }
+                                                }
+                                            },
+                                            "forum_name": {
+                                                "type": "string",
+                                                "example": "Chit-chat"
+                                            },
+                                            "creation_date": {
+                                                "type": "string",
+                                                "example": "2024-02-06T07:45:23.984+00:00",
+                                                "format": "date-time"
+                                            },
+                                            "banner": {
+                                                "type": "string",
+                                                "example": "Some random chat"
+                                            },
+                                            "blacklist": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "example": "65c1e3930ed4497f8cafdec4"
+                                                }
+                                            },
+                                            "users": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "user_id": {
+                                                            "type": "string",
+                                                            "example": "657b7d6d0064424d0daad81a"
+                                                        },
+                                                        "is_moderator": {
+                                                            "type": "boolean",
+                                                            "example": false
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "rating": {
+                                                "type": "number",
+                                                "example": 4.5
+                                            },
+                                            "tags": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "example": "fun"
+                                                }
+                                            },
+                                            "topthread": {
+                                                "type": "string",
+                                                "example": "65c1e3930ed4497f8cafdac0"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No forum found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No forum found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
         "/thread": {
             "post": {
-                "description": "",
+                "description": "Create thread",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "forum_name": {
+                                        "type": "string",
+                                        "example": "Chit-chat99"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Thread 1"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "Some random content"
+                                    },
+                                    "images": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "example": "https://i.imgur.com/0y3b11j.jpg"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "404": {
+                        "description": "No forum found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No forum found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Thread created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /thread"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
         "/chat/{chatId}/comments": {
             "get": {
-                "description": "",
+                "description": "Returns the chats comments by chatroom id",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "parameters": [
                     {
                         "name": "chatId",
@@ -469,15 +834,122 @@
                     }
                 ],
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "Chat comments returned",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "_id": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "room_id": {
+                                                        "type": "string",
+                                                        "example": "65dc8b87ea70db4fabe4adb6"
+                                                    },
+                                                    "message_id": {
+                                                        "type": "string",
+                                                        "example": "65df007759a021381425863f"
+                                                    }
+                                                }
+                                            },
+                                            "text": {
+                                                "type": "string",
+                                                "example": "Hi!"
+                                            },
+                                            "reply": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "is_reply": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    },
+                                                    "parent_comment_id": {
+                                                        "type": "string",
+                                                        "example": null
+                                                    },
+                                                    "sequential_number": {
+                                                        "type": "number",
+                                                        "example": 0
+                                                    }
+                                                }
+                                            },
+                                            "likes": {
+                                                "type": "number",
+                                                "example": 2
+                                            },
+                                            "dislikes": {
+                                                "type": "number",
+                                                "example": 0
+                                            },
+                                            "emoticons": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "example": "😀"
+                                                }
+                                            },
+                                            "creation_date": {
+                                                "type": "string",
+                                                "example": "2021-04-13T14:37:45.263Z",
+                                                "format": "date-time"
+                                            },
+                                            "creator_name": {
+                                                "type": "string",
+                                                "example": "sanyi"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Chat not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No chat found with id: 65df007759a021381425863f"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /chat/65dc8b87ea70db4fabe4adb6/comments"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
         "/chat/{chatId}": {
             "get": {
-                "description": "",
+                "description": "Returns the data of the chat by id",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "parameters": [
                     {
                         "name": "chatId",
@@ -489,13 +961,112 @@
                     }
                 ],
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "Chat data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "_id": {
+                                            "type": "string",
+                                            "example": "65df007759a021381425863f"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Chit-chat"
+                                        },
+                                        "is_private": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "users": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "user_id": {
+                                                        "type": "string",
+                                                        "example": "65dc8b87ea70db4fabe4adb6"
+                                                    },
+                                                    "is_moderator": {
+                                                        "type": "boolean",
+                                                        "example": true
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "common_topics": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "football"
+                                            }
+                                        },
+                                        "owner": {
+                                            "type": "string",
+                                            "example": "65dc8b87ea70db4fabe4adb6"
+                                        },
+                                        "time_to_live": {
+                                            "type": "object",
+                                            "properties": {
+                                                "is_ttl": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "expiration": {
+                                                    "type": "string",
+                                                    "example": "2999-01-01",
+                                                    "format": "date-time"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Chat not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No chat found with id: 65df007759a021381425863f"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /chat/65dc8b87ea70db4fabe4adb6"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
             "delete": {
                 "description": "",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "parameters": [
                     {
                         "name": "chatId",
@@ -507,38 +1078,404 @@
                     }
                 ],
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "Chat deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Chat deleted successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You are not allowed to delete this chat"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Chat not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No chat found with id: 65df007759a021381425863f"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
         "/createOrRetrieveChat": {
             "post": {
-                "description": "",
+                "description": "Retrieves the mutual chats between the caller user and another one",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "friend": {
+                                        "type": "string",
+                                        "example": "sanyi"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "Chats retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "chats": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "_id": {
+                                                        "type": "string",
+                                                        "example": "65df007759a021381425863f"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "sanyi"
+                                                    },
+                                                    "is_private": {
+                                                        "type": "boolean",
+                                                        "example": true
+                                                    },
+                                                    "common_topics": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string",
+                                                            "example": "sport"
+                                                        }
+                                                    },
+                                                    "owner": {
+                                                        "type": "string",
+                                                        "example": "65ca57bf7b4f2295c385b4f2"
+                                                    },
+                                                    "time_to_live": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "is_ttl": {
+                                                                "type": "boolean",
+                                                                "example": false
+                                                            },
+                                                            "expiration": {
+                                                                "type": "string",
+                                                                "example": "2999-01-01T00:00:00.000Z",
+                                                                "format": "date-time"
+                                                            }
+                                                        }
+                                                    },
+                                                    "users": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "user_id": {
+                                                                    "type": "string",
+                                                                    "example": "65ca57ef7b4f2295c385b4f9"
+                                                                },
+                                                                "is_moderator": {
+                                                                    "type": "boolean",
+                                                                    "example": true
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /createOrRetrieveChat"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "You have no friend with name, or no user user found error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no friend with name: sanyi"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
         "/chat": {
             "post": {
-                "description": "",
+                "description": "Create a new chat",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "random chat"
+                                    },
+                                    "is_ttl": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "days_to_die": {
+                                        "type": "number",
+                                        "example": 30
+                                    },
+                                    "is_private": {
+                                        "type": "boolean",
+                                        "example": false
+                                    },
+                                    "other_user_name": {
+                                        "type": "string",
+                                        "example": "sanyi"
+                                    }
+                                },
+                                "required": ["name", "is_private", "other_user_name"]
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "roomId": {
+                                            "type": "string",
+                                            "example": "65ca57ef7b4f2295c385b4f9"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /chat"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "You have no friend with name",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No user found with this name: sanyi"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Users already have a chat with this user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Users already have mutual private chatroom"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
         "/comment": {
             "post": {
-                "description": "",
+                "description": "Create comment",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "room_id": {
+                                        "type": "string",
+                                        "example": "65ca57ef7b4f2295c385b4f9"
+                                    },
+                                    "text": {
+                                        "type": "string",
+                                        "example": "Hello!"
+                                    },
+                                    "is_reply": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "parent_comment_id": {
+                                        "type": "string",
+                                        "example": "65ca57ef7b4f2295c385b4f9"
+                                    },
+                                    "sequential_number": {
+                                        "type": "number",
+                                        "example": 1
+                                    }
+                                },
+                                "required": ["room_id", "text", "is_reply"]
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /comment"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No chat found with id or parent comment does not exist with this id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Parent comment does not exist with this id: 65ca57ef7b4f2295c385b4f9"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "413": {
+                        "description": "Comment text is too long (more than 2000 characters)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Too many characters in the comment (2114).The max comment length is 2000 characters!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -546,19 +1483,137 @@
         "/chats": {
             "get": {
                 "description": "",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "The chats of the caller user retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "_id": {
+                                                "type": "string",
+                                                "example": "65ca57ef7b4f2295c385b4f9"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Random chat"
+                                            },
+                                            "is_private": {
+                                                "type": "boolean",
+                                                "example": false
+                                            },
+                                            "friend_user_name": {
+                                                "type": "string",
+                                                "example": "Random user"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /chats"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No user found with this id, or user does not have any chats yet error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User does not have any chats yet!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
         "/friends": {
             "get": {
-                "description": "",
+                "description": "Retrieves all the friends of the user",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "responses": {
-                    "default": {
-                        "description": ""
+                    "200": {
+                        "description": "The friends of the caller user retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "username": {
+                                                "type": "string",
+                                                "example": "random"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: /friends"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No friends found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No friends found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -619,14 +1674,6 @@
                         "description": ""
                     }
                 }
-            }
-        }
-    },
-    "components": {
-        "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer"
             }
         }
     }

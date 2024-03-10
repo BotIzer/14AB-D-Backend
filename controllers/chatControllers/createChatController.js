@@ -15,6 +15,11 @@ const createChat = tryCatchWrapper(async (req, res) => {
     } = req.body
     const decodedCreatorId = await getCreatorIdFromHeaders(req.headers) /*'65ca57bf7b4f2295c385b4f2'*/
     let otherUser = await User.findOne({ username: otherUserName })
+    if (!otherUser) {
+        res.status(StatusCodes.NOT_FOUND).json({
+            message: `No user found with this name: '${otherUserName}'`,
+        })
+    }
     if (await hasMutualPrivateChat(decodedCreatorId, otherUser._id)) {
         throw new usersAlreadyHaveMutualPrivateChatroomError()
     }
