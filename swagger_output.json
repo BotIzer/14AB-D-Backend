@@ -1861,6 +1861,22 @@
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "Friend request declined",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Friend request declined"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "content": {
