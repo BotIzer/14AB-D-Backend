@@ -21,6 +21,7 @@ const {
     createForum,
     getAllThreads,
     getAllForums,
+    getForumById,
     searchForumByTag,
     deleteForum,
     banUserFromForum,
@@ -55,6 +56,7 @@ router.route('/user/addHobby').post(protectPath, addHobby)
 router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(protectPath, deleteForum) //DELETEFORUM NOT TESTED
 router.route('/forum/getAllThreads/:forumId').get(checkWetherBannedFromForum, getAllThreads)
 router.route('/forum/getForumsByTag/:tag').get(searchForumByTag)
+router.route('/forum/:forumId').get(getForumById) // add to Swagger!
 router.route('/forum/ban/').post(protectPath, banUserFromForum).put(protectPath, unbanUserFromForum) //NOT TESTED                       SWAGGER
 router.route('/thread').post(protectPath, createThread)
 router.route('/thread/:threadId').delete(protectPath, deleteThreadConroller) //NOT TESTED                                               SWAGGER

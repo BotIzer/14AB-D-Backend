@@ -45,7 +45,17 @@ const getAllForums = tryCatchWrapper(async (req, res) => {
     res.status(StatusCodes.OK).json(forums)
     return
 })
-
+const getForumById = tryCatchWrapper(async (req,res) =>{
+    const forum = await Forum.findOne({'_id.forum_id': req.params.forumId})
+    if(!forum){
+        res.status(StatusCodes.NOT_FOUND).json({
+            message: 'No forum found'
+        })
+        return
+    }
+    res.status(StatusCodes.OK).json(forum)
+    return
+})
 const searchForumByTag = tryCatchWrapper(async (req, res) => {
     const forums = await Forum.find({ tags: req.params.tag })
     if (!forums) {
@@ -152,6 +162,7 @@ module.exports = {
     createForum,
     getAllThreads,
     getAllForums,
+    getForumById,
     searchForumByTag,
     deleteForum,
     banUserFromForum,
