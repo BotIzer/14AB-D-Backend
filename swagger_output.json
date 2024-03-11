@@ -1012,6 +1012,116 @@
                 }
             }
         },
+        "/forum/{forumId}": {
+            "get": {
+                "description": "Get a specific forum by id",
+                "parameters": [
+                    {
+                        "name": "forumId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "random"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Forum found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "_id": {
+                                            "type": "object",
+                                            "properties": {
+                                                "creator_id": {
+                                                    "type": "string",
+                                                    "example": "657b7d6d0064424d0daad81a"
+                                                },
+                                                "forum_id": {
+                                                    "type": "string",
+                                                    "example": "65c1e3930ed4497f8cafdac0"
+                                                }
+                                            }
+                                        },
+                                        "forum_name": {
+                                            "type": "string",
+                                            "example": "Chit-chat"
+                                        },
+                                        "creation_date": {
+                                            "type": "string",
+                                            "example": "2024-02-06T07:45:23.984+00:00",
+                                            "format": "date-time"
+                                        },
+                                        "banner": {
+                                            "type": "string",
+                                            "example": "https://i.imgur.com/d2d234.png"
+                                        },
+                                        "blacklist": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "65c1e3930ed4497f8cafdec4"
+                                            }
+                                        },
+                                        "users": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "user_id": {
+                                                        "type": "string",
+                                                        "example": "657b7d6d0064424d0daad81a"
+                                                    },
+                                                    "is_moderator": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "rating": {
+                                            "type": "number",
+                                            "example": 4.5
+                                        },
+                                        "tags": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "fun"
+                                            }
+                                        },
+                                        "topthread": {
+                                            "type": "string",
+                                            "example": "65c1e3930ed4497f8cafdac0"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No forum found with id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No forum not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/forum/ban": {
             "post": {
                 "description": "Ban a user from the forum",
@@ -1540,6 +1650,92 @@
                                         "message": {
                                             "type": "string",
                                             "example": "You have no permission to use path: POST /thread"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/thread/{threadId}": {
+            "delete": {
+                "description": "Delete a thread",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "threadId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thread deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Thread deleted successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: DELETE /thread/{threadId}"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "User is not allowed to delete this thread",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You are not allowed to delete this thread"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Thread not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Thread not found"
                                         }
                                     }
                                 }
@@ -2121,6 +2317,85 @@
                 }
             }
         },
+        "/chat/addFriend/": {
+            "post": {
+                "description": "Add a friend to the chat",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "friend_name": {
+                                        "type": "string",
+                                        "example": "sanyi"
+                                    },
+                                    "chat_id": {
+                                        "type": "string",
+                                        "example": "65ca57ef7b4f2295c385b4f9"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Friend added to the chat",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Friend added to chat"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: POST /chat/addFriend/"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found or chat not found or you have no friend with a specific name",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/comment": {
             "post": {
                 "description": "Create comment",
@@ -2614,6 +2889,5 @@
                 }
             }
         }
-        
     }
 }
