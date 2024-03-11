@@ -59,7 +59,7 @@ router.route('/forum/getForumsByTag/:tag').get(searchForumByTag)
 router.route('/forum/:forumId').get(getForumById)
 router.route('/forum/ban/').post(protectPath, banUserFromForum).put(protectPath, unbanUserFromForum) //NOT TESTED
 router.route('/thread').post(protectPath, createThread)
-router.route('/thread/:threadId').delete(protectPath, deleteThreadConroller) //NOT TESTED                                               SWAGGER
+router.route('/thread/:threadId').delete(protectPath, deleteThreadConroller) //NOT TESTED
 router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)
 router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPath, deleteChat)
 router.route('/chat/addFriend/').post(protectPath, addFriendToChat) //NOT TESTED!                                                       SWAGGER
