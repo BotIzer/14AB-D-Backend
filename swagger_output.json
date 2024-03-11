@@ -2425,6 +2425,43 @@
                     }
                 }
             }
+        },
+        "/forum/ban": {
+            "post": {
+                "description": "Ban a user from the forum",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "forum_id": {
+                                        "type": "string",
+                                        "example": "65ca57ef7b4f2295c385b4f9"
+                                    },
+                                    "user_id": {
+                                        "type": "string",
+                                        "example": "65ca57ef7b4f2295c385b4a3"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User banned",
+                        "content": {
+                            
+                        }
+                    }
+                }
+            }
         }
     }
 }
