@@ -53,7 +53,7 @@ const getForumById = tryCatchWrapper(async (req,res) =>{
         })
         return
     }
-    res.status(StatusCodes.OK).json(forum)
+    res.status(StatusCodes.OK).json([forum])
     return
 })
 const searchForumByTag = tryCatchWrapper(async (req, res) => {
