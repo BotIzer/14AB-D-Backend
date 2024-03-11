@@ -49,7 +49,7 @@ router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)
 router.route('/search').post(search)
 router.route('/user').put(protectPath, updateUser).delete(protectPath, deleteUser) //DELETEUSER NOT TESTED
-router.route('/user/friendRequests').get(protectPath, getUserRequests) //NOT TESTED!                                                    SWAGGER
+router.route('/user/friendRequests').get(protectPath, getUserRequests) //NOT TESTED!
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/user/addHobby').post(protectPath, addHobby)
 router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(protectPath, deleteForum) //DELETEFORUM NOT TESTED       SWAGGER
