@@ -1012,6 +1012,101 @@
                 }
             }
         },
+        "/forum/ban": {
+            "post": {
+                "description": "Ban a user from the forum",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "forum_id": {
+                                        "type": "string",
+                                        "example": "65ca57ef7b4f2295c385b4f9"
+                                    },
+                                    "user_id": {
+                                        "type": "string",
+                                        "example": "65ca57ef7b4f2295c385b4a3"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User banned",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User banned from forum"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "User is already banned from this forum",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User is already banned from this forum"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You are not authorized to ban users from this forum"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No forum found error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No forum found!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/forum/getAllThreads/{forumId}": {
             "get": {
                 "description": "Get all threads in a specific forum",
@@ -2425,43 +2520,7 @@
                     }
                 }
             }
-        },
-        "/forum/ban": {
-            "post": {
-                "description": "Ban a user from the forum",
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "forum_id": {
-                                        "type": "string",
-                                        "example": "65ca57ef7b4f2295c385b4f9"
-                                    },
-                                    "user_id": {
-                                        "type": "string",
-                                        "example": "65ca57ef7b4f2295c385b4a3"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "User banned",
-                        "content": {
-                            
-                        }
-                    }
-                }
-            }
         }
+        
     }
 }
