@@ -52,7 +52,7 @@ router.route('/user').put(protectPath, updateUser).delete(protectPath, deleteUse
 router.route('/user/friendRequests').get(protectPath, getUserRequests) //NOT TESTED!
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/user/addHobby').post(protectPath, addHobby)
-router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(protectPath, deleteForum) //DELETEFORUM NOT TESTED       SWAGGER
+router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(protectPath, deleteForum) //DELETEFORUM NOT TESTED
 router.route('/forum/getAllThreads/:forumId').get(checkWetherBannedFromForum, getAllThreads)
 router.route('/forum/getForumsByTag/:tag').get(searchForumByTag)
 router.route('/forum/ban/').post(protectPath, banUserFromForum).put(protectPath, unbanUserFromForum) //NOT TESTED                       SWAGGER
