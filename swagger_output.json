@@ -278,7 +278,7 @@
                                                     },
                                                     "banner": {
                                                         "type": "string",
-                                                        "example": "cars"
+                                                        "example": "https://i.imgur.com/d2d234.png"
                                                     }
                                                 }
                                             }
@@ -613,6 +613,69 @@
                 }
             }
         },
+        "/user/friendRequest": {
+            "get": {
+                "description": "Get users friend requests",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns with an array containing the users friend requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "username": {
+                                                "type": "string",
+                                                "example": "sanyi"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: GET /user/friendRequest"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No user found error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found with: username"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/addHobby": {
             "post": {
                 "description": "Add hobbies to the user",
@@ -683,6 +746,263 @@
                                         "message": {
                                             "type": "string",
                                             "example": "You have no permission to use path: POST /user/addHobby"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/forum": {
+            "get": {
+                "description": "Get all forums",
+                "responses": {
+                    "200": {
+                        "description": "All forums retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "_id": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "creator_id": {
+                                                        "type": "string",
+                                                        "example": "657b7d6d0064424d0daad81a"
+                                                    },
+                                                    "forum_id": {
+                                                        "type": "string",
+                                                        "example": "65c1e3930ed4497f8cafdac0"
+                                                    }
+                                                }
+                                            },
+                                            "forum_name": {
+                                                "type": "string",
+                                                "example": "Chit-chat"
+                                            },
+                                            "creation_date": {
+                                                "type": "string",
+                                                "example": "2024-02-06T07:45:23.984+00:00",
+                                                "format": "date-time"
+                                            },
+                                            "banner": {
+                                                "type": "string",
+                                                "example": "https://i.imgur.com/d2d234.png"
+                                            },
+                                            "blacklist": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "example": "65c1e3930ed4497f8cafdec4"
+                                                }
+                                            },
+                                            "users": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "user_id": {
+                                                            "type": "string",
+                                                            "example": "657b7d6d0064424d0daad81a"
+                                                        },
+                                                        "is_moderator": {
+                                                            "type": "boolean",
+                                                            "example": false
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "rating": {
+                                                "type": "number",
+                                                "example": 4.5
+                                            },
+                                            "tags": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "example": "fun"
+                                                }
+                                            },
+                                            "topthread": {
+                                                "type": "string",
+                                                "example": "65c1e3930ed4497f8cafdac0"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Forums not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No forum not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new forum",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "_id": {
+                                        "type": "object",
+                                        "properties": {
+                                            "creator_id": {
+                                                "type": "string",
+                                                "example": "657b7d6d0064424d0daad81a"
+                                            }
+                                        }
+                                    },
+                                    "forum_name": {
+                                        "type": "string",
+                                        "example": "Random forum"
+                                    },
+                                    "banner": {
+                                        "type": "string",
+                                        "example": "https://i.imgur.com/d2d234.png"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Forum created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "When you are not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: POST /forum"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Forum already exists with name",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Forum already exists with name: All about cooking"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a specific forum",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "forumName",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "random"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Forum deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Forum deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: DELETE /forum"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Forum not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Forum not found"
                                         }
                                     }
                                 }
@@ -885,7 +1205,7 @@
                                             },
                                             "banner": {
                                                 "type": "string",
-                                                "example": "Some random chat"
+                                                "example": "https://i.imgur.com/d2d234.png"
                                             },
                                             "blacklist": {
                                                 "type": "array",
