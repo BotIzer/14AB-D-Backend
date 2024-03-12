@@ -6,22 +6,18 @@ const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeade
 const { daysToDieError, usersAlreadyHaveMutualPrivateChatroomError } = require('../../errors/chatErrors/chatErrors')
 
 const createChat = tryCatchWrapper(async (req, res) => {
-    let {
-        name: name,
-        is_ttl: isTtl,
-        days_to_die: daysToDie,
-        is_private: isPrivate,
-        other_user_name: otherUserName,
-    } = req.body
-    const decodedCreatorId = await getCreatorIdFromHeaders(req.headers) /*'65ca57bf7b4f2295c385b4f2'*/
-    let otherUser = await User.findOne({ username: otherUserName })
-    if (!otherUser) {
-        res.status(StatusCodes.NOT_FOUND).json({
-            message: `No user found with this name: '${otherUserName}'`,
-        })
-    }
-    if (await hasMutualPrivateChat(decodedCreatorId, otherUser._id)) {
-        throw new usersAlreadyHaveMutualPrivateChatroomError()
+    let { name: name, is_ttl: isTtl, days_to_die: daysToDie, is_private: isPrivate, usernames: usernames } = req.body
+    const decodedCreatorId = await getCreatorIdFromHeaders(req.headers)
+    for (const username of usernames) {
+        let otherUser = await User.findOne({ username: username })
+        if (!otherUser) {
+            res.status(StatusCodes.NOT_FOUND).json({
+                message: `No user found with this name: '${usernames}'`,
+            })
+        }
+        if (await hasMutualPrivateChat(decodedCreatorId, otherUser._id)) {
+            throw new usersAlreadyHaveMutualPrivateChatroomError()
+        }
     }
     const expirationDate = await setExpirationDate(isTtl, daysToDie)
     let newChat = new Chat({
@@ -41,9 +37,18 @@ const createChat = tryCatchWrapper(async (req, res) => {
     creatorUser.chats.push(newChat._id)
     creatorUser.save()
     if (isPrivate) {
+        let otherUser = await User.findOne({ username: usernames[0] })
         otherUser.chats.push(newChat._id)
         otherUser.save()
         newChat.users.push({ user_id: otherUser._id, is_moderator: true })
+        newChat.save()
+    } else {
+        for (const username of usernames) {
+            let otherUser = await User.findOne({ username: username })
+            newChat.users.push({ user_id: otherUser._id, is_moderator: false })
+            otherUser.chats.push(newChat._id)
+            otherUser.save()
+        }
         newChat.save()
     }
     res.status(StatusCodes.CREATED).json({ roomId: newChat._id })
