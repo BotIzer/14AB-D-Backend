@@ -158,6 +158,22 @@ const unbanUserFromForum = tryCatchWrapper(async (req, res) => {
         message: 'User unbanned from forum',
     })
 })
+
+const updateForum = tryCatchWrapper(async (req, res) => {
+    const userId = await getCreatorIdFromHeaders(req.headers)
+    const isOwner = Forum.exists({ '_id.creator_id': userId, forum_name: req.body.forum_name })
+    if (!isOwner) {
+        res.status(StatusCodes.NOT_FOUND).json({
+            message: `You have no forum with name: ${req.body.forum_name}`,
+        })
+        return
+    }
+    await Forum.updateOne({ forum_name: req.body.forum_name }, req.body)
+    res.status(StatusCodes.OK).json({
+        message: 'Forum updated',
+    })
+})
+
 module.exports = {
     createForum,
     getAllThreads,
@@ -167,4 +183,5 @@ module.exports = {
     deleteForum,
     banUserFromForum,
     unbanUserFromForum,
+    updateForum
 }
