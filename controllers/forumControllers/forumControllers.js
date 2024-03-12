@@ -168,7 +168,7 @@ const updateForum = tryCatchWrapper(async (req, res) => {
         })
         return
     }
-    await Forum.updateOne({ forum_name: req.body.forum_name }, req.body)
+    await Forum.updateOne({ '_id.forum_id': req.params.forumId }, req.body)
     res.status(StatusCodes.OK).json({
         message: 'Forum updated',
     })
