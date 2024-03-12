@@ -35,6 +35,7 @@ const {
     checkMutualChat,
     getChatsComments,
     deleteChat,
+    leaveChat
 } = require('../controllers/chatControllers/chatControllers')
 const { createComment } = require('../controllers/commentControllers/commentControllers')
 const {
@@ -65,6 +66,7 @@ router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPa
 router.route('/chat/addFriend/').post(protectPath, addFriendToChat) //NOT TESTED!
 router.route('/createOrRetrieveChat').post(protectPath, checkMutualChat)
 router.route('/chat').post(protectPath, createChat)
+router.route('/chat/leaveChat').post(protectPath, leaveChat)
 router.route('/comment').post(protectPath, createComment)
 router.route('/chats').get(protectPath, getUsersChats)
 router.route('/friends').get(protectPath, getFriends)
