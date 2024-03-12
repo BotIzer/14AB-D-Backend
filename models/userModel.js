@@ -13,10 +13,25 @@ const userSchema = new mongoose.Schema({
             'Add a valid name!',
         ],
     },
-    chats: [{
-        type: mongoose.ObjectId,
-        ref: 'Chatroom'
-    }],
+    chats: [
+        {
+            type: mongoose.ObjectId,
+            ref: 'Chatroom',
+        },
+    ],
+    notifications: [
+        {
+            id: {
+                type: mongoose.ObjectId,
+                auto: true,
+            },
+            text: String,
+            seen: {
+                type: Boolean,
+                default: false,
+            },
+        },
+    ],
     email: {
         type: String,
         required: [true, 'To add email is required!'],
@@ -44,7 +59,7 @@ const userSchema = new mongoose.Schema({
         minlength: [2, 'Username should be at least 2 characters!'],
         maxlength: [20, 'Username cannot be longer than 20 characters!'],
         trim: true,
-        unique: true
+        unique: true,
     },
     friends: [mongoose.ObjectId],
     password: {
@@ -82,7 +97,7 @@ userSchema.methods.validPassword = (user, password) => {
     }
 }
 
-userSchema.methods.getSignedJwtToken = function() {
+userSchema.methods.getSignedJwtToken = function () {
     return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRE,
     })
