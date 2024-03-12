@@ -25,6 +25,9 @@ const forumSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    description: {
+        type: String,
+    },
     blacklist: [mongoose.ObjectId],
     users: [
         {
