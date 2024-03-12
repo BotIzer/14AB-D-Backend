@@ -70,9 +70,8 @@ const setExpirationDate = tryCatchWrapper((ttl, daysToDie) => {
 const hasMutualPrivateChat = tryCatchWrapper(async (decodedCreatorId, otherUserId) => {
     const myChats = (await User.findById(decodedCreatorId).select('chats -_id')).chats
     const otherChats = (await User.findById(otherUserId).select('chats -_id')).chats
-
     for (const chatId of myChats) {
-        if (otherChats.includes(chatId)) {
+        if (otherChats.includes(chatId) && (await Chat.findById(chatId).select('is_private -_id')).is_private === true) {
             return true
         }
     }
