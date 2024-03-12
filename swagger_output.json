@@ -1022,7 +1022,7 @@
                         "required": true,
                         "schema": {
                             "type": "string",
-                            "example": "random"
+                            "example": "65c1e3930ed4497f8cafdac0"
                         }
                     }
                 ],
@@ -1113,6 +1113,85 @@
                                         "message": {
                                             "type": "string",
                                             "example": "No forum not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a forum",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "forumId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "65c1e3930ed4497f8cafdac0"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "forum_name": {
+                                        "type": "string",
+                                        "example": "Updated chit-chat"
+                                    },
+                                    "banner": {
+                                        "type": "string",
+                                        "example": "https://i.imgur.com/d2d234.png"
+                                    },
+                                    "tags": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "example": "fun"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "You are not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: PUT /forum/{forumId}"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "You have no forum with id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no forum with id: 65c1e3930ed4497f8cafdac0"
                                         }
                                     }
                                 }

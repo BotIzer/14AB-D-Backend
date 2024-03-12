@@ -161,10 +161,10 @@ const unbanUserFromForum = tryCatchWrapper(async (req, res) => {
 
 const updateForum = tryCatchWrapper(async (req, res) => {
     const userId = await getCreatorIdFromHeaders(req.headers)
-    const isOwner = Forum.exists({ '_id.creator_id': userId, forum_name: req.body.forum_name })
+    const isOwner = Forum.exists({ '_id.creator_id': userId, '_id.forum_id': req.params.forumId })
     if (!isOwner) {
         res.status(StatusCodes.NOT_FOUND).json({
-            message: `You have no forum with name: ${req.body.forum_name}`,
+            message: `You have no forum with id: ${req.params.forumId}`,
         })
         return
     }
