@@ -51,11 +51,11 @@ const getAllForums = tryCatchWrapper(async (req, res) => {
     res.status(StatusCodes.OK).json(forums)
     return
 })
-const getForumById = tryCatchWrapper(async (req,res) =>{
-    const forum = await Forum.findOne({'_id.forum_id': req.params.forumId})
-    if(!forum){
+const getForumById = tryCatchWrapper(async (req, res) => {
+    const forum = await Forum.findOne({ '_id.forum_id': req.params.forumId })
+    if (!forum) {
         res.status(StatusCodes.NOT_FOUND).json({
-            message: 'No forum found'
+            message: 'No forum found',
         })
         return
     }
@@ -105,12 +105,7 @@ const banUserFromForum = tryCatchWrapper(async (req, res) => {
         return
     }
     const bannerId = await getCreatorIdFromHeaders(req.headers)
-    if (
-        bannerId !== forum._id.creator_id ||
-        (await User.findById(bannerId)
-            .select('roles')
-            .then((user) => !user.roles.includes('admin')))
-    ) {
+    if (bannerId != forum._id.creator_id.toString() && await User.findById(bannerId).roles != 'admin') {
         res.status(StatusCodes.UNAUTHORIZED).json({
             message: 'You are not authorized to ban users from this forum',
         })
@@ -140,12 +135,7 @@ const unbanUserFromForum = tryCatchWrapper(async (req, res) => {
         return
     }
     const unbannerId = await getCreatorIdFromHeaders(req.headers)
-    if (
-        unbannerId !== forum._id.creator_id ||
-        (await User.findById(unbannerId)
-            .select('roles')
-            .then((user) => !user.roles.includes('admin')))
-    ) {
+    if (unbannerId != forum._id.creator_id.toString() && (await User.findById(unbannerId).roles) != 'admin') {
         res.status(StatusCodes.UNAUTHORIZED).json({
             message: 'You are not authorized to unban users from this forum',
         })
@@ -189,5 +179,5 @@ module.exports = {
     deleteForum,
     banUserFromForum,
     unbanUserFromForum,
-    updateForum
+    updateForum,
 }
