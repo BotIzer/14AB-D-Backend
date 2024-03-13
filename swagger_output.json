@@ -200,7 +200,7 @@
         },
         "/search": {
             "post": {
-                "description": "Search after forums and users, is noting is found, returns an [[], []]",
+                "description": "Search after forums and users, is noting is found, returns an [ [], [] ]",
                 "requestBody": {
                     "required": true,
                     "content": {
