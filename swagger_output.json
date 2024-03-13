@@ -23,6 +23,7 @@
     "paths": {
         "/register": {
             "post": {
+                "tags": ["auth"],
                 "description": "Register user with username, email and strong password",
                 "security": [
                     {
@@ -148,6 +149,7 @@
         },
         "/login": {
             "post": {
+                "tags": ["auth"],
                 "description": "Login user with email and password",
                 "security": [
                     {
@@ -266,6 +268,7 @@
         },
         "/search": {
             "post": {
+                "tags": ["search"],
                 "description": "Search after forums and users, is noting is found, returns an [ [], [] ]",
                 "requestBody": {
                     "required": true,
@@ -331,6 +334,7 @@
         },
         "/user": {
             "put": {
+                "tags": ["user"],
                 "description": "Update user",
                 "security": [
                     {
@@ -446,7 +450,6 @@
                                                 }
                                             }
                                         }
-                                        
                                     }
                                 }
                             }
@@ -487,6 +490,7 @@
                 }
             },
             "delete": {
+                "tags": ["user"],
                 "description": "Delete user",
                 "security": [
                     {
@@ -558,6 +562,7 @@
         },
         "/user/{username}": {
             "get": {
+                "tags": ["user"],
                 "description": "Get userinformation by username",
                 "parameters": [
                     {
@@ -658,6 +663,7 @@
         },
         "/user/friendRequest": {
             "get": {
+                "tags": ["user"],
                 "description": "Get users friend requests",
                 "security": [
                     {
@@ -721,6 +727,7 @@
         },
         "/user/addHobby": {
             "post": {
+                "tags": ["user"],
                 "description": "Add hobbies to the user",
                 "security": [
                     {
@@ -800,6 +807,7 @@
         },
         "/forum": {
             "get": {
+                "tags": ["forum"],
                 "description": "Get all forums",
                 "responses": {
                     "200": {
@@ -900,6 +908,7 @@
                 }
             },
             "post": {
+                "tags": ["forum"],
                 "description": "Create a new forum",
                 "security": [
                     {
@@ -986,6 +995,7 @@
                 }
             },
             "delete": {
+                "tags": ["forum"],
                 "description": "Delete a specific forum",
                 "security": [
                     {
@@ -1057,6 +1067,7 @@
         },
         "/forum/{forumId}": {
             "get": {
+                "tags": ["forum"],
                 "description": "Get a specific forum by id",
                 "parameters": [
                     {
@@ -1165,6 +1176,7 @@
                 }
             },
             "put": {
+                "tags": ["forum"],
                 "description": "Update a forum",
                 "security": [
                     {
@@ -1246,6 +1258,7 @@
         },
         "/forum/ban": {
             "post": {
+                "tags": ["forum"],
                 "description": "Ban a user from the forum",
                 "security": [
                     {
@@ -1339,6 +1352,7 @@
                 }
             },
             "put": {
+                "tags": ["forum"],
                 "description": "Unban a user from the forum",
                 "security": [
                     {
@@ -1434,6 +1448,7 @@
         },
         "/forum/getAllThreads/{forumId}": {
             "get": {
+                "tags": ["forum"],
                 "description": "Get all threads in a specific forum",
                 "security": [
                     {
@@ -1579,6 +1594,7 @@
         },
         "/forum/getForumsByTag/{tag}": {
             "get": {
+                "tags": ["forum"],
                 "description": "Search forums by tag",
                 "parameters": [
                     {
@@ -1692,6 +1708,7 @@
         },
         "/thread": {
             "post": {
+                "tags": ["thread"],
                 "description": "Create thread",
                 "security": [
                     {
@@ -1783,6 +1800,7 @@
         },
         "/thread/{threadId}": {
             "delete": {
+                "tags": ["thread"],
                 "description": "Delete a thread",
                 "security": [
                     {
@@ -1869,6 +1887,7 @@
         },
         "/chat/{chatId}/comments": {
             "get": {
+                "tags": ["chat"],
                 "description": "Returns the chats comments by chatroom id",
                 "security": [
                     {
@@ -1996,6 +2015,7 @@
         },
         "/chat/{chatId}": {
             "get": {
+                "tags": ["chat"],
                 "description": "Returns the data of the chat by id",
                 "security": [
                     {
@@ -2113,6 +2133,7 @@
                 }
             },
             "delete": {
+                "tags": ["chat"],
                 "description": "",
                 "security": [
                     {
@@ -2199,6 +2220,7 @@
         },
         "/createOrRetrieveChat": {
             "post": {
+                "tags": ["chat"],
                 "description": "Retrieves the mutual chats between the caller user and another one",
                 "security": [
                     {
@@ -2332,6 +2354,7 @@
         },
         "/chat": {
             "post": {
+                "tags": ["chat"],
                 "description": "Create a new chat",
                 "security": [
                     {
@@ -2441,6 +2464,7 @@
         },
         "/chat/addFriend/": {
             "post": {
+                "tags": ["chat"],
                 "description": "Add a friend to the chat",
                 "security": [
                     {
@@ -2518,8 +2542,86 @@
                 }
             }
         },
+
+        "/chats": {
+            "get": {
+                "tags": ["chat"],
+                "description": "",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The chats of the caller user retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "_id": {
+                                                "type": "string",
+                                                "example": "65ca57ef7b4f2295c385b4f9"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Random chat"
+                                            },
+                                            "is_private": {
+                                                "type": "boolean",
+                                                "example": false
+                                            },
+                                            "friend_user_name": {
+                                                "type": "string",
+                                                "example": "Random user"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: GET /chats"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No user found with this id, or user does not have any chats yet error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User does not have any chats yet!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/comment": {
             "post": {
+                "tags": ["comment"],
                 "description": "Create comment",
                 "security": [
                     {
@@ -2627,83 +2729,9 @@
                 }
             }
         },
-        "/chats": {
-            "get": {
-                "description": "",
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The chats of the caller user retrieved",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object",
-                                        "properties": {
-                                            "_id": {
-                                                "type": "string",
-                                                "example": "65ca57ef7b4f2295c385b4f9"
-                                            },
-                                            "name": {
-                                                "type": "string",
-                                                "example": "Random chat"
-                                            },
-                                            "is_private": {
-                                                "type": "boolean",
-                                                "example": false
-                                            },
-                                            "friend_user_name": {
-                                                "type": "string",
-                                                "example": "Random user"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "You have no permission to use path: GET /chats"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "No user found with this id, or user does not have any chats yet error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "User does not have any chats yet!"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/friends": {
             "get": {
+                "tags": ["friend"],
                 "description": "Retrieves all the friends of the user",
                 "security": [
                     {
@@ -2767,6 +2795,7 @@
         },
         "/friend/{friendName}": {
             "post": {
+                "tags": ["friend"],
                 "description": "Send a friendrequest",
                 "security": [
                     {
@@ -2835,6 +2864,7 @@
                 }
             },
             "delete": {
+                "tags": ["friend"],
                 "description": "Delete friend",
                 "security": [
                     {
@@ -2905,6 +2935,7 @@
         },
         "/acceptFriendRequest/{requestCreatorName}": {
             "post": {
+                "tags": ["friend"],
                 "description": "Accept the friend request",
                 "security": [
                     {
@@ -2959,6 +2990,7 @@
         },
         "/declineFriendRequest/{requestCreatorName}": {
             "post": {
+                "tags": ["friend"],
                 "description": "Decline the friend request",
                 "security": [
                     {
