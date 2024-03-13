@@ -5,8 +5,10 @@ const { StatusCodes } = require('http-status-codes')
 const sendTokenResponse = require('../../middlewares/sendTokenResponse')
 
 const registerUser = tryCatchWrapper(async (req, res) => {
-    if (req.cookies['token'] || req.headers.authorization?.startsWith('Bearer')) {
-        throw new userIsAlreadyLoggedInError()
+    if (req.cookies['token'] || req.headers.authorization) {
+        if (req.headers.authorization != 'Bearer null') {
+          throw new userIsAlreadyLoggedInError()
+        }
     }
     if (req.body.username.length > 20) {
         res.status(StatusCodes.CONFLICT).json({ message: 'Username is too long' })
