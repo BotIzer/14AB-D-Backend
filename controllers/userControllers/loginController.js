@@ -6,7 +6,7 @@ const { userIsAlreadyLoggedInError, wrongLoginDataError } = require('../../error
 
 const loginUser = tryCatchWrapper(async (req, res) => {
     // checks whether or not the user is logged in
-    if (req.cookies['token']) {
+    if (req.cookies['token'] || req.headers.authorization) {
         throw new userIsAlreadyLoggedInError()
     }
     const user = await User.findOne({ email: req.body.email })

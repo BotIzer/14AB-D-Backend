@@ -4,7 +4,7 @@ const sendTokenResponse = async (user, statusCode, res) => {
     const token = user.getSignedJwtToken()
 
     // const userInfo = await getUserInfoFromToken(token)
-    res.status(201).json({ success: true, token: token})
+    res.status(statusCode).json({ success: true, token: token })
     return
 }
 

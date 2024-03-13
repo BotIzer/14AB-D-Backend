@@ -3,7 +3,7 @@ const { StatusCodes } = require('http-status-codes')
 
 class wrongLoginDataError extends CustomAPIError {
     constructor() {
-        super('Username or password is wrong!')
+        super('Email or password is wrong!')
         this.statusCode = StatusCodes.UNAUTHORIZED
     }
 }
