@@ -116,6 +116,11 @@
         "/login": {
             "post": {
                 "description": "Login user with email and password",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -168,6 +173,22 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Email or password is wrong"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "User is already logged in error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User is already logged in"
                                         }
                                     }
                                 }
