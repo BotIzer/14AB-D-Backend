@@ -69,6 +69,39 @@
                                             "type": "boolean",
                                             "example": true
                                         },
+                                        "userInfo": {
+                                            "type": "object",
+                                            "properties": {
+                                                "username": {
+                                                    "type": "string",
+                                                    "example": "pista"
+                                                },
+                                                "full_name": {
+                                                    "type": "string",
+                                                    "example": "Kiss Pista"
+                                                },
+                                                "profile_image": {
+                                                    "type": "string",
+                                                    "example": "https://i.imgur.com/pLh571N.png"
+                                                },
+                                                "custom_ui": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "roles": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "user"
+                                                    }
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-02-12T17:39:11.060+00:00"
+                                                }
+                                            }
+                                        },
                                         "token": {
                                             "type": "string",
                                             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
@@ -153,6 +186,39 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": true
+                                        },
+                                        "userInfo": {
+                                            "type": "object",
+                                            "properties": {
+                                                "username": {
+                                                    "type": "string",
+                                                    "example": "pista"
+                                                },
+                                                "full_name": {
+                                                    "type": "string",
+                                                    "example": "Kiss Pista"
+                                                },
+                                                "profile_image": {
+                                                    "type": "string",
+                                                    "example": "https://i.imgur.com/pLh571N.png"
+                                                },
+                                                "custom_ui": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "roles": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "user"
+                                                    }
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-02-12T17:39:11.060+00:00"
+                                                }
+                                            }
                                         },
                                         "token": {
                                             "type": "string",
