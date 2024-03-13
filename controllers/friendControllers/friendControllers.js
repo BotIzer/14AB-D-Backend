@@ -57,6 +57,7 @@ const acceptFriendRequest = tryCatchWrapper(async (req, res) => {
     accepter.friends.push(friend._id)
     accepter.friend_requests.pull(req.params.requestCreatorName)
     await accepter.save()
+    friend.sent_friend_requests.pull(accepter.username)
     friend.friends.push(accepter._id)
     await friend.save()
     res.status(StatusCodes.OK).json({ message: 'Friend request accepted' })
@@ -68,6 +69,9 @@ const declineFriendRequest = tryCatchWrapper(async (req, res) => {
     const decliner = await User.findById(id)
     decliner.friend_requests.pull(req.params.requestCreatorName)
     await decliner.save()
+    const requester = await User.findOne({ username: req.params.requestCreatorName })
+    requester.sent_friend_requests.pull(decliner.username)
+    await requester.save()
     res.status(StatusCodes.OK).json({ message: 'Friend request declined' })
     return
 })
