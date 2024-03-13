@@ -1068,12 +1068,12 @@
                 ],
                 "parameters": [
                     {
-                        "name": "forumName",
+                        "name": "forumname",
                         "in": "header",
                         "required": true,
                         "schema": {
                             "type": "string",
-                            "example": "random"
+                            "example": "random forumname"
                         }
                     }
                 ],
