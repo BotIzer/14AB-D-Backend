@@ -87,7 +87,7 @@ const deleteUser = tryCatchWrapper(async (req, res) => {
 })
 
 const addHobby = tryCatchWrapper(async (req, res) => {
-    const userId = getCreatorIdFromHeaders(req.headers)
+    const userId = await getCreatorIdFromHeaders(req.headers)
     const user = await User.findById(userId)
     if (!user) throw new noUserFoundError(userId)
     const hobbies = req.body.hobbies
