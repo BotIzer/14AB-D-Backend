@@ -45,6 +45,8 @@ const makeFriendRequest = tryCatchWrapper(async (req, res) => {
     }
     user.friend_requests.push(sender.username)
     await user.save()
+    sender.sent_friend_requests.push(user.username)
+    await sender.save()
     res.status(StatusCodes.OK).json({ message: 'Friend request sent' })
     return
 })
