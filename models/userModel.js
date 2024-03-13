@@ -73,6 +73,7 @@ const userSchema = new mongoose.Schema({
         ],
     },
     friend_requests: [String],
+    sent_friend_requests: [String],
     created_at: {
         type: Date,
         default: Date.now,
