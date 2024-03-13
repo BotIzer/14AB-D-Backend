@@ -43,6 +43,12 @@ const makeFriendRequest = tryCatchWrapper(async (req, res) => {
     if (!user) {
         res.status(StatusCodes.NOT_FOUND).json({ message: 'No user found to send friend request to!' })
     }
+    if (user.username === sender.username) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'You cannot send a friend request to yourself!' })
+    }
+    if (sender.friends.includes(user._id)) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'You are already friends with this user!' })
+    }
     user.friend_requests.push(sender.username)
     await user.save()
     sender.sent_friend_requests.push(user.username)

@@ -2893,6 +2893,22 @@
                             }
                         }
                     },
+                    "400": {
+                        "description": "You wanted to send a request to someone who is already you friend or to yourself",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You are already friends with this user!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "content": {
