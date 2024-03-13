@@ -95,9 +95,13 @@ const addFriendToChat = tryCatchWrapper(async (req, res) => {
     const chat = await Chatroom.findById(chatId)
     if (!chat) {
         res.status(StatusCodes.NOT_FOUND).json({ message: 'No chat found!' })
-    } 
-        for (const addersFriend of adder.friends) {
+    }
+    for (const addersFriend of adder.friends) {
         if (JSON.stringify(addersFriend) == JSON.stringify(friend._id)) {
+            if (chat.users.find(user => user.user_id == friend._id)) {
+                res.status(StatusCodes.BAD_REQUEST).json({ message: 'You are already in this chat!' })
+                return
+            }
             chat.users.push({
                 user_id: friend._id,
                 is_moderator: false,
@@ -113,4 +117,11 @@ const addFriendToChat = tryCatchWrapper(async (req, res) => {
     return
 })
 
-module.exports = { getFriends, deleteFriend, makeFriendRequest, acceptFriendRequest, declineFriendRequest, addFriendToChat }
+module.exports = {
+    getFriends,
+    deleteFriend,
+    makeFriendRequest,
+    acceptFriendRequest,
+    declineFriendRequest,
+    addFriendToChat,
+}
