@@ -59,12 +59,12 @@ router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(p
 router.route('/forum/getAllThreads/:forumId').get(checkWetherBannedFromForum, getAllThreads)
 router.route('/forum/getForumsByTag/:tag').get(searchForumByTag)
 router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum) //PUT NOT TESTED!
-router.route('/forum/ban/').post(protectPath, banUserFromForum).put(protectPath, unbanUserFromForum) //NOT TESTED
+router.route('/forum/ban').post(protectPath, banUserFromForum).put(protectPath, unbanUserFromForum) //NOT TESTED
 router.route('/thread').post(protectPath, createThread)
 router.route('/thread/:threadId').delete(protectPath, deleteThreadConroller) //NOT TESTED
 router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)
 router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPath, deleteChat)
-router.route('/chat/addFriend/').post(protectPath, addFriendToChat) //NOT TESTED!
+router.route('/chat/addFriend').post(protectPath, addFriendToChat) //NOT TESTED!
 router.route('/createOrRetrieveChat').post(protectPath, checkMutualChat)
 router.route('/chat').post(protectPath, createChat)
 router.route('/chat/leaveChat').post(protectPath, leaveChat)
