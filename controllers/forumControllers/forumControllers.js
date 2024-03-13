@@ -8,6 +8,12 @@ const Thread = require('../../models/threadModel')
 
 const createForum = tryCatchWrapper(async (req, res) => {
     const { forum_name: forumName, banner: banner } = req.body
+    if (!forumName) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            message: 'Please provide a forum name',
+        })
+        return
+    }
     if (await Forum.findOne({ forum_name: forumName })) throw new forumAlreadyExistsError(forumName)
     const decodedCreatorId = await getCreatorIdFromHeaders(req.headers)
     let newForum = new Forum({

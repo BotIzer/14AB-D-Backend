@@ -23,7 +23,6 @@ const forumSchema = new mongoose.Schema({
     },
     banner: {
         type: String,
-        required: true,
     },
     description: {
         type: String,
