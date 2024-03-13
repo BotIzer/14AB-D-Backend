@@ -5,7 +5,7 @@ const { StatusCodes } = require('http-status-codes')
 const sendTokenResponse = require('../../middlewares/sendTokenResponse')
 
 const registerUser = tryCatchWrapper(async (req, res) => {
-    if (req.cookies['token']) {
+    if (req.cookies['token'] || req.headers.authorization) {
         throw new userIsAlreadyLoggedInError()
     }
     if (req.body.username.split('_')[0] === 'deletedUser') {

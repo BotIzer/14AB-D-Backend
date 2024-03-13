@@ -24,6 +24,11 @@
         "/register": {
             "post": {
                 "description": "Register user with username, email and strong password",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
