@@ -318,63 +318,69 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "full_name": {
-                                            "type": "string",
-                                            "example": "Nagy Sándor"
-                                        },
-                                        "chats": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "example": "65cfb05bbd7448340f8993e2"
-                                            }
-                                        },
-                                        "email": {
-                                            "type": "string",
-                                            "example": "email@mail.com"
-                                        },
-                                        "profile_image": {
-                                            "type": "string",
-                                            "example": "default"
-                                        },
-                                        "custom_ui": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "roles": {
-                                            "type": "string",
-                                            "example": "user"
-                                        },
-                                        "username": {
-                                            "type": "string",
-                                            "example": "pista"
-                                        },
-                                        "friends": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "example": "65cfb05bbd7448340f8993e2"
-                                            }
-                                        },
-                                        "created_at": {
-                                            "type": "string",
-                                            "example": "2020-07-07T13:31:16.371Z",
-                                            "format": "date-time"
-                                        },
-                                        "friend_requests": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "example": "randomUsername"
-                                            }
-                                        },
-                                        "hobbies": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "example": "sports"
+                                        "user": {
+                                            "type": "object",
+                                            "properties": {
+                                                "full_name": {
+                                                    "type": "string",
+                                                    "example": "Nagy Sándor"
+                                                },
+                                                "chats": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "65cfb05bbd7448340f8993e2"
+                                                    }
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "email@mail.com"
+                                                },
+                                                "profile_image": {
+                                                    "type": "string",
+                                                    "example": "default"
+                                                },
+                                                "custom_ui": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "roles": {
+                                                    "type": "string",
+                                                    "example": "user"
+                                                },
+                                                "username": {
+                                                    "type": "string",
+                                                    "example": "pista"
+                                                },
+                                                "friends": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "65cfb05bbd7448340f8993e2"
+                                                    }
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2020-07-07T13:31:16.371Z",
+                                                    "format": "date-time"
+                                                },
+                                                "friend_requests": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "randomUsername"
+                                                    }
+                                                },
+                                                "hobbies": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "sports"
+                                                    }
+                                                }
                                             }
                                         }
+                                        
                                     }
                                 }
                             }
