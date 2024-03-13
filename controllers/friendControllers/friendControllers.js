@@ -95,9 +95,9 @@ const addFriendToChat = tryCatchWrapper(async (req, res) => {
     const chat = await Chatroom.findById(chatId)
     if (!chat) {
         res.status(StatusCodes.NOT_FOUND).json({ message: 'No chat found!' })
-    }
-    adder.friends.forEach(async (addersFriend) => {
-        if (addersFriend == friend._id) {
+    } 
+        for (const addersFriend of adder.friends) {
+        if (JSON.stringify(addersFriend) == JSON.stringify(friend._id)) {
             chat.users.push({
                 user_id: friend._id,
                 is_moderator: false,
@@ -108,7 +108,7 @@ const addFriendToChat = tryCatchWrapper(async (req, res) => {
             res.status(StatusCodes.OK).json({ message: 'Friend added to chat' })
             return
         }
-    })
+    }
     res.status(StatusCodes.NOT_FOUND).json({ message: 'You have no friend with name: ' + friendName })
     return
 })
