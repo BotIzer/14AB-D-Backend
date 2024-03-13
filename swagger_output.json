@@ -427,6 +427,17 @@
                         "bearerAuth": []
                     }
                 ],
+                "parameters": [
+                    {
+                        "name": "password",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "RandomPass1234!"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Friend request declined",
