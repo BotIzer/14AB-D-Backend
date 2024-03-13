@@ -699,7 +699,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "You have no permission to use path: GET /user/friendRequest"
+                                            "example": "You have no permission to use path: GET /user/friends/requests"
                                         }
                                     }
                                 }
@@ -715,7 +715,71 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "User not found with: username"
+                                            "example": "User not found with id: 65ca57ef7b4f2295c385b4f9"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/friends/sentRequests": {
+            "get": {
+                "tags": ["user"],
+                "description": "Get users sent friend requests",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns with an array containing the users sent friend requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "username": {
+                                                "type": "string",
+                                                "example": "sanyi"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: GET /user/friends/sentRequests"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No user found error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found with id: 65ca57ef7b4f2295c385b4f9"
                                         }
                                     }
                                 }

@@ -108,6 +108,16 @@ const getUserRequests = tryCatchWrapper(async (req, res) => {
     return
 })
 
+const getUsersSentRequests = tryCatchWrapper(async (req, res) => {
+    const userId = await getCreatorIdFromHeaders(req.headers)
+    const user = await User.findById(userId)
+    if (!user) throw new noUserFoundError(userId)
+    console.log(user)
+    const sentRequests = user.sent_friend_requests
+    res.status(StatusCodes.OK).json({ sentRequests })
+    return
+})
+
 function generateRandomString(length) {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()'
     const specialChar = chars[Math.floor(Math.random() * (chars.length - 10)) + 52] // Choose a special character
@@ -129,4 +139,5 @@ module.exports = {
     getUserProfileByUsername,
     addHobby,
     getUserRequests,
+    getUsersSentRequests,
 }
