@@ -5,7 +5,7 @@ const { StatusCodes } = require('http-status-codes')
 const sendTokenResponse = require('../../middlewares/sendTokenResponse')
 
 const registerUser = tryCatchWrapper(async (req, res) => {
-    if (req.cookies['token'] || req.headers.authorization) {
+    if (req.cookies['token'] || req.headers.authorization?.startsWith('Bearer')) {
         throw new userIsAlreadyLoggedInError()
     }
     if (req.body.username.length > 20) {
