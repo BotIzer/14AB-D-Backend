@@ -1285,6 +1285,22 @@
                     }
                 },
                 "responses": {
+                    "200": {
+                        "description": "Forum updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Forum updated"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "401": {
                         "description": "You are not logged in",
                         "content": {
