@@ -55,7 +55,7 @@ const getUserProfileByUsername = tryCatchWrapper(async (req, res) => {
 })
 
 const updateUser = tryCatchWrapper(async (req, res) => {
-    const userId = getCreatorIdFromHeaders(req.headers)
+    const userId = await getCreatorIdFromHeaders(req.headers)
     const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions).select('-_id -password')
     if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })
@@ -63,7 +63,7 @@ const updateUser = tryCatchWrapper(async (req, res) => {
 })
 
 const deleteUser = tryCatchWrapper(async (req, res) => {
-    const userId = getCreatorIdFromHeaders(req.headers)
+    const userId = await getCreatorIdFromHeaders(req.headers)
     const user = await User.findById(userId)
     if (!user) throw new noUserFoundError(userId)
     if (!user.validPassword(user, req.headers.password)) {
@@ -71,7 +71,7 @@ const deleteUser = tryCatchWrapper(async (req, res) => {
         return
     }
     const deletedUsername =
-        'deletedUser_' + ((await User.find({ username: { $regex: `^deletedUser`, $options: 'i' } })).length + 1)
+        'deletedUser_' + (await User.find({ username: { $regex: `^deletedUser`, $options: 'i' } })).length + 1
     user.username = deletedUsername
     user.generateHash(generateRandomString(10) + 'Pass12345%!')
     user.full_name = 'Deleted User'
