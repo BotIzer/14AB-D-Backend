@@ -8,6 +8,12 @@ const registerUser = tryCatchWrapper(async (req, res) => {
     if (req.cookies['token'] || req.headers.authorization) {
         throw new userIsAlreadyLoggedInError()
     }
+    if (req.body.username.length > 20) {
+        res.status(StatusCodes.CONFLICT).json({ message: 'Username is too long' })
+    }
+    if (req.body.username.length < 2) {
+        res.status(StatusCodes.CONFLICT).json({ message: 'Username is too short' })
+    }
     if (req.body.username.split('_')[0] === 'deletedUser') {
         res.status(StatusCodes.CONFLICT).json({ message: 'You cannot register with deletedUser username' })
     }
