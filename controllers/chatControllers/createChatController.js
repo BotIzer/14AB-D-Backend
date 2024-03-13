@@ -15,9 +15,12 @@ const createChat = tryCatchWrapper(async (req, res) => {
                 message: `No user found with this name: '${usernames}'`,
             })
         }
-        if (await hasMutualPrivateChat(decodedCreatorId, otherUser._id)) {
-            throw new usersAlreadyHaveMutualPrivateChatroomError()
+        if(isPrivate){
+            if (await hasMutualPrivateChat(decodedCreatorId, otherUser._id)) {
+                throw new usersAlreadyHaveMutualPrivateChatroomError()
+            }
         }
+        
     }
     const expirationDate = await setExpirationDate(isTtl, daysToDie)
     let newChat = new Chat({
