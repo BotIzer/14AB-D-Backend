@@ -45,7 +45,7 @@
                                     },
                                     "email": {
                                         "type": "string",
-                                        "example": "alma@almas.com"
+                                        "example": "newemail1234@newemail1234.com"
                                     },
                                     "password": {
                                         "type": "string",
@@ -165,11 +165,11 @@
                                 "properties": {
                                     "email": {
                                         "type": "string",
-                                        "example": "sanyi@gmail.com"
+                                        "example": "alma@almas.com"
                                     },
                                     "password": {
                                         "type": "string",
-                                        "example": "StrongPassword1234!"
+                                        "example": "RandomPass1234!"
                                     }
                                 },
                                 "required": ["email", "password"]
@@ -2173,7 +2173,7 @@
         "/createOrRetrieveChat": {
             "post": {
                 "tags": ["chat"],
-                "description": "Retrieves the mutual chats between the caller user and another one",
+                "description": "Retrieves the mutual chats between the caller user and another one. NOT A STANDALONE ROUTE, I CANNOT USED BY ITSELF",
                 "security": [
                     {
                         "bearerAuth": []
