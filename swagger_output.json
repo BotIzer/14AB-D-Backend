@@ -45,11 +45,11 @@
                                     },
                                     "email": {
                                         "type": "string",
-                                        "example": "sanyi@gmail.com"
+                                        "example": "alma@almas.com"
                                     },
                                     "password": {
                                         "type": "string",
-                                        "example": "RandomPassword1234!",
+                                        "example": "RandomPass1234!",
                                         "minLength": 8
                                     }
                                 },
