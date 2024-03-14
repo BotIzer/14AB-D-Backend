@@ -2173,7 +2173,7 @@
         "/createOrRetrieveChat": {
             "post": {
                 "tags": ["chat"],
-                "description": "Retrieves the mutual chats between the caller user and another one. NOT A STANDALONE ROUTE, I CANNOT USED BY ITSELF",
+                "description": "Retrieves the mutual chats between the caller user and another one. NOT A STANDALONE ROUTE, IT IS USED WITH /chat",
                 "security": [
                     {
                         "bearerAuth": []
