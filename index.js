@@ -11,6 +11,7 @@ const router = require('./routes/router')
 const errorHandlerMiddleware = require('./middlewares/errorHandler')
 const noMiddlewareFound = require('./middlewares/noMiddlewareFoundError')
 const User = require('./models/userModel')
+const Thread = require('./models/threadModel')
 const mongoSanitize = require('express-mongo-sanitize')
 const helmet = require('helmet')
 const xss = require('xss-clean')
@@ -18,6 +19,7 @@ const rateLimit = require('express-rate-limit')
 const hpp = require('hpp')
 const swaggerUi = require('swagger-ui-express')
 const swaggerOutput = require('./swagger_output.json')
+const {ObjectId} = require('mongodb')
 
 const app = express()
 const server = http.createServer(app)
@@ -73,7 +75,15 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('User disconnected')
     })
+    socket.on('likedThread', async (data) => {
+        console.log("Someone liked a thread");
+        const thread = await Thread.findOne({ '_id.thread_id': data.threadId })
+        thread.likes += 1
+        console.log(thread.likes);
+        thread.save()
+    })
 })
+
 // Start the server
 startServer()
 
