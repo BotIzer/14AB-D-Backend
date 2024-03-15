@@ -89,3 +89,5 @@ const createEmitResponse = async (change) => {
         creator_name: (await User.findById(change.fullDocument._id.creator_id).select('username -_id')).username,
     }
 }
+
+module.exports = app

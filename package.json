@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "npx env-cmd -f .env.test mocha --exit",
         "dev": "npx env-cmd -f .env.dev nodemon index.js",
         "start": "node index.js"
     },
@@ -19,7 +19,10 @@
     },
     "homepage": "https://github.com/BotIzer/14AB-D-Backend#readme",
     "devDependencies": {
+        "chai": "^4.4.1",
+        "chai-http": "^4.4.0",
         "env-cmd": "^10.1.0",
+        "mocha": "^10.3.0",
         "nodemon": "^3.0.1"
     },
     "dependencies": {
