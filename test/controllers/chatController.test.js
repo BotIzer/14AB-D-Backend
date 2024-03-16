@@ -4,76 +4,61 @@ const expect = chai.expect
 const chaiHttp = require('chai-http')
 const server = require('../../index.js')
 const User = require('../../models/userModel.js')
+
 chai.use(chaiHttp)
 
 describe("/chat controller's tests", () => {
     let userToken
-    before((done) => {
-        User.deleteMany({}).then(() => {
-            chai.request(server)
-                .post('/register')
-                .send({
-                    username: 'randomTestUser',
-                    email: 'randomTestUser@randomTestUser.com',
-                    password: 'StrongTestPassword1234!',
-                })
-                .then((res) => {
-                    chai.request(server)
-                        .post('/register')
-                        .send({
-                            username: 'otherTestUser',
-                            email: 'otherTestUser@otherTestUser.com',
-                            password: 'StrongTestPassword1234!',
-                        })
-                        .then((res) => {
-                            chai.request(server)
-                                .post('/login')
-                                .send({
-                                    email: 'randomTestUser@randomTestUser.com',
-                                    password: 'StrongTestPassword1234!',
-                                })
-                                .end((err, res) => {
-                                    userToken = res.body.token
-                                    done()
-                                })
-                        })
-                })
+
+    beforeEach(async () => {
+        await User.deleteMany({})
+        await chai.request(server).post('/register').send({
+            username: 'randomTestUser',
+            email: 'randomTestUser@randomTestUser.com',
+            password: 'StrongTestPassword1234!',
         })
+        await chai.request(server).post('/register').send({
+            username: 'otherTestUser',
+            email: 'otherTestUser@otherTestUser.com',
+            password: 'StrongTestPassword1234!',
+        })
+        const loginRes = await chai.request(server).post('/login').send({
+            email: 'randomTestUser@randomTestUser.com',
+            password: 'StrongTestPassword1234!',
+        })
+        userToken = loginRes.body.token
     })
+
     describe('/chats route test', () => {
-        it('should return with 200 statuscode an empty array', (done) => {
-            chai.request(server)
+        it('should return with 200 status code and an empty array', async () => {
+            const res = await chai
+                .request(server)
                 .get('/chats')
                 .set({
                     authorization: 'Bearer ' + userToken,
                 })
-                .end((err, res) => {
-                    res.should.have.status(200)
-                    res.body.should.have.property('returnArray')
-                    expect(res.body.returnArray).to.be.a('array').that.is.empty
-                    done()
-                })
+
+            res.should.have.status(200)
+            res.body.should.have.property('returnArray').that.is.an('array').and.is.empty
         })
     })
-    // describe('/chat POST route test', () => {
-    //     it("should return with 201 statuscode and with the chat's id", (done) => {
-    //         chai.request(server)
-    //             .post('/chat')
-    //             .set({
-    //                 authorization: 'Bearer' + userToken,
-    //             })
-    //             .send({
-    //                 name: 'randomTestChat',
-    //                 is_ttl: false,
-    //                 is_private: true,
-    //                 usernames: ['otherTestUser'],
-    //             })
-    //             .end((err, res) => {
-    //                 console.log(res.body)
-    //                 res.should.have.status(201)
-    //                 // res.body.should.have.property('roomId')
-    //                 done()
-    //             })
-    //     })
-    // })
+
+    describe('/chat POST route test', () => {
+        it("should return with 201 status code and the chat's id", async () => {
+            const res = await chai
+                .request(server)
+                .post('/chat')
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .send({
+                    name: 'randomTestChat',
+                    is_ttl: false,
+                    is_private: true,
+                    usernames: ['otherTestUser'],
+                })
+            res.should.have.status(201)
+            res.body.should.have.property('roomId')
+        })
+    })
 })
