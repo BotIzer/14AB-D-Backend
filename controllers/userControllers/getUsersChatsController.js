@@ -13,10 +13,6 @@ const getUsersChats = tryCatchWrapper(async (req, res) => {
         })
     }
     const myName = (await User.findById(id)).username
-    console.log(myName);
-    if (!chats) {
-        throw new userDoesNotHaveChatsYetError()
-    }
     const privateChats = []
     const publicChats = []
 
