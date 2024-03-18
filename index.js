@@ -19,7 +19,7 @@ const rateLimit = require('express-rate-limit')
 const hpp = require('hpp')
 const swaggerUi = require('swagger-ui-express')
 const swaggerOutput = require('./swagger_output.json')
-const {ObjectId} = require('mongodb')
+const { ObjectId } = require('mongodb')
 
 const app = express()
 const server = http.createServer(app)
@@ -33,11 +33,13 @@ app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }))
 app.use(express.urlencoded({ extended: true }))
 app.use(mongoSanitize())
 app.use(xss())
-app.use(helmet({
-    crossOriginResourcePolicy: false,
-}))
+app.use(
+    helmet({
+        crossOriginResourcePolicy: false,
+    })
+)
 const limiter = rateLimit({
-    windowMs: 1000,         // 1000 ms = 1 second
+    windowMs: 1000, // 1000 ms = 1 second
     max: 100,
 })
 app.use(limiter)
@@ -76,10 +78,16 @@ io.on('connection', (socket) => {
         console.log('User disconnected')
     })
     socket.on('likedThread', async (data) => {
-        console.log("Someone liked a thread");
+        console.log('Someone liked a thread')
         const thread = await Thread.findOne({ '_id.thread_id': data.threadId })
-        thread.likes += 1
-        console.log(thread.likes);
+        if (!thread.likes.users.includes(data.userId)) {
+            if (thread.dislikes.users.pop(userId)) {
+                thread.dislikes.count -= 1
+            }
+            thread.likes.count += 1
+            thread.likes.users.push(data.userId)
+        }
+        console.log(thread.likes)
         thread.save()
     })
 })

@@ -20,12 +20,18 @@ const threadSchema = new mongoose.Schema({
         required: true,
     },
     likes: {
-        type: Number,
-        default: 0,
+        count: {
+            type: Number,
+            default: 0,
+        },
+        users: [mongoose.ObjectId],
     },
     dislikes: {
-        type: Number,
-        default: 0,
+        count: {
+            type: Number,
+            default: 0,
+        },
+        users: [mongoose.ObjectId],
     },
     editors: [mongoose.ObjectId],
     emoticons: [String],
