@@ -77,17 +77,26 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('User disconnected')
     })
-    socket.on('likedThread', async (data) => {
-        console.log('Someone liked a thread')
+
+    // WARNING: THIS PIECE OF CODE CAN CAUSE MEMORY LEAKS
+    // AND MAY LEAD TO CRASHES AND OTHER UNDEFINED BEHAVIOUR!
+    // IMMEDIATE FIX IS NEEDED
+    socket.on('onOpinionChanged', async (data) => {
+        console.log('Something changed')
         const thread = await Thread.findOne({ '_id.thread_id': data.threadId })
-        if (!thread.likes.users.includes(data.userId)) {
-            if (thread.dislikes.users.pop(userId)) {
-                thread.dislikes.count -= 1
+        if(data.isLiked){
+            if (!thread.likes.users.includes(data.userId)) {
+                if (thread.dislikes.users.pop(userId)) {
+                    thread.dislikes.count -= 1
+                }
+                thread.likes.count += 1
+                thread.likes.users.push(data.userId)
             }
-            thread.likes.count += 1
-            thread.likes.users.push(data.userId)
         }
-        console.log(thread.likes)
+        else{
+
+        }
+        console.log(thread)
         thread.save()
     })
 })
