@@ -85,7 +85,7 @@ const deleteForum = tryCatchWrapper(async (req, res) => {
         return
     }
     const id = await getCreatorIdFromHeaders(req.headers)
-    if (new mongoose.Types.ObjectId(id) !== new mongoose.Types.ObjectId(forum._id.creator_id)) {
+    if (id != forum._id.creator_id.toString()) {
         res.status(StatusCodes.UNAUTHORIZED).json({
             message: 'You are not authorized to delete this forum',
         })
