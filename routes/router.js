@@ -39,7 +39,7 @@ const {
     deleteChat,
     leaveChat
 } = require('../controllers/chatControllers/chatControllers')
-const { createComment, updateComment } = require('../controllers/commentControllers/commentControllers')
+const { createComment, updateComment, deleteComment } = require('../controllers/commentControllers/commentControllers')
 const {
     getFriends,
     deleteFriend,
