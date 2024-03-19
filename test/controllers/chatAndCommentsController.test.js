@@ -96,4 +96,21 @@ describe("/chat controller's tests", () => {
             res.body.should.have.property('comments').that.is.an('array').and.is.empty
         })
     })
+    describe('/comments POST route test', () => {
+        it('should return with 201 status code and', async () => {
+            const res = await chai
+                .request(server)
+                .post('/comment')
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .send({
+                    room_id: chatId,
+                    text: 'randomTestComment1234',
+                    is_reply: false,
+                })
+            res.should.have.status(201)
+            res.body.should.have.property('success').that.is.a('boolean').that.is.equal(true)
+        })
+    })
 })
