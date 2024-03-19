@@ -83,7 +83,7 @@ const deleteForum = tryCatchWrapper(async (req, res) => {
         return
     }
     const id = await getCreatorIdFromHeaders(req.headers)
-    if (id !== forum._id.creator_id) {
+    if (new mongoose.Types.ObjectId(id) !== new mongoose.Types.ObjectId(forum._id.creator_id)) {
         res.status(StatusCodes.UNAUTHORIZED).json({
             message: 'You are not authorized to delete this forum',
         })
@@ -105,7 +105,7 @@ const banUserFromForum = tryCatchWrapper(async (req, res) => {
         return
     }
     const bannerId = await getCreatorIdFromHeaders(req.headers)
-    if (bannerId != forum._id.creator_id.toString() && await User.findById(bannerId).roles != 'admin') {
+    if (bannerId != forum._id.creator_id.toString() && (await User.findById(bannerId).roles) != 'admin') {
         res.status(StatusCodes.UNAUTHORIZED).json({
             message: 'You are not authorized to ban users from this forum',
         })
