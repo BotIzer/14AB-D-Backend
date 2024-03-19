@@ -72,12 +72,28 @@ describe("/chat controller's tests", () => {
                 })
             res.should.have.status(200)
             res.body.should.have.property('chat')
-            res.body.chat.should.have.property('time_to_live').that.is.a('object').that.have.property('is_ttl').that.is.equal(false)
+            res.body.chat.should.have
+                .property('time_to_live')
+                .that.is.a('object')
+                .that.have.property('is_ttl')
+                .that.is.equal(false)
             res.body.chat.should.have.property('is_private').that.is.equal(true)
             res.body.chat.should.have.property('name').that.is.equal('randomTestChat')
             res.body.chat.should.have.property('users').that.is.an('array').that.have.lengthOf(1)
             res.body.chat.should.have.property('owner').that.is.a('string').lengthOf(24)
             res.body.chat.should.have.property('common_topics').that.is.an('array').and.is.empty
+        })
+    })
+    describe('/chat/:chatId/comments route test', () => {
+        it('should return with 200 status code and an empty array', async () => {
+            const res = await chai
+                .request(server)
+                .get(`/chat/${chatId}/comments`)
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+            res.should.have.status(200)
+            res.body.should.have.property('comments').that.is.an('array').and.is.empty
         })
     })
 })
