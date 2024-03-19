@@ -279,7 +279,7 @@
                                 "properties": {
                                     "keyword": {
                                         "type": "string",
-                                        "example": "pista",
+                                        "example": "Chit-Chat",
                                         "minLength": 1
                                     }
                                 },
@@ -335,7 +335,7 @@
         "/user": {
             "put": {
                 "tags": ["user"],
-                "description": "Update user",
+                "description": "Update user. LOGIN REQUIRED!",
                 "security": [
                     {
                         "bearerAuth": []
@@ -491,7 +491,7 @@
             },
             "delete": {
                 "tags": ["user"],
-                "description": "Delete user",
+                "description": "Delete user. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -664,7 +664,7 @@
         "/user/friends/requests": {
             "get": {
                 "tags": ["user"],
-                "description": "Get users friend requests",
+                "description": "Get users friend requests. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -728,7 +728,7 @@
         "/user/friends/sentRequests": {
             "get": {
                 "tags": ["user"],
-                "description": "Get users sent friend requests",
+                "description": "Get users sent friend requests. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -792,7 +792,7 @@
         "/user/addHobby": {
             "post": {
                 "tags": ["user"],
-                "description": "Add hobbies to the user",
+                "description": "Add hobbies to the user. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -973,7 +973,7 @@
             },
             "post": {
                 "tags": ["forum"],
-                "description": "Create a new forum",
+                "description": "Create a new forum. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -1060,7 +1060,7 @@
             },
             "delete": {
                 "tags": ["forum"],
-                "description": "Delete a specific forum",
+                "description": "Delete a specific forum. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -1241,7 +1241,7 @@
             },
             "put": {
                 "tags": ["forum"],
-                "description": "Update a forum",
+                "description": "Update a forum. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -1339,7 +1339,7 @@
         "/forum/ban": {
             "post": {
                 "tags": ["forum"],
-                "description": "Ban a user from the forum",
+                "description": "Ban a user from the forum. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -1433,7 +1433,7 @@
             },
             "put": {
                 "tags": ["forum"],
-                "description": "Unban a user from the forum",
+                "description": "Unban a user from the forum. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -1529,7 +1529,7 @@
         "/forum/getAllThreads/{forumId}": {
             "get": {
                 "tags": ["forum"],
-                "description": "Get all threads in a specific forum",
+                "description": "Get all threads in a specific forum. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -1789,7 +1789,7 @@
         "/thread": {
             "post": {
                 "tags": ["thread"],
-                "description": "Create thread",
+                "description": "Create thread. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -1881,7 +1881,7 @@
         "/thread/{threadId}": {
             "delete": {
                 "tags": ["thread"],
-                "description": "Delete a thread",
+                "description": "Delete a thread. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -1968,7 +1968,7 @@
         "/chat/{chatId}": {
             "get": {
                 "tags": ["chat"],
-                "description": "Returns the data of the chat by id",
+                "description": "Returns the data of the chat by id. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -1980,7 +1980,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "65dc8b87ea70db4fabe4adb6"
                         }
                     }
                 ],
@@ -2086,7 +2087,7 @@
             },
             "delete": {
                 "tags": ["chat"],
-                "description": "",
+                "description": "Delete chat. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -2173,7 +2174,7 @@
         "/createOrRetrieveChat": {
             "post": {
                 "tags": ["chat"],
-                "description": "Retrieves the mutual chats between the caller user and another one. NOT A STANDALONE ROUTE, IT IS USED WITH /chat",
+                "description": "Retrieves the mutual chats between the caller user and another one. NOT A STANDALONE ROUTE, IT IS USED WITH /chat. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -2307,7 +2308,7 @@
         "/chat": {
             "post": {
                 "tags": ["chat"],
-                "description": "Create a new chat",
+                "description": "Create a new chat. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -2417,7 +2418,7 @@
         "/chat/addFriend/": {
             "post": {
                 "tags": ["chat"],
-                "description": "Add a friend to the chat",
+                "description": "Add a friend to the chat. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -2498,7 +2499,7 @@
         "/chats": {
             "get": {
                 "tags": ["chat"],
-                "description": "",
+                "description": "Return the chats of the user who is logged in. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -2574,7 +2575,7 @@
         "/comment": {
             "post": {
                 "tags": ["comment"],
-                "description": "Create comment",
+                "description": "Create comment. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -2684,7 +2685,7 @@
         "/chat/{chatId}/comments": {
             "get": {
                 "tags": ["comment"],
-                "description": "Returns the chats comments by chatroom id",
+                "description": "Returns the chats comments by chatroom id. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -2696,7 +2697,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "65dc8b87ea70db4fabe4adb6"
                         }
                     }
                 ],
@@ -2812,7 +2814,7 @@
         "/friends": {
             "get": {
                 "tags": ["friend"],
-                "description": "Retrieves all the friends of the user",
+                "description": "Retrieves all the friends of the user. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -2876,7 +2878,7 @@
         "/friend/{friendName}": {
             "post": {
                 "tags": ["friend"],
-                "description": "Send a friendrequest",
+                "description": "Send a friendrequest. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -2961,7 +2963,7 @@
             },
             "delete": {
                 "tags": ["friend"],
-                "description": "Delete friend",
+                "description": "Delete friend. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -3032,7 +3034,7 @@
         "/acceptFriendRequest/{requestCreatorName}": {
             "post": {
                 "tags": ["friend"],
-                "description": "Accept the friend request",
+                "description": "Accept the friend request. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
@@ -3087,7 +3089,7 @@
         "/declineFriendRequest/{requestCreatorName}": {
             "post": {
                 "tags": ["friend"],
-                "description": "Decline the friend request",
+                "description": "Decline the friend request. LOGIN REQUIRED",
                 "security": [
                     {
                         "bearerAuth": []
