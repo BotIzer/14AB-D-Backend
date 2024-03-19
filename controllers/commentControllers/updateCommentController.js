@@ -1,5 +1,4 @@
 const Comment = require('../../models/commentModel')
-const Chatroom = require('../../models/chatroomModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
@@ -20,7 +19,7 @@ const updateComment = tryCatchWrapper(async (req, res) => {
     if (req.body._id || req.body.creation_date || req.body.likes || req.body.dislikes || req.body.emoticons) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: 'Cannot edit this field!' })
     }
-    comment.updateOne(req.body)
+    await comment.updateOne(req.body)
     await comment.save()
 })
 
