@@ -39,7 +39,7 @@ const {
     deleteChat,
     leaveChat
 } = require('../controllers/chatControllers/chatControllers')
-const { createComment } = require('../controllers/commentControllers/commentControllers')
+const { createComment, updateComment } = require('../controllers/commentControllers/commentControllers')
 const {
     getFriends,
     deleteFriend,
@@ -72,6 +72,7 @@ router.route('/chat').post(protectPath, createChat)
 router.route('/chat/leaveChat').post(protectPath, leaveChat)
 router.route('/chats').get(protectPath, getUsersChats)
 router.route('/comment').post(protectPath, createComment)
+router.route('/comment/:commentId').patch(protectPath, updateComment).delete(protectPath, deleteComment)           //SWAGGER!
 router.route('/friends').get(protectPath, getFriends)
 router.route('/friend/:friendName').post(protectPath, makeFriendRequest).delete(protectPath, deleteFriend)
 router.route('/acceptFriendRequest/:requestCreatorName').post(protectPath, acceptFriendRequest)
