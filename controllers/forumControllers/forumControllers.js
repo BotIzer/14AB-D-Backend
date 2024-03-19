@@ -5,6 +5,8 @@ const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
 const { forumAlreadyExistsError } = require('../../errors/forumErrors/forumErrors')
 const Thread = require('../../models/threadModel')
+const mongoose = require('mongoose')
+
 
 const createForum = tryCatchWrapper(async (req, res) => {
     const { forum_name: forumName, banner: banner } = req.body
