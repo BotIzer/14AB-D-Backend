@@ -113,4 +113,52 @@ describe("/chat controller's tests", () => {
             res.body.should.have.property('success').that.is.a('boolean').that.is.equal(true)
         })
     })
+    describe('/chat/:chatId/comments route test', () => {
+        it('should return with 200 status code and an array with one comment object element', async () => {
+            const res = await chai
+                .request(server)
+                .get(`/chat/${chatId}/comments`)
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+            res.should.have.status(200)
+            res.body.should.have.property('comments').that.is.an('array').and.have.lengthOf(1)
+            res.body.comments[0].should.have.property('text').that.is.a('string').that.is.equal('randomTestComment1234')
+            res.body.comments[0].should.have.property('likes').that.is.a('number').that.is.equal(0)
+            res.body.comments[0].should.have.property('dislikes').that.is.a('number').that.is.equal(0)
+            res.body.comments[0].should.have
+                .property('creator_name')
+                .that.is.a('string')
+                .that.is.equal('randomTestUser')
+            res.body.comments[0].should.have
+                .property('_id')
+                .that.is.an('object')
+                .that.have.property('room_id')
+                .that.is.a('string')
+                .lengthOf(24)
+            res.body.comments[0].should.have
+                .property('_id')
+                .that.is.an('object')
+                .that.have.property('message_id')
+                .that.is.a('string')
+                .lengthOf(24)
+            res.body.comments[0].should.have
+                .property('reply')
+                .that.is.an('object')
+                .that.have.property('is_reply')
+                .that.is.a('boolean')
+                .that.is.equal(false)
+            res.body.comments[0].should.have
+                .property('reply')
+                .that.is.an('object')
+                .that.have.property('parent_comment_id')
+                .that.is.equal(null)
+            res.body.comments[0].should.have
+                .property('reply')
+                .that.is.an('object')
+                .that.have.property('sequential_number')
+                .that.is.an('number')
+                .and.is.equal(0)
+        })
+    })
 })
