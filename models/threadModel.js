@@ -4,15 +4,15 @@ const threadSchema = new mongoose.Schema({
     _id: {
         forum_id: {
             type: mongoose.ObjectId,
-            required: true
+            required: true,
         },
         creator_id: {
             type: mongoose.ObjectId,
-            required: true
+            required: true,
         },
         thread_id: {
             type: mongoose.ObjectId,
-            auto: true
+            auto: true,
         },
     },
     name: {
@@ -20,12 +20,18 @@ const threadSchema = new mongoose.Schema({
         required: true,
     },
     likes: {
-        type: Number,
-        default: 0,
+        count: {
+            type: Number,
+            default: 0,
+        },
+        users: [mongoose.ObjectId],
     },
     dislikes: {
-        type: Number,
-        default: 0,
+        count: {
+            type: Number,
+            default: 0,
+        },
+        users: [mongoose.ObjectId],
     },
     editors: [mongoose.ObjectId],
     emoticons: [String],
@@ -37,6 +43,7 @@ const threadSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    image_array: [String],
 })
 
 module.exports = mongoose.model('Thread', threadSchema, 'Threads')

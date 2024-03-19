@@ -6,7 +6,7 @@ const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeade
 const { noForumFoundError }= require('../../errors/forumErrors/forumErrors')
 
 const createThread = tryCatchWrapper(async (req, res) => {
-    const { forum_name: forumName, name: name, content: content } = req.body
+    const { forum_name: forumName, name: name, content: content, images: images } = req.body
     const decodedCreatorId = await getCreatorIdFromHeaders(req.headers)
     const forumId = await Forum.getForumIdByName(forumName)
     if (!forumId) {
@@ -18,9 +18,12 @@ const createThread = tryCatchWrapper(async (req, res) => {
             creator_id: decodedCreatorId,
         },
         name: name,
-        content: content,
         editors: decodedCreatorId,
         creation_date: Date.now(),
+        content: content,
+    })
+    images.forEach(image => {
+        newThread.image_array.push(image)
     })
     newThread.save()
     res.status(StatusCodes.CREATED).json({ success: true })

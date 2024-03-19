@@ -5,8 +5,22 @@ const { StatusCodes } = require('http-status-codes')
 const sendTokenResponse = require('../../middlewares/sendTokenResponse')
 
 const registerUser = tryCatchWrapper(async (req, res) => {
-    if (req.cookies['token']) {
-        throw new userIsAlreadyLoggedInError()
+    if (req.cookies['token'] || req.headers.authorization) {
+        if (req.headers.authorization != 'Bearer null') {
+          throw new userIsAlreadyLoggedInError()
+        }
+    }
+    if (req.body.username.length > 20) {
+        res.status(StatusCodes.CONFLICT).json({ message: 'Username is too long' })
+        return
+    }
+    if (req.body.username.length < 2) {
+        res.status(StatusCodes.CONFLICT).json({ message: 'Username is too short' })
+        return
+    }
+    if (req.body.username === 'deletedUser' || req.body.username.split('_')[0] === 'deletedUser') {
+        res.status(StatusCodes.CONFLICT).json({ message: 'You cannot register with deletedUser username' })
+        return
     }
     if (await User.findOne({ username: req.body.username })) {
         throw new userAlreadyExistsError(req.body.username)

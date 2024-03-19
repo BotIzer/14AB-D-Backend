@@ -11,6 +11,15 @@ const router = require('./routes/router')
 const errorHandlerMiddleware = require('./middlewares/errorHandler')
 const noMiddlewareFound = require('./middlewares/noMiddlewareFoundError')
 const User = require('./models/userModel')
+const Thread = require('./models/threadModel')
+const mongoSanitize = require('express-mongo-sanitize')
+const helmet = require('helmet')
+const xss = require('xss-clean')
+const rateLimit = require('express-rate-limit')
+const hpp = require('hpp')
+const swaggerUi = require('swagger-ui-express')
+const swaggerOutput = require('./swagger_output.json')
+const { ObjectId } = require('mongodb')
 
 const app = express()
 const server = http.createServer(app)
@@ -22,13 +31,26 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }))
 app.use(express.urlencoded({ extended: true }))
+app.use(mongoSanitize())
+app.use(xss())
+app.use(
+    helmet({
+        crossOriginResourcePolicy: false,
+    })
+)
+const limiter = rateLimit({
+    windowMs: 1000, // 1000 ms = 1 second
+    max: 100,
+})
+app.use(limiter)
+app.use(hpp())
 app.use(morgan('dev'))
 app.use('/', router)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerOutput))
 app.use(noMiddlewareFound)
 app.use(errorHandlerMiddleware)
 
 const port = process.env.PORT || 3000
-
 const startServer = async () => {
     try {
         await connectDB(process.env.DB)
@@ -55,7 +77,30 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('User disconnected')
     })
+
+    // WARNING: THIS PIECE OF CODE CAN CAUSE MEMORY LEAKS
+    // AND MAY LEAD TO CRASHES AND OTHER UNDEFINED BEHAVIOUR!
+    // IMMEDIATE FIX IS NEEDED
+    socket.on('onOpinionChanged', async (data) => {
+        console.log('Something changed')
+        const thread = await Thread.findOne({ '_id.thread_id': data.threadId })
+        if(data.isLiked){
+            if (!thread.likes.users.includes(data.userId)) {
+                if (thread.dislikes.users.pop(userId)) {
+                    thread.dislikes.count -= 1
+                }
+                thread.likes.count += 1
+                thread.likes.users.push(data.userId)
+            }
+        }
+        else{
+
+        }
+        console.log(thread)
+        thread.save()
+    })
 })
+
 // Start the server
 startServer()
 
@@ -71,3 +116,5 @@ const createEmitResponse = async (change) => {
         creator_name: (await User.findById(change.fullDocument._id.creator_id).select('username -_id')).username,
     }
 }
+
+module.exports = app

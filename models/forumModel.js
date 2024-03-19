@@ -23,7 +23,9 @@ const forumSchema = new mongoose.Schema({
     },
     banner: {
         type: String,
-        required: true,
+    },
+    description: {
+        type: String,
     },
     blacklist: [mongoose.ObjectId],
     users: [

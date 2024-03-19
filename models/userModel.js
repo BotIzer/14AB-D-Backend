@@ -13,10 +13,25 @@ const userSchema = new mongoose.Schema({
             'Add a valid name!',
         ],
     },
-    chats: [{
-        type: mongoose.ObjectId,
-        ref: 'Chatroom'
-    }],
+    chats: [
+        {
+            type: mongoose.ObjectId,
+            ref: 'Chatroom',
+        },
+    ],
+    notifications: [
+        {
+            id: {
+                type: mongoose.ObjectId,
+                auto: true,
+            },
+            text: String,
+            seen: {
+                type: Boolean,
+                default: false,
+            },
+        },
+    ],
     email: {
         type: String,
         required: [true, 'To add email is required!'],
@@ -34,9 +49,9 @@ const userSchema = new mongoose.Schema({
     },
     roles: {
         type: String,
-        default: 'u',
+        default: 'user',
         trim: true,
-        enum: ['u', 'o', 'm'],
+        enum: ['user', 'owner', 'moderator', 'admin'],
     },
     username: {
         type: String,
@@ -44,7 +59,7 @@ const userSchema = new mongoose.Schema({
         minlength: [2, 'Username should be at least 2 characters!'],
         maxlength: [20, 'Username cannot be longer than 20 characters!'],
         trim: true,
-        unique: true
+        unique: true,
     },
     friends: [mongoose.ObjectId],
     password: {
@@ -57,6 +72,8 @@ const userSchema = new mongoose.Schema({
             'Strong password is required! (Min. 8 characters long, contains uppercase and lowercase letters, spec. character and numerals)',
         ],
     },
+    friend_requests: [String],
+    sent_friend_requests: [String],
     created_at: {
         type: Date,
         default: Date.now,
@@ -65,6 +82,7 @@ const userSchema = new mongoose.Schema({
         type: Map,
         of: String,
     },
+    hobbies: [String],
     reset_password_token: String,
     reset_password_expire: Date,
 })
@@ -80,7 +98,7 @@ userSchema.methods.validPassword = (user, password) => {
     }
 }
 
-userSchema.methods.getSignedJwtToken = function() {
+userSchema.methods.getSignedJwtToken = function () {
     return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRE,
     })
