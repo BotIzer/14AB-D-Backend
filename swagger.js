@@ -8,7 +8,7 @@ const doc = {
     },
     servers: [
         {
-            url: 'http://localhost:3000',
+            url: process.env.BACKEND_URL,
             description: '',
         },
     ],
