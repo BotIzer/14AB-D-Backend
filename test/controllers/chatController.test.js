@@ -9,8 +9,8 @@ chai.use(chaiHttp)
 
 describe("/chat controller's tests", () => {
     let userToken
-
-    beforeEach(async () => {
+    let chatId
+    before(async () => {
         await User.deleteMany({})
         await chai.request(server).post('/register').send({
             username: 'randomTestUser',
@@ -59,6 +59,25 @@ describe("/chat controller's tests", () => {
                 })
             res.should.have.status(201)
             res.body.should.have.property('roomId')
+            chatId = res.body.roomId
+        })
+    })
+    describe('/chat/:chatId route test', () => {
+        it("should return with 200 status code and an object with the chat's info", async () => {
+            const res = await chai
+                .request(server)
+                .get(`/chat/${chatId}`)
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+            res.should.have.status(200)
+            res.body.should.have.property('chat')
+            res.body.chat.should.have.property('time_to_live').that.is.a('object').that.have.property('is_ttl').that.is.equal(false)
+            res.body.chat.should.have.property('is_private').that.is.equal(true)
+            res.body.chat.should.have.property('name').that.is.equal('randomTestChat')
+            res.body.chat.should.have.property('users').that.is.an('array').that.have.lengthOf(1)
+            res.body.chat.should.have.property('owner').that.is.a('string').lengthOf(24)
+            res.body.chat.should.have.property('common_topics').that.is.an('array').and.is.empty
         })
     })
 })
