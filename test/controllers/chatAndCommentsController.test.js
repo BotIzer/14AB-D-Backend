@@ -223,7 +223,10 @@ describe("/chat controller's tests", () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.have.property('message').that.is.a('string').that.is.equal('Comment updated successfully')
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal('Comment updated successfully')
                     done()
                 })
         })
@@ -237,7 +240,10 @@ describe("/chat controller's tests", () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.have.property('message').that.is.a('string').that.is.equal('Comment deleted successfully')
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal('Comment deleted successfully')
                     done()
                 })
         })
@@ -251,10 +257,7 @@ describe("/chat controller's tests", () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(404)
-                    res.body.should.have
-                        .property('message')
-                        .that.is.a('string')
-                        .that.is.equal('Comment not found')
+                    res.body.should.have.property('message').that.is.a('string').that.is.equal('Comment not found')
                     done()
                 })
         })
@@ -271,10 +274,80 @@ describe("/chat controller's tests", () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(404)
+                    res.body.should.have.property('message').that.is.a('string').that.is.equal('Comment not found')
+                    done()
+                })
+        })
+    })
+    describe('/chat/:chatId', () => {
+        it('should return with 200 status code and with a message', (done) => {
+            chai.request(server)
+                .delete('/chat/' + chatId)
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .end((err, res) => {
+                    res.should.have.status(200)
                     res.body.should.have
                         .property('message')
                         .that.is.a('string')
-                        .that.is.equal('Comment not found')
+                        .that.is.equal('Chat deleted successfully.')
+                    done()
+                })
+        })
+    })
+    describe('/chat/:chatId', () => {
+        it('should return with 404 status code and an with an error message', (done) => {
+            chai.request(server)
+                .delete('/chat/' + chatId)
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .end((err, res) => {
+                    res.should.have.status(404)
+                    res.body.should.have.property('message').that.is.a('string').that.is.equal('No chat found.')
+                    done()
+                })
+        })
+    })
+    describe('/chat POST route test', () => {
+        it("should create another chat return with 201 status code and the chat's id", (done) => {
+            chai.request(server)
+                .post('/chat')
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .send({
+                    name: 'anotherRandomTestChat',
+                    is_ttl: false,
+                    is_private: true,
+                    usernames: ['otherTestUser'],
+                })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.have.property('roomId')
+                    chatId = res.body.roomId
+                    done()
+                })
+        })
+    })
+    describe('/chat/leave POST route test', () => {
+        it('should return with 200 status code and a message', (done) => {
+            chai.request(server)
+                .post('/chat/leaveChat')
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .send({
+                    chat_id: chatId,
+                })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.have
+                        .property('chat')
+                        .that.is.a('object')
+                    res.body.should.have.property('success').that.is.a('boolean').that.is.equal(true)
+                    res.body.should.have.property('message').that.is.a('string').that.is.equal('Chat left successfully!')
                     done()
                 })
         })
