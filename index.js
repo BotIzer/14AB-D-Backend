@@ -23,7 +23,7 @@ const { ObjectId } = require('mongodb')
 
 const app = express()
 app.set('trust proxy', 1)
-app.get('/ip', (request, response) => response.send(request.ip))
+// app.get('/ip', (request, response) => response.send(request.ip))
 const server = http.createServer(app)
 const io = socketIo(server, {
     cors: { origin: process.env.FRONTEND_URL, credentials: true },
