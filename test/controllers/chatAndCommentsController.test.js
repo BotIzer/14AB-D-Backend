@@ -195,7 +195,7 @@ describe("/chat controller's tests", () => {
         })
     })
     describe('/comment/:commentId PATCH route test', () => {
-        it('should return with 200 status code and an object with the updated comment', (done) => {
+        it('should return with 400 status code and an error message', (done) => {
             chai.request(server)
                 .patch('/comment/' + commentId)
                 .set({
@@ -207,6 +207,37 @@ describe("/chat controller's tests", () => {
                 .end((err, res) => {
                     res.should.have.status(400)
                     res.body.should.have.property('message').that.is.a('string').that.is.equal('Comment too long')
+                    done()
+                })
+        })
+    })
+    describe('/comment/:commentId PATCH route test', () => {
+        it('should return with 200 status code and an object with the updated comment', (done) => {
+            chai.request(server)
+                .patch('/comment/' + commentId)
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .send({
+                    text: 'UpdatedCommentText',
+                })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.have.property('message').that.is.a('string').that.is.equal('Comment updated successfully')
+                    done()
+                })
+        })
+    })
+    describe('/comment/:commentId DELETE route test', () => {
+        it('should return with 200 status code and a message', (done) => {
+            chai.request(server)
+                .delete('/comment/' + commentId)
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.have.property('message').that.is.a('string').that.is.equal('Comment deleted successfully')
                     done()
                 })
         })
