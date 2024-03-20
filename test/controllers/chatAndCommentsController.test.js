@@ -343,11 +343,57 @@ describe("/chat controller's tests", () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.have
-                        .property('chat')
-                        .that.is.a('object')
+                    res.body.should.have.property('chat').that.is.a('object')
                     res.body.should.have.property('success').that.is.a('boolean').that.is.equal(true)
-                    res.body.should.have.property('message').that.is.a('string').that.is.equal('Chat left successfully!')
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal('Chat left successfully!')
+                    done()
+                })
+        })
+    })
+    describe('/chat/leave POST route test', () => {
+        it('should return with 400 status code and an error message', (done) => {
+            chai.request(server)
+                .post('/chat/leaveChat')
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .send({
+                    chat_id: chatId,
+                })
+                .end((err, res) => {
+                    res.should.have.status(400)
+                    res.body.should.have.property('success').that.is.a('boolean').that.is.equal(false)
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal('You are not in this chat!')
+                    done()
+                })
+        })
+    })
+    describe('/chat/:chatId route test', () => {
+        it("should return with 200 status code and an object with the chat's info, but now the users array should be empty", (done) => {
+            chai.request(server)
+                .get(`/chat/${chatId}`)
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.have.property('chat')
+                    res.body.chat.should.have
+                        .property('time_to_live')
+                        .that.is.a('object')
+                        .that.have.property('is_ttl')
+                        .that.is.equal(false)
+                    res.body.chat.should.have.property('is_private').that.is.equal(true)
+                    res.body.chat.should.have.property('name').that.is.equal('anotherRandomTestChat')
+                    res.body.chat.should.have.property('users').that.is.an('array').that.have.lengthOf(0)
+                    res.body.chat.should.have.property('owner').that.is.a('string').lengthOf(24)
+                    res.body.chat.should.have.property('common_topics').that.is.an('array').and.is.empty
                     done()
                 })
         })

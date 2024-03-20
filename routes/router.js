@@ -74,7 +74,7 @@ router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPa
 router.route('/chat/addFriend').post(protectPath, addFriendToChat)
 router.route('/createOrRetrieveChat').post(protectPath, checkMutualChat)
 router.route('/chat').post(protectPath, createChat)
-router.route('/chat/leaveChat').post(protectPath, leaveChat)
+router.route('/chat/leaveChat').post(protectPath, leaveChat) //400 into swagger
 router.route('/chats').get(protectPath, getUsersChats)
 
 router.route('/comment').post(protectPath, createComment)
