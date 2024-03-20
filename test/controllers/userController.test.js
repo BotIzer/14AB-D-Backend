@@ -8,15 +8,11 @@ const User = require('../../models/userModel.js')
 chai.use(chaiHttp)
 
 describe("userController's tests", () => {
-    before((done) => {
-        User.deleteMany({}).then(() => {
-            done()
-        })
+    before(async () => {
+        User.deleteMany({}).then(() => {})
     })
-    after((done) => {
-        User.deleteMany({}).then(() => {
-            done()
-        })
+    after(async () => {
+        User.deleteMany({}).then(() => {})
     })
 
     describe('/register route test', () => {
