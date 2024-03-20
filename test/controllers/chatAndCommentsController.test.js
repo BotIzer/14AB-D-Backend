@@ -10,6 +10,7 @@ chai.use(chaiHttp)
 describe("/chat controller's tests", () => {
     let userToken
     let chatId
+    let commentId
     before(async () => {
         await User.deleteMany({})
         await chai.request(server).post('/register').send({
@@ -159,6 +160,22 @@ describe("/chat controller's tests", () => {
                 .that.have.property('sequential_number')
                 .that.is.an('number')
                 .and.is.equal(0)
+                commentId = res.body.comments[0]._id.message_id
+                console.log(commentId)              //COMMENTID FIX NEEDED!!!!!!
+        })
+    })
+    describe('/comment/:commentId PATCH route test', () => {
+        it('should return with 200 status code and an object with the updated comment', async () => {
+            const res = await chai
+                .request(server)
+                .patch('/comment/' + commentId)
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .send({
+                    text: 'randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345',
+                })
+                console.log(res.body)
         })
     })
 })
