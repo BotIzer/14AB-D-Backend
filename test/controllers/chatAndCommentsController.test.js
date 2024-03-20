@@ -331,7 +331,7 @@ describe("/chat controller's tests", () => {
                 })
         })
     })
-    describe('/chat/leave POST route test', () => {
+    describe('/chat/leaveChat POST route test', () => {
         it('should return with 200 status code and a message', (done) => {
             chai.request(server)
                 .post('/chat/leaveChat')
@@ -353,7 +353,7 @@ describe("/chat controller's tests", () => {
                 })
         })
     })
-    describe('/chat/leave POST route test', () => {
+    describe('/chat/leaveChat POST route test', () => {
         it('should return with 400 status code and an error message', (done) => {
             chai.request(server)
                 .post('/chat/leaveChat')
@@ -396,6 +396,28 @@ describe("/chat controller's tests", () => {
                     res.body.chat.should.have.property('common_topics').that.is.an('array').and.is.empty
                     done()
                 })
+        })
+    })
+    describe('/chat/leaveChat POST route test', () => {
+        it('should delete the chat', async () => {
+            userToken = (
+                await chai.request(server).post('/login').send({
+                    email: 'otherTestUser@otherTestUser.com',
+                    password: 'StrongTestPassword1234!',
+                })
+            ).body.token
+            const res = await chai
+                .request(server)
+                .post('/chat/leaveChat')
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .send({
+                    chat_id: chatId,
+                })
+            res.should.have.status(200)
+            res.body.should.have.property('success').that.is.a('boolean').that.is.equal(true)
+            res.body.should.have.property('message').that.is.a('string').that.is.equal('Chat left successfully!')
         })
     })
 })
