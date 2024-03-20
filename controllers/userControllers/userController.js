@@ -56,7 +56,7 @@ const getUserProfileByUsername = tryCatchWrapper(async (req, res) => {
 
 const updateUser = tryCatchWrapper(async (req, res) => {
     const userId = await getCreatorIdFromHeaders(req.headers)
-    const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions).select('-_id -password')
+    const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions).select('-email -_id -password')
     if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })
     return
