@@ -242,4 +242,41 @@ describe("/chat controller's tests", () => {
                 })
         })
     })
+    describe('/comment/:commentId DELETE route test', () => {
+        it('should return with 404 status code and a not found error message', (done) => {
+            chai.request(server)
+                .delete('/comment/' + commentId)
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .end((err, res) => {
+                    res.should.have.status(404)
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal('Comment not found')
+                    done()
+                })
+        })
+    })
+    describe('/comment/:commentId PATCH route test', () => {
+        it('should return with 404 status code and not found error', (done) => {
+            chai.request(server)
+                .patch('/comment/' + commentId)
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .send({
+                    text: 'UpdatedCommentText',
+                })
+                .end((err, res) => {
+                    res.should.have.status(404)
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal('Comment not found')
+                    done()
+                })
+        })
+    })
 })
