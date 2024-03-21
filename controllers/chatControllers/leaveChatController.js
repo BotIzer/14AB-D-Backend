@@ -19,8 +19,7 @@ const leaveChat = tryCatchWrapper(async (req, res) => {
             chat = await Chat.updateOne({ _id: chatId }, { $pull: { users: { user_id: decodedId } } }, updaterOptions)
             res.status(200).json({
                 success: true,
-                message: 'Chat left successfully!',
-                chat,
+                message: 'Chat left successfully!'
             })
             return
         }
@@ -41,8 +40,7 @@ const leaveChat = tryCatchWrapper(async (req, res) => {
         user.save()
         res.status(200).json({
             success: true,
-            message: 'Chat left successfully!',
-            chat,
+            message: 'Chat left successfully!'
         })
         return
     }
