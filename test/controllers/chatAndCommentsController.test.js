@@ -433,4 +433,46 @@ describe("/chat controller's tests", () => {
                 })
         })
     })
+    describe('/chat POST route test', () => {
+        it("should create another chat return with 201 status code and the chat's id", (done) => {
+            chai.request(server)
+                .post('/chat')
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .send({
+                    name: 'anotherRandomTestChat',
+                    is_ttl: false,
+                    is_private: true,
+                    usernames: ['otherTestUser'],
+                })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.have.property('roomId')
+                    chatId = res.body.roomId
+                    done()
+                })
+        })
+    })
+    describe('/chat/addFriend POST route test', () => {
+        it('should return with 404 status code and you have no friend with name error', (done) => {
+            chai.request(server)
+                .post('/chat/addFriend')
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .send({
+                    friend_name: 'otherTestUser',
+                    chat_id: chatId,
+                })
+                .end((err, res) => {
+                    res.should.have.status(404)
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal('You have no friend with name: otherTestUser')
+                    done()
+                })
+        })
+    })
 })
