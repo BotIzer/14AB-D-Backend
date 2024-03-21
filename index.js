@@ -82,25 +82,26 @@ io.on('connection', (socket) => {
     })
     socket.on('onOpinionChanged', async (data) => {
         const userId = jwt.verify(data.userToken, process.env.JWT_SECRET).id;
+        const userName = await User.findById(userId).select('username -_id')
         const thread = await Thread.findOne({ '_id.thread_id': data.threadId })
         //TODO: throw error if this occurs
         if (!userId || !thread) return;
         if(data.isLiked){
-            if (!thread.likes.users.includes(userId)) {
-                if (thread.dislikes.users.pop(userId)) {
+            if (!thread.likes.users.includes(userName)) {
+                if (thread.dislikes.users.pop(userName)) {
                     thread.dislikes.count -= 1
                 }
                 thread.likes.count += 1
-                thread.likes.users.push(userId)
+                thread.likes.users.push(userName)
             }
         }
         else{
-            if (!thread.dislikes.users.includes(userId)) {
-                if (thread.likes.users.pop(userId)) {
+            if (!thread.dislikes.users.includes(userName)) {
+                if (thread.likes.users.pop(userName)) {
                     thread.likes.count -= 1
                 }
                 thread.dislikes.count += 1
-                thread.dislikes.users.push(userId)
+                thread.dislikes.users.push(userName)
             }
         }
         thread.save()
