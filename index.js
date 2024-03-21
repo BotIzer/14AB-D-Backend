@@ -82,7 +82,7 @@ io.on('connection', (socket) => {
     })
     socket.on('onOpinionChanged', async (data) => {
         const userId = jwt.verify(data.userToken, process.env.JWT_SECRET).id;
-        const userName = await User.findById(userId).select('username -_id')
+        const userName = (await User.findById(userId).select('username -_id')).username
         const thread = await Thread.findOne({ '_id.thread_id': data.threadId })
         //TODO: throw error if this occurs
         if (!userId || !thread) return;
