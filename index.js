@@ -117,7 +117,7 @@ io.on('connection', (socket) => {
             }
         }
         thread.save()
-        socket.emit('onOpinionChanged',{likeCount: thread.likes.count, dislikeCount: thread.dislikes.count})
+        io.emit('onOpinionChanged',{likeCount: thread.likes.count, dislikeCount: thread.dislikes.count})
     })
 })
 
