@@ -95,7 +95,7 @@ io.on('connection', (socket) => {
                 thread.likes.users.push(userName)
             }
         }
-        else{
+        else if(data.isDisliked){
             if (!thread.dislikes.users.includes(userName)) {
                 if (thread.likes.users.pop(userName)) {
                     thread.likes.count -= 1
@@ -104,8 +104,20 @@ io.on('connection', (socket) => {
                 thread.dislikes.users.push(userName)
             }
         }
+        else{
+            if (!thread.likes.users.includes(userName)) {
+                if (thread.dislikes.users.pop(userName)) {
+                    thread.dislikes.count -= 1
+                }
+            }
+            if (!thread.dislikes.users.includes(userName)) {
+                if (thread.likes.users.pop(userName)) {
+                    thread.likes.count -= 1
+                }
+            }
+        }
         thread.save()
-        socket.emit('onOpinionChanged')
+        socket.emit('onOpinionChanged',{likeCount: thread.likes.count, dislikeCount: thread.dislikes.count})
     })
 })
 
