@@ -20,6 +20,7 @@ const hpp = require('hpp')
 const swaggerUi = require('swagger-ui-express')
 const swaggerOutput = require('./swagger_output.json')
 const { ObjectId } = require('mongodb')
+const jwt = require('jsonwebtoken')
 
 const app = express()
 app.set('trust proxy', 1)
@@ -79,27 +80,31 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('User disconnected')
     })
-
-    // WARNING: THIS PIECE OF CODE CAN CAUSE MEMORY LEAKS
-    // AND MAY LEAD TO CRASHES AND OTHER UNDEFINED BEHAVIOUR!
-    // IMMEDIATE FIX IS NEEDED
     socket.on('onOpinionChanged', async (data) => {
-        console.log('Something changed')
+        const userId = jwt.verify(data.userToken, process.env.JWT_SECRET).id;
         const thread = await Thread.findOne({ '_id.thread_id': data.threadId })
+        //TODO: throw error if this occurs
+        if (!userId || !thread) return;
         if(data.isLiked){
-            if (!thread.likes.users.includes(data.userId)) {
+            if (!thread.likes.users.includes(userId)) {
                 if (thread.dislikes.users.pop(userId)) {
                     thread.dislikes.count -= 1
                 }
                 thread.likes.count += 1
-                thread.likes.users.push(data.userId)
+                thread.likes.users.push(userId)
             }
         }
         else{
-
+            if (!thread.dislikes.users.includes(userId)) {
+                if (thread.likes.users.pop(userId)) {
+                    thread.likes.count -= 1
+                }
+                thread.dislikes.count += 1
+                thread.dislikes.users.push(userId)
+            }
         }
-        console.log(thread)
         thread.save()
+        socket.emit('onOpinionChanged')
     })
 })
 
