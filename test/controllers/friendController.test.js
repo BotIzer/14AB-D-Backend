@@ -225,7 +225,7 @@ describe("userController's tests", () => {
 
     describe('test every route without the authorization header', () => {
         describe('/friends GET route test when there are no friends', () => {
-            it('should return with 200 status code and an empty array', (done) => {
+            it('should return with 401 status code and unauthorized error', (done) => {
                 chai.request(server)
                     .get('/friends')
                     .set({
@@ -239,7 +239,7 @@ describe("userController's tests", () => {
         })
 
         describe('/user/friends/requests GET route test when there are no friend requests', () => {
-            it('should return with 200 status code and an empty array', (done) => {
+            it('should return with 401 status code and unauthorized error', (done) => {
                 chai.request(server)
                     .get('/user/friends/requests')
                     .set({
@@ -252,7 +252,7 @@ describe("userController's tests", () => {
             })
         })
         describe('/user/friends/sentRequests GET route test when there are no sent friend requests', () => {
-            it('should return with 200 status code and an empty array', (done) => {
+            it('should return with 401 status code and unauthorized error', (done) => {
                 chai.request(server)
                     .get('/user/friends/sentRequests')
                     .set({
@@ -265,7 +265,7 @@ describe("userController's tests", () => {
             })
         })
         describe('/friend/:friendName POST route test when there is no sent friend request to that specific user', () => {
-            it('should return with 200 status code and success message', (done) => {
+            it('should return with 401 status code and unauthorized error', (done) => {
                 chai.request(server)
                     .post('/friend/otherTestUser')
                     .set({
@@ -278,7 +278,7 @@ describe("userController's tests", () => {
             })
         })
         describe('/friend/:friendName POST route test when there is a sent friend request to that specific user', () => {
-            it('should return 400 statuscode and error message', (done) => {
+            it('should return with 401 status code and unauthorized error', (done) => {
                 chai.request(server)
                     .post('/friend/otherTestUser')
                     .set({
@@ -291,7 +291,7 @@ describe("userController's tests", () => {
             })
         })
         describe('/user/friends/sentRequests GET route test when there is a sent friend request', () => {
-            it('should return with 200 status code and an array with one element', (done) => {
+            it('should return with 401 status code and unauthorized error', (done) => {
                 chai.request(server)
                     .get('/user/friends/sentRequests')
                     .set({
