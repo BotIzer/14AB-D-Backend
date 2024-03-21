@@ -8,7 +8,7 @@ const Chatroom = require('../../models/chatroomModel.js')
 const Comment = require('../../models/commentModel.js')
 chai.use(chaiHttp)
 
-describe("/chat controller's tests", () => {
+describe("chatController's tests", () => {
     let userToken
     let chatId
     let commentId

@@ -9,6 +9,7 @@ const getFriends = tryCatchWrapper(async (req, res) => {
     const friendIds = await User.findById(id).select('friends -_id')
     if (!friendIds) {
         res.status(StatusCodes.NOT_FOUND).json({ message: 'No friends found' })
+        return
     }
     const friends = []
     for (const id of friendIds.friends) {
@@ -26,6 +27,7 @@ const deleteFriend = tryCatchWrapper(async (req, res) => {
     const friend = await User.findOne({ username: req.params.friendName })
     if (!friend) {
         res.status(StatusCodes.NOT_FOUND).json({ message: 'No friend found!' })
+        return
     }
     const deletersProfile = await User.findById(id)
     deletersProfile.friends.pull(friend._id)
@@ -42,12 +44,19 @@ const makeFriendRequest = tryCatchWrapper(async (req, res) => {
     const user = await User.findOne({ username: req.params.friendName })
     if (!user) {
         res.status(StatusCodes.NOT_FOUND).json({ message: 'No user found to send friend request to!' })
+        return
     }
     if (user.username === sender.username) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: 'You cannot send a friend request to yourself!' })
+        return
+    }
+    if (user.friend_requests.includes(sender.username)) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'You already sent a friend request to this user!' })
+        return
     }
     if (sender.friends.includes(user._id)) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: 'You are already friends with this user!' })
+        return
     }
     user.friend_requests.push(sender.username)
     await user.save()
