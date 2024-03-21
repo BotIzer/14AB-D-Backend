@@ -11,9 +11,6 @@ describe("userController's tests", () => {
     before(async () => {
         User.deleteMany({}).then(() => {})
     })
-    after(async () => {
-        User.deleteMany({}).then(() => {})
-    })
 
     describe('/register route test', () => {
         it('should return with 201 statuscode and a token', (done) => {
