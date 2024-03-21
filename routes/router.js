@@ -74,11 +74,11 @@ router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPa
 router.route('/chat/addFriend').post(protectPath, addFriendToChat)
 router.route('/createOrRetrieveChat').post(protectPath, checkMutualChat)
 router.route('/chat').post(protectPath, createChat)
-router.route('/chat/leaveChat').post(protectPath, leaveChat) //400 into swagger
+router.route('/chat/leaveChat').post(protectPath, leaveChat)
 router.route('/chats').get(protectPath, getUsersChats)
 
 router.route('/comment').post(protectPath, createComment)
-router.route('/comment/:commentId').patch(protectPath, updateComment).delete(protectPath, deleteComment)           //SWAGGER!
+router.route('/comment/:commentId').patch(protectPath, updateComment).delete(protectPath, deleteComment)
 
 router.route('/friends').get(protectPath, getFriends)
 router.route('/friend/:friendName').post(protectPath, makeFriendRequest).delete(protectPath, deleteFriend)
