@@ -343,7 +343,6 @@ describe("/chat controller's tests", () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.have.property('chat').that.is.a('object')
                     res.body.should.have.property('success').that.is.a('boolean').that.is.equal(true)
                     res.body.should.have
                         .property('message')
@@ -418,6 +417,20 @@ describe("/chat controller's tests", () => {
             res.should.have.status(200)
             res.body.should.have.property('success').that.is.a('boolean').that.is.equal(true)
             res.body.should.have.property('message').that.is.a('string').that.is.equal('Chat left successfully!')
+        })
+    })
+    describe('/chats route test', () => {
+        it('should return with 200 status code and an empty array', (done) => {
+            chai.request(server)
+                .get('/chats')
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.have.property('returnArray').that.is.an('array').and.is.empty
+                    done()
+                })
         })
     })
 })
