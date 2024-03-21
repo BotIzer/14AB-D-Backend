@@ -80,6 +80,64 @@ describe("userController's tests", () => {
                 })
         })
     })
+    describe('/friend/:friendName POST but with declined friend request', () => {
+        it('should return with 200 status code and success message', (done) => {
+            chai.request(server)
+                .post('/friend/otherTestUser')
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.an('string')
+                        .and.is.equal('Friend request sent')
+                    done()
+                })
+        })
+        it('should return with 200 status code and success message', (done) => {
+            chai.request(server)
+                .post('/declineFriendRequest/randomTestUser')
+                .set({
+                    authorization: 'Bearer ' + otherUserToken,
+                })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.an('string')
+                        .and.is.equal('Friend request declined')
+                    done()
+                })
+        })
+        it("should return with 200 status code and an empty array from randomTestUser's side", (done) => {
+            chai.request(server)
+                .get('/friends')
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').that.is.empty
+                    done()
+                })
+        })
+        it("should return with 200 status code and an empty array from otherTestUser's side aswell", (done) => {
+            chai.request(server)
+                .get('/friends')
+                .set({
+                    authorization: 'Bearer ' + otherUserToken,
+                })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').that.is.empty
+                    done()
+                })
+        })
+    })
     describe('/friend/:friendName POST route test when there is no sent friend request to that specific user', () => {
         it('should return with 200 status code and success message', (done) => {
             chai.request(server)
@@ -176,6 +234,24 @@ describe("userController's tests", () => {
                 .end((err, res) => {
                     res.should.have.status(200)
                     res.body.should.be.an('array').and.has.lengthOf(1)
+                    done()
+                })
+        })
+    })
+    describe('/friend/:friendName POST route test when the two users are already friends', () => {
+        it('should return 400 statuscode and error message', (done) => {
+            chai.request(server)
+                .post('/friend/otherTestUser')
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .end((err, res) => {
+                    res.should.have.status(400)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.an('string')
+                        .and.is.equal('You are already friends with this user!')
                     done()
                 })
         })
@@ -303,6 +379,5 @@ describe("userController's tests", () => {
                     })
             })
         })
-
     })
 })
