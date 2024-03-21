@@ -3309,6 +3309,22 @@
                             }
                         }
                     },
+                    "400": {
+                        "description": "You have no requests from this user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no pending friend requests from this user!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "content": {
@@ -3358,6 +3374,22 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Friend request declined"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "You have no requests from this user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no pending friend requests from this user!"
                                         }
                                     }
                                 }
