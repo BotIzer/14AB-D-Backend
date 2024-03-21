@@ -298,7 +298,40 @@ describe("userController's tests", () => {
                 })
         })
     })
-
+    describe('/acceptFriendRequest/:requestCreatorName POST route test when there are no requests', () => {
+        it('should return with 400 status code and an error message', (done) => {
+            chai.request(server)
+                .post('/acceptFriendRequest/randomTestUser')
+                .set({
+                    authorization: 'Bearer ' + otherUserToken,
+                })
+                .end((err, res) => {
+                    res.should.have.status(400)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.an('string')
+                        .and.is.equal('You have no pending friend requests from this user!')
+                    done()
+                })
+        })
+        it('should return with 400 status code and an error message', (done) => {
+            chai.request(server)
+                .post('/acceptFriendRequest/randomTestUser')
+                .set({
+                    authorization: 'Bearer ' + userToken,
+                })
+                .end((err, res) => {
+                    res.should.have.status(400)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.an('string')
+                        .and.is.equal('You have no pending friend requests from this user!')
+                    done()
+                })
+        })
+    })
     describe('test every route without the authorization header', () => {
         describe('/friends GET route test when there are no friends', () => {
             it('should return with 401 status code and unauthorized error', (done) => {
@@ -370,6 +403,32 @@ describe("userController's tests", () => {
             it('should return with 401 status code and unauthorized error', (done) => {
                 chai.request(server)
                     .get('/user/friends/sentRequests')
+                    .set({
+                        authorization: 'Bearer ',
+                    })
+                    .end((err, res) => {
+                        res.should.have.status(401)
+                        done()
+                    })
+            })
+        })
+        describe('/acceptFriendRequest/:requestCreatorName POST route test when there no token in the header', () => {
+            it('should return with 401 status code and unauthorized error', (done) => {
+                chai.request(server)
+                    .post('/acceptFriendRequest/randomTestUser')
+                    .set({
+                        authorization: 'Bearer ',
+                    })
+                    .end((err, res) => {
+                        res.should.have.status(401)
+                        done()
+                    })
+            })
+        })
+        describe('/declineFriendRequest/:requestCreatorName POST route test when there no token in the header', () => {
+            it('should return with 401 status code and unauthorized error', (done) => {
+                chai.request(server)
+                    .post('/declineFriendRequest/randomTestUser')
                     .set({
                         authorization: 'Bearer ',
                     })

@@ -82,6 +82,6 @@ router.route('/comment/:commentId').patch(protectPath, updateComment).delete(pro
 
 router.route('/friends').get(protectPath, getFriends)
 router.route('/friend/:friendName').post(protectPath, makeFriendRequest).delete(protectPath, deleteFriend)
-router.route('/acceptFriendRequest/:requestCreatorName').post(protectPath, acceptFriendRequest)
-router.route('/declineFriendRequest/:requestCreatorName').post(protectPath, declineFriendRequest)
+router.route('/acceptFriendRequest/:requestCreatorName').post(protectPath, acceptFriendRequest)                     //400 swagger
+router.route('/declineFriendRequest/:requestCreatorName').post(protectPath, declineFriendRequest)                   //400 swagger
 module.exports = router
