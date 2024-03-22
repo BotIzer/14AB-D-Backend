@@ -82,11 +82,15 @@ io.on('connection', (socket) => {
     })
     socket.on('onOpinionChanged', async (data) => {
         const userId = jwt.verify(data.userToken, process.env.JWT_SECRET).id;
-        const userName = (await User.findById(userId).select('username -_id')).username
         const thread = await Thread.findOne({ '_id.thread_id': data.threadId })
+        const userName = (await User.findById(userId).select('username -_id')).username
         //TODO: throw error if this occurs
         if (!userId || !thread) return;
-        if(data.isLiked){
+        if(data.isLiked && data.isDisliked){
+            // TODO: throw error if some bad things happen
+            return;
+        }
+        else if(data.isLiked){
             if (!thread.likes.users.includes(userName)) {
                 if (thread.dislikes.users.pop(userName)) {
                     thread.dislikes.count -= 1
@@ -110,14 +114,14 @@ io.on('connection', (socket) => {
                     thread.dislikes.count -= 1
                 }
             }
-            if (!thread.dislikes.users.includes(userName)) {
+            else if (!thread.dislikes.users.includes(userName)) {
                 if (thread.likes.users.pop(userName)) {
                     thread.likes.count -= 1
                 }
             }
         }
         thread.save()
-        io.emit('onOpinionChanged',{likeCount: thread.likes.count, dislikeCount: thread.dislikes.count})
+        io.emit('likesAndDislikes',{likeCount: thread.likes.count, dislikeCount: thread.dislikes.count})
     })
 })
 
