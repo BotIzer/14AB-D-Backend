@@ -33,7 +33,7 @@ describe("chatController's tests", () => {
         userToken = loginRes.body.token
     })
 
-    describe('/chats route test', () => {
+    describe('/chats GET route test', () => {
         it('should return with 200 status code and an empty array', (done) => {
             chai.request(server)
                 .get('/chats')
@@ -83,7 +83,7 @@ describe("chatController's tests", () => {
                 })
         })
     })
-    describe('/chat/:chatId route test', () => {
+    describe('/chat/:chatId GET route test', () => {
         it("should return with 200 status code and an object with the chat's info", (done) => {
             chai.request(server)
                 .get(`/chat/${chatId}`)
@@ -107,7 +107,7 @@ describe("chatController's tests", () => {
                 })
         })
     })
-    describe('/chat/:chatId/comments route test', () => {
+    describe('/chat/:chatId/comments GET route test', () => {
         it('should return with 200 status code and an empty array', (done) => {
             chai.request(server)
                 .get(`/chat/${chatId}/comments`)
@@ -122,7 +122,7 @@ describe("chatController's tests", () => {
         })
     })
     describe('/comments POST route test', () => {
-        it('should return with 201 status code and', (done) => {
+        it('should return with 201 status code and a success boolean field', (done) => {
             chai.request(server)
                 .post('/comment')
                 .set({
@@ -398,7 +398,7 @@ describe("chatController's tests", () => {
         })
     })
     describe('/chat/leaveChat POST route test', () => {
-        it('should delete the chat', async () => {
+        it('should delete the chat and return status code 200', async () => {
             userToken = (
                 await chai.request(server).post('/login').send({
                     email: 'otherTestUser@otherTestUser.com',
@@ -471,6 +471,164 @@ describe("chatController's tests", () => {
                         .property('message')
                         .that.is.a('string')
                         .that.is.equal('You have no friend with name: otherTestUser')
+                    done()
+                })
+        })
+    })
+
+    describe('test the /chats GET route when there is no token in the headers', () => {
+        it('should return with 401 status code and an error message', (done) => {
+            chai.request(server)
+                .get('/chats')
+                .set({
+                    authorization: 'Bearer ',
+                })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal('You have no permission to use path: /chats')
+                    done()
+                })
+        })
+    })
+    describe('/chat POST route test when there is no token in the headers', () => {
+        it('should return with 401 status code and an error message', (done) => {
+            chai.request(server)
+                .post('/chat')
+                .set({
+                    authorization: 'Bearer ',
+                })
+                .send({
+                    name: 'randomTestChat',
+                    is_ttl: false,
+                    is_private: true,
+                    usernames: ['otherTestUser'],
+                })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal('You have no permission to use path: /chat')
+                    done()
+                })
+        })
+    })
+    describe('/chat/:chatId GET route test when there is no token in the headers', () => {
+        it('should return with 401 status code and an error message', (done) => {
+            chai.request(server)
+                .get(`/chat/${chatId}`)
+                .set({
+                    authorization: 'Bearer ',
+                })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal(`You have no permission to use path: /chat/${chatId}`)
+                    done()
+                })
+        })
+    })
+    describe('/chat/:chatId/comments GET route test when there is no token in the headers', () => {
+        it('should return with 401 status code and an error message', (done) => {
+            chai.request(server)
+                .get(`/chat/${chatId}/comments`)
+                .set({
+                    authorization: 'Bearer ',
+                })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal(`You have no permission to use path: /chat/${chatId}/comments`)
+                    done()
+                })
+        })
+    })
+    describe('/comments POST route test when there is no token in the headers', () => {
+        it('should return with 401 status code and an error message', (done) => {
+            chai.request(server)
+                .post('/comment')
+                .set({
+                    authorization: 'Bearer ',
+                })
+                .send({
+                    room_id: chatId,
+                    text: 'randomTestComment1234',
+                    is_reply: false,
+                })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal('You have no permission to use path: /comment')
+                    done()
+                })
+        })
+    })
+    describe('/comment/:commentId PATCH route test when there is no token in the headers', () => {
+        it('should return with 401 status code and an error message', (done) => {
+            chai.request(server)
+                .patch('/comment/' + commentId)
+                .set({
+                    authorization: 'Bearer ',
+                })
+                .send({
+                    text: 'randomTestComment1234',
+                })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal(`You have no permission to use path: /comment/${commentId}`)
+                    done()
+                })
+        })
+    })
+    describe('/chat/leaveChat POST route test when there is no token in the headers', () => {
+        it('should delete the chat and return status code 200', (done) => {
+            chai.request(server)
+                .post('/chat/leaveChat')
+                .set({
+                    authorization: 'Bearer ',
+                })
+                .send({
+                    chat_id: chatId,
+                })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal('You have no permission to use path: /chat/leaveChat')
+                    done()
+                })
+        })
+    })
+    describe('/chat/addFriend POST route test when there is no token in the headers', () => {
+        it('should return with 404 status code and you have no friend with name error', (done) => {
+            chai.request(server)
+                .post('/chat/addFriend')
+                .set({
+                    authorization: 'Bearer ',
+                })
+                .send({
+                    friend_name: 'otherTestUser',
+                    chat_id: chatId,
+                })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal('You have no permission to use path: /chat/addFriend')
                     done()
                 })
         })
