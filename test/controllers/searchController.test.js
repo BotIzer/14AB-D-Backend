@@ -7,7 +7,7 @@ chai.use(chaiHttp)
 const User = require('../../models/userModel.js')
 const Forum = require('../../models/forumModel.js')
 
-describe('searchController', () => {
+describe('searchController tests', () => {
     let userToken
     before(async () => {
         await User.deleteMany({})

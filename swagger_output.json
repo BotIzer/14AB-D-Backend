@@ -1881,6 +1881,22 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Forum's name, thread's name or the content field is empty",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Please provide a thread content"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
