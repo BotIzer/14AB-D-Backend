@@ -5,6 +5,11 @@ const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 
 const search = tryCatchWrapper(async (req, res) => {
     const searchKeyword = req.body.keyword
+    if (!searchKeyword || searchKeyword.trim() === '') {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            message: 'No search keyword provided',
+        })
+    }
     const items = []
     items.push(
         await Forum.find({

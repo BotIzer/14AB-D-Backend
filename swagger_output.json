@@ -328,6 +328,22 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "No keyword provided",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No search keyword provided"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -985,15 +1001,6 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "_id": {
-                                        "type": "object",
-                                        "properties": {
-                                            "creator_id": {
-                                                "type": "string",
-                                                "example": "657b7d6d0064424d0daad81a"
-                                            }
-                                        }
-                                    },
                                     "forum_name": {
                                         "type": "string",
                                         "example": "Random forum"
