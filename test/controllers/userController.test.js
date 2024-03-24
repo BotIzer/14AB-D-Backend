@@ -8,6 +8,7 @@ const User = require('../../models/userModel.js')
 chai.use(chaiHttp)
 
 describe("userController's tests", () => {
+    let userToken
     before(async () => {
         User.deleteMany({}).then(() => {})
     })
@@ -196,6 +197,7 @@ describe("userController's tests", () => {
                     res.body.userInfo.should.have.property('roles').that.is.a('string')
                     res.body.userInfo.should.have.property('username').that.is.a('string')
                     res.body.userInfo.should.have.property('created_at').that.is.a('string')
+                    userToken = res.body.token
                     done()
                 })
         })
@@ -214,6 +216,42 @@ describe("userController's tests", () => {
                     res.body.should.be.a('object')
                     res.body.should.have.property('message')
                     expect(res.body.message).to.be.equal('User is already logged in!')
+                    done()
+                })
+        })
+    })
+    describe('/user/addHobby route test', () => {
+        it('should return with 401 and not authorized error message', (done) => {
+            chai.request(server)
+                .post('/user/addHobby')
+                .set({ authorization: 'Bearer ' })
+                .send({
+                    hobbies: 'TestHobby',
+                })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.be
+                        .a('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .equal('You have no permission to use path: /user/addHobby')
+                    done()
+                })
+        })
+        it('should return with 200 and success true', (done) => {
+            chai.request(server)
+                .post('/user/addHobby')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({
+                    hobbies: 'TestHobby',
+                })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be
+                        .a('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .equal('Hobby or hobbies added')
                     done()
                 })
         })
