@@ -61,7 +61,7 @@ router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/user/addHobby').post(protectPath, addHobby)
 
 router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(protectPath, deleteForum)
-router.route('/forum/getAllThreads/:forumId').get(checkWetherBannedFromForum, getAllThreads)
+router.route('/forum/getAllThreads/:forumId').get(protectPath, checkWetherBannedFromForum, getAllThreads)
 router.route('/forum/getForumsByTag/:tag').get(searchForumByTag)
 router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum)
 router.route('/forum/ban').post(protectPath, banUserFromForum).put(protectPath, unbanUserFromForum)

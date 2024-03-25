@@ -113,7 +113,9 @@ const banUserFromForum = tryCatchWrapper(async (req, res) => {
         })
         return
     }
-    const { user_id: userId } = req.body
+    const userName = req.body.user_name
+    const userId = await User.findOne({ username: userName })._id
+    console.log(userId)
     if (forum.blacklist.includes(userId)) {
         res.status(StatusCodes.BAD_REQUEST).json({
             message: 'User is already banned from this forum',
