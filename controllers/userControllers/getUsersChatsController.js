@@ -35,7 +35,17 @@ const getUsersChats = tryCatchWrapper(async (req, res) => {
             })
         }
     }
-    const returnArray = privateChats.concat(...publicChats)
+    const privatePage = parseInt(req.query.private_page) || 1
+    const privateLimit = parseInt(req.query.private_limit) || 10
+    const privateSkip = (privatePage - 1) * privateLimit
+    const retPrivChats = privateChats.splice(privateSkip, privateLimit)
+
+    const publicPage = parseInt(req.query.public_page) || 1
+    const publicLimit = parseInt(req.query.public_limit) || 10
+    const publicSkip = (publicPage - 1) * publicLimit
+    const retPubChats = publicChats.splice(publicSkip, publicLimit)
+
+    const returnArray = retPrivChats.concat(...retPubChats)
     res.status(StatusCodes.OK).json({ returnArray })
     return
 })
