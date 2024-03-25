@@ -26,7 +26,7 @@ const createForum = tryCatchWrapper(async (req, res) => {
         banner: banner,
     })
     newForum.save()
-    res.status(StatusCodes.CREATED).json({ success: true })
+    res.status(StatusCodes.CREATED).json({ success: true, forumId: newForum._id.forum_id})
     return
 })
 
