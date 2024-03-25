@@ -65,6 +65,10 @@ const userSchema = new mongoose.Schema({
         maxlength: [20, 'Username cannot be longer than 20 characters!'],
         trim: true,
         unique: true,
+        match: [
+            /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/,
+            'Username must start with a letter and can only contain letters, numbers, dashes and underscores',
+        ],
     },
     friends: [mongoose.ObjectId],
     password: {

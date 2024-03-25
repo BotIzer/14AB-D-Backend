@@ -64,6 +64,12 @@ const updateUser = tryCatchWrapper(async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ message: 'Username cannot be longer than 20 characters!' })
         return
     }
+    if (/^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/.test(req.body.username) === false) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            message: 'Username must start with a letter and can only contain letters, numbers, dashes and underscores',
+        })
+        return
+    }
     if (req.body.full_name && req.body.full_name.length < 5) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: 'Full name must be at least 5 characters long' })
         return
