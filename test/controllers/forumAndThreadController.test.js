@@ -189,7 +189,7 @@ describe('forumController tests', () => {
                 })
         })
     })
-    describe('/forum/ban POST route tests', () => {   
+    describe('/forum/ban POST route tests', () => {
         it('should return with 200 status code and success true', (done) => {
             chai.request(server)
                 .post('/forum/ban')
@@ -197,7 +197,11 @@ describe('forumController tests', () => {
                 .send({ forum_id: forumId, user_name: 'otherTestUser' })
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.be.an('object').that.has.property('message').that.is.a('string').that.equals('User banned from forum')
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.equals('User banned from forum')
                     done()
                 })
         })
@@ -217,7 +221,11 @@ describe('forumController tests', () => {
                 .set({ authorization: 'Bearer ' + otherUserToken })
                 .end((err, res) => {
                     res.should.have.status(403)
-                    res.body.should.be.an('object').that.has.property('message').that.is.a('string').that.equals('You are banned from this forum!')
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.equals('You are banned from this forum!')
                     done()
                 })
         })
@@ -233,6 +241,16 @@ describe('forumController tests', () => {
                         .that.has.property('message')
                         .that.is.a('string')
                         .that.equals('User unbanned from forum')
+                    done()
+                })
+        })
+        it('should return with 200 status code and the forums data', (done) => {
+            chai.request(server)
+                .get('/forum/getAllThreads/' + forumId)
+                .set({ authorization: 'Bearer ' + otherUserToken })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').that.has.lengthOf(1)
                     done()
                 })
         })
@@ -283,7 +301,6 @@ describe('forumController tests', () => {
                         done()
                     })
             })
-            
         })
     })
     describe('threadController tests while there is no token in the headers', () => {

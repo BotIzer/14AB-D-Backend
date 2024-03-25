@@ -131,7 +131,6 @@ const banUserFromForum = tryCatchWrapper(async (req, res) => {
 
 const unbanUserFromForum = tryCatchWrapper(async (req, res) => {
     const forum = await Forum.findOne({ '_id.forum_id': req.body.forum_id })
-    console.log(forum)
     if (!forum) {
         res.status(StatusCodes.NOT_FOUND).json({
             message: 'No forum found',
