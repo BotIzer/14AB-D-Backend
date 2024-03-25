@@ -9,6 +9,7 @@ const Forum = require('../../models/forumModel.js')
 
 describe('forumController tests', () => {
     let userToken
+    let otherUserToken
     let forumId
     before(async () => {
         await User.deleteMany({})
@@ -23,6 +24,16 @@ describe('forumController tests', () => {
             password: 'StrongTestPassword1234!',
         })
         userToken = loginRes.body.token
+        await chai.request(server).post('/register').send({
+            username: 'otherTestUser',
+            email: 'otherTestUser@otherTestUser.com',
+            password: 'StrongTestPassword1234!',
+        })
+        const otherLoginRes = await chai.request(server).post('/login').send({
+            email: 'otherTestUser@otherTestUser.com',
+            password: 'StrongTestPassword1234!',
+        })
+        otherUserToken = otherLoginRes.body.token
     })
     describe('/forum GET route tests while the DB is empty', () => {
         it('should return with 200 status code and an empty array', (done) => {
@@ -134,7 +145,7 @@ describe('forumController tests', () => {
             chai.request(server)
                 .put('/forum/' + forumId)
                 .set({ authorization: 'Bearer ' + userToken })
-                .send({ forum_name: 'testForumUpdated' })
+                .send({ forum_name: 'testForumUpdated', tags: ['testTag'] })
                 .end((err, res) => {
                     res.should.have.status(200)
                     res.body.should.be
@@ -154,6 +165,39 @@ describe('forumController tests', () => {
                     res.should.have.status(200)
                     res.body.should.be.an('array').lengthOf(1)
                     res.body[0].should.have.property('forum_name').that.is.a('string').that.equals('testForumUpdated')
+                    done()
+                })
+        })
+    })
+    describe('/forum/getForumsByTag/:tag GET route tests while the forum has threads', () => {
+        it('should return with 200 status code and an array with the forum', (done) => {
+            chai.request(server)
+                .get('/forum/getForumsByTag/testTag')
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').lengthOf(1)
+                    done()
+                })
+        })
+        it('should return with 200 status code and an empty array', (done) => {
+            chai.request(server)
+                .get('/forum/getForumsByTag/testTagg')
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').lengthOf(0)
+                    done()
+                })
+        })
+    })
+    describe('/forum/ban POST route tests', () => {   
+        it('should return with 200 status code and success true', (done) => {
+            console.log(userToken)
+            chai.request(server)
+                .post('/forum/ban')
+                .set({ authorization: 'Bearer' + userToken })
+                .send({ forum_id: forumId, user_name: 'otherTestUser' })
+                .end((err, res) => {
+                    console.log(res.body)
                     done()
                 })
         })
