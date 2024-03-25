@@ -152,7 +152,6 @@ function generateRandomString(length) {
     return password
 }
 
-
 module.exports = {
     getAllUsers,
     getUserDataById,

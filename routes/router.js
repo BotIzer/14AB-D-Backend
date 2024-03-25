@@ -30,7 +30,7 @@ const {
     updateForum,
 } = require('../controllers/forumControllers/forumControllers')
 const search = require('../controllers/searchController/searchController')
-const { createThread, deleteThreadConroller } = require('../controllers/threadControllers/threadControllers')
+const { createThread, deleteThreadConroller, likeDislikeStateChanged } = require('../controllers/threadControllers/threadControllers')
 const {
     getChatDataById,
     createChat,
@@ -68,6 +68,7 @@ router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum)
 
 router.route('/thread').post(protectPath, createThread)
 router.route('/thread/:threadId').delete(protectPath, deleteThreadConroller)
+router.route('/thread/:threadId/likeDislike').post(protectPath, likeDislikeStateChanged)
 
 router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)
 router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPath, deleteChat)
