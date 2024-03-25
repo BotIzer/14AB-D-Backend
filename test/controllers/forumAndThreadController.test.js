@@ -167,10 +167,60 @@ describe('forumController tests', () => {
                     .send({ forum_name: 'testForum' })
                     .end((err, res) => {
                         res.should.have.status(401)
-                        res.body.should.be.an('object').that.has.property('message').that.is.a('string').equals('You have no permission to use path: /forum')
+                        res.body.should.be
+                            .an('object')
+                            .that.has.property('message')
+                            .that.is.a('string')
+                            .equals('You have no permission to use path: /forum')
                         done()
                     })
             })
+            it('should return with 401 status code and an error message', (done) => {
+                chai.request(server)
+                    .get('/forum/getAllThreads/' + forumId)
+                    .set({ authorization: 'Bearer ' })
+                    .end((err, res) => {
+                        res.should.have.status(401)
+                        res.body.should.be
+                            .an('object')
+                            .that.has.property('message')
+                            .that.is.a('string')
+                            .equals('You have no permission to use path: /forum/getAllThreads/' + forumId)
+                        done()
+                    })
+            })
+            it('should return with 401 status code and error message', (done) => {
+                chai.request(server)
+                    .put('/forum/' + forumId)
+                    .set({ authorization: 'Bearer ' })
+                    .send({ forum_name: 'testForumUpdated' })
+                    .end((err, res) => {
+                        res.should.have.status(401)
+                        res.body.should.be
+                            .an('object')
+                            .that.has.property('message')
+                            .that.is.a('string')
+                            .equals('You have no permission to use path: /forum/' + forumId)
+                        done()
+                    })
+            })
+        })
+    })
+    describe('threadController tests while there is no token in the headers', () => {
+        it('should return with 401 status code', (done) => {
+            chai.request(server)
+                .post('/thread')
+                .set({ authorization: 'Bearer ' })
+                .send({ forum_name: 'testForum', name: 'testThread', images: [], content: 'Some random text' })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .equals('You have no permission to use path: /thread')
+                    done()
+                })
         })
     })
 })
