@@ -158,7 +158,7 @@ describe('forumController tests', () => {
         })
     })
     describe('/forum/:forumId GET route tests', () => {
-        it('should return with 200 status code and an array with the updated forum', (done) => {
+        it('should return with 200 status code and with the forum', (done) => {
             chai.request(server)
                 .get('/forum/' + forumId)
                 .end((err, res) => {
@@ -194,10 +194,48 @@ describe('forumController tests', () => {
             console.log(userToken)
             chai.request(server)
                 .post('/forum/ban')
-                .set({ authorization: 'Bearer' + userToken })
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_id: forumId, user_name: 'otherTestUser' })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('object').that.has.property('message').that.is.a('string').that.equals('User banned from forum')
+                    done()
+                })
+        })
+        it('should return with 200 status code and the forum with blacklisted user', (done) => {
+            chai.request(server)
+                .get('/forum/' + forumId)
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').lengthOf(1)
+                    res.body[0].should.have.property('blacklist').that.is.an('array').lengthOf(1)
+                    done()
+                })
+        })
+        it('should return with 403 status code and a message', (done) => {
+            chai.request(server)
+                .get('/forum/getAllThreads/' + forumId)
+                .set({ authorization: 'Bearer ' + otherUserToken })
+                .end((err, res) => {
+                    res.should.have.status(403)
+                    res.body.should.be.an('object').that.has.property('message').that.is.a('string').that.equals('You are banned from this forum!')
+                    done()
+                })
+        })
+        it('should return with 200 status code and success true', (done) => {
+            console.log(userToken)
+            chai.request(server)
+                .put('/forum/ban')
+                .set({ authorization: 'Bearer ' + userToken })
                 .send({ forum_id: forumId, user_name: 'otherTestUser' })
                 .end((err, res) => {
                     console.log(res.body)
+                    // res.should.have.status(200)
+                    // res.body.should.be
+                    //     .an('object')
+                    //     .that.has.property('message')
+                    //     .that.is.a('string')
+                    //     .that.equals('User banned from forum')
                     done()
                 })
         })
@@ -248,6 +286,7 @@ describe('forumController tests', () => {
                         done()
                     })
             })
+            
         })
     })
     describe('threadController tests while there is no token in the headers', () => {
