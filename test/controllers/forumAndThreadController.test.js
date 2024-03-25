@@ -191,7 +191,6 @@ describe('forumController tests', () => {
     })
     describe('/forum/ban POST route tests', () => {   
         it('should return with 200 status code and success true', (done) => {
-            console.log(userToken)
             chai.request(server)
                 .post('/forum/ban')
                 .set({ authorization: 'Bearer ' + userToken })
@@ -223,19 +222,17 @@ describe('forumController tests', () => {
                 })
         })
         it('should return with 200 status code and success true', (done) => {
-            console.log(userToken)
             chai.request(server)
                 .put('/forum/ban')
                 .set({ authorization: 'Bearer ' + userToken })
                 .send({ forum_id: forumId, user_name: 'otherTestUser' })
                 .end((err, res) => {
-                    console.log(res.body)
-                    // res.should.have.status(200)
-                    // res.body.should.be
-                    //     .an('object')
-                    //     .that.has.property('message')
-                    //     .that.is.a('string')
-                    //     .that.equals('User banned from forum')
+                    res.should.have.status(200)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.equals('User unbanned from forum')
                     done()
                 })
         })

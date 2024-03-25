@@ -56,6 +56,26 @@ const getUserProfileByUsername = tryCatchWrapper(async (req, res) => {
 
 const updateUser = tryCatchWrapper(async (req, res) => {
     const userId = await getCreatorIdFromHeaders(req.headers)
+    if (req.body.username && req.body.username.length < 2) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'Username must be at least 2 characters long' })
+        return
+    }
+    if (req.body.username && req.body.username.length > 20) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'Username cannot be longer than 20 characters!' })
+        return
+    }
+    if (req.body.full_name && req.body.full_name.length < 5) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'Full name must be at least 5 characters long' })
+        return
+    }
+    if (req.body.full_name && req.body.full_name.length > 100) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'Full name cannot be longer than 100 characters!' })
+        return
+    }
+    if (req.body.description && req.body.description.length > 5000) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'Description cannot be longer than 5000 characters!' })
+        return
+    }
     const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions).select('-email -_id -password')
     if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })

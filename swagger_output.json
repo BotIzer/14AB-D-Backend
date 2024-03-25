@@ -502,6 +502,22 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Invalid user data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Full name cannot be longer than 100 characters!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
