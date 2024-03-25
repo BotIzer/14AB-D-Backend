@@ -11,6 +11,7 @@ describe('forumController tests', () => {
     let userToken
     let otherUserToken
     let forumId
+    let threadId
     before(async () => {
         await User.deleteMany({})
         await Forum.deleteMany({})
@@ -136,6 +137,126 @@ describe('forumController tests', () => {
                 .end((err, res) => {
                     res.should.have.status(201)
                     res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+    })
+    describe('/forum/getAllThreads/:forumId GET route tests while the forum has threads', () => {
+        it('should return with 200 status code and an empty array', (done) => {
+            chai.request(server)
+                .get('/forum/getAllThreads/' + forumId)
+                .set({ authorization: 'Bearer ' + userToken })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').has.lengthOf(1)
+                    threadId = res.body[0]._id.thread_id
+                    done()
+                })
+        })
+    })
+    describe('/thread/:threadId/likeDislike POST route tests', () => {
+        it('should like the thread, then return with 200 status code and message that everything is ok', (done) => {
+            chai.request(server)
+                .post('/thread/' + threadId + '/likeDislike')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ pressedButton: 'like' })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.equals('Thread liked')
+                    done()
+                })
+        })
+        it('should unlike the thread, then return with 200 status code and message that everything is ok', (done) => {
+            chai.request(server)
+                .post('/thread/' + threadId + '/likeDislike')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ pressedButton: 'like' })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.equals('Thread unliked')
+                    done()
+                })
+        })
+        it('should like the thread, then return with 200 status code and message that everything is ok', (done) => {
+            chai.request(server)
+                .post('/thread/' + threadId + '/likeDislike')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ pressedButton: 'like' })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.equals('Thread liked')
+                    done()
+                })
+        })
+        it('should dislike the thread, then return with 200 status code and message that everything is ok', (done) => {
+            chai.request(server)
+                .post('/thread/' + threadId + '/likeDislike')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ pressedButton: 'dislike' })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.equals('Thread disliked')
+                    done()
+                })
+        })
+        it('should undislike the thread, then return with 200 status code and message that everything is ok', (done) => {
+            chai.request(server)
+                .post('/thread/' + threadId + '/likeDislike')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ pressedButton: 'dislike' })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.equals('Thread undisliked')
+                    done()
+                })
+        })
+        it('should dislike the thread, then return with 200 status code and message that everything is ok', (done) => {
+            chai.request(server)
+                .post('/thread/' + threadId + '/likeDislike')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ pressedButton: 'dislike' })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.equals('Thread disliked')
+                    done()
+                })
+        })
+        it('should return 401 status code and error message', (done) => {
+            chai.request(server)
+                .post('/thread/' + threadId + '/likeDislike')
+                .set({ authorization: 'Bearer ' })
+                .send({ pressedButton: 'dislike' })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.equals('You have no permission to use path: /thread/' + threadId + '/likeDislike')
                     done()
                 })
         })
@@ -310,7 +431,11 @@ describe('forumController tests', () => {
                 .set({ authorization: 'Bearer ' + otherUserToken, forumname: 'testForumUpdated' })
                 .end((err, res) => {
                     res.should.have.status(401)
-                    res.body.should.be.an('object').that.has.property('message').that.is.a('string').equals('You are not authorized to delete this forum')
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .equals('You are not authorized to delete this forum')
                     done()
                 })
         })
@@ -320,7 +445,11 @@ describe('forumController tests', () => {
                 .set({ authorization: 'Bearer ' + userToken, forumname: 'testForumUpdated' })
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.be.an('object').that.has.property('message').that.is.a('string').equals('Forum deleted')
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .equals('Forum deleted')
                     done()
                 })
         })
@@ -330,7 +459,11 @@ describe('forumController tests', () => {
                 .set({ authorization: 'Bearer ' + userToken, forumname: 'testForumUpdated' })
                 .end((err, res) => {
                     res.should.have.status(404)
-                    res.body.should.be.an('object').that.has.property('message').that.is.a('string').equals('No forum found')
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .equals('No forum found')
                     done()
                 })
         })
