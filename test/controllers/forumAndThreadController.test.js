@@ -50,7 +50,7 @@ describe('forumController tests', () => {
                     done()
                 })
         })
-        it('should return with 400 status code and an error message', (done) => {
+        it('should return with 201 status code and success true', (done) => {
             chai.request(server)
                 .post('/forum')
                 .set({ authorization: 'Bearer ' + userToken })
@@ -93,6 +93,17 @@ describe('forumController tests', () => {
                 })
         })
     })
+    describe('/forum/:forumId GET route tests', () => {
+        it('should return with 200 status code and an array with the forum', (done) => {
+            chai.request(server)
+                .get('/forum/' + forumId)
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').lengthOf(1)
+                    done()
+                })
+        })
+    })
     describe('/forum/getAllThreads/:forumId GET route tests while the forum has no threads', () => {
         it('should return with 200 status code and an empty array', (done) => {
             chai.request(server)
@@ -116,6 +127,50 @@ describe('forumController tests', () => {
                     res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
                     done()
                 })
+        })
+    })
+    describe('/forum/:forumId PUT update forum test', () => {
+        it('should return with 200 status code and success true', (done) => {
+            chai.request(server)
+                .put('/forum/' + forumId)
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForumUpdated' })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.equals('Forum updated')
+                    done()
+                })
+        })
+    })
+    describe('/forum/:forumId GET route tests', () => {
+        it('should return with 200 status code and an array with the updated forum', (done) => {
+            chai.request(server)
+                .get('/forum/' + forumId)
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').lengthOf(1)
+                    res.body[0].should.have.property('forum_name').that.is.a('string').that.equals('testForumUpdated')
+                    done()
+                })
+        })
+    })
+    describe('forum controller tests while there is no token in the headers', () => {
+        describe('/forum POST route tests', () => {
+            it('should return with 401 status code and error message', (done) => {
+                chai.request(server)
+                    .post('/forum')
+                    .set({ authorization: 'Bearer ' })
+                    .send({ forum_name: 'testForum' })
+                    .end((err, res) => {
+                        res.should.have.status(401)
+                        res.body.should.be.an('object').that.has.property('message').that.is.a('string').equals('You have no permission to use path: /forum')
+                        done()
+                    })
+            })
         })
     })
 })
