@@ -80,6 +80,7 @@ const searchForumByTag = tryCatchWrapper(async (req, res) => {
 })
 
 const deleteForum = tryCatchWrapper(async (req, res) => {
+    console.log(req.headers.forumname)
     const forum = await Forum.findOne({ forum_name: req.headers.forumname })
     if (!forum) {
         res.status(StatusCodes.NOT_FOUND).json({

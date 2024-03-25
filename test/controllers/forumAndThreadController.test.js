@@ -303,6 +303,52 @@ describe('forumController tests', () => {
             })
         })
     })
+    describe('/forum DELETE route tests', () => {
+        it('should return with 401 status code and error message', (done) => {
+            chai.request(server)
+                .delete('/forum/')
+                .set({ authorization: 'Bearer ' + otherUserToken, forumname: 'testForumUpdated' })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.be.an('object').that.has.property('message').that.is.a('string').equals('You are not authorized to delete this forum')
+                    done()
+                })
+        })
+        it('should return with 200 status code and message that everything is ok', (done) => {
+            chai.request(server)
+                .delete('/forum/')
+                .set({ authorization: 'Bearer ' + userToken, forumname: 'testForumUpdated' })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('object').that.has.property('message').that.is.a('string').equals('Forum deleted')
+                    done()
+                })
+        })
+        it('should return with 404 status code and error message', (done) => {
+            chai.request(server)
+                .delete('/forum/')
+                .set({ authorization: 'Bearer ' + userToken, forumname: 'testForumUpdated' })
+                .end((err, res) => {
+                    res.should.have.status(404)
+                    res.body.should.be.an('object').that.has.property('message').that.is.a('string').equals('No forum found')
+                    done()
+                })
+        })
+        it('should return with 401 status code and error message', (done) => {
+            chai.request(server)
+                .delete('/forum')
+                .set({ authorization: 'Bearer ', forumname: 'testForumUpdated' })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .equals('You have no permission to use path: /forum')
+                    done()
+                })
+        })
+    })
     describe('threadController tests while there is no token in the headers', () => {
         it('should return with 401 status code', (done) => {
             chai.request(server)
