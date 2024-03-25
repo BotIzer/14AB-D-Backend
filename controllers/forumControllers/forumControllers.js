@@ -43,7 +43,10 @@ const getAllThreads = tryCatchWrapper(async (req, res) => {
 })
 
 const getAllForums = tryCatchWrapper(async (req, res) => {
-    const forums = await Forum.find()
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
+    const forums = await Forum.find().skip(skip).limit(limit)
     if (!forums) {
         res.status(StatusCodes.NOT_FOUND).json({
             message: 'No forums found',

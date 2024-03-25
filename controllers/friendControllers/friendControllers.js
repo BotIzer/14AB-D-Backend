@@ -18,7 +18,11 @@ const getFriends = tryCatchWrapper(async (req, res) => {
             username: friend.username,
         })
     }
-    res.status(StatusCodes.OK).json(friends)
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
+    const returnFriends = friends.splice(skip, limit)
+    res.status(StatusCodes.OK).json(returnFriends)
     return
 })
 
