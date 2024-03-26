@@ -10,7 +10,7 @@ chai.use(chaiHttp)
 describe("userController's tests", () => {
     let userToken
     before(async () => {
-        User.deleteMany({}).then(() => {})
+        await User.deleteMany({})
     })
 
     describe('/register route test', () => {

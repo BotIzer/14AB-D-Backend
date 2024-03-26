@@ -61,7 +61,7 @@ describe("userController's tests", () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.be.an('object').that.has.property('requests').that.is.an('array').and.is.empty
+                    res.body.should.be.an('object').that.has.property('returnRequests').that.is.an('array').and.is.empty
                     done()
                 })
         })
@@ -203,7 +203,7 @@ describe("userController's tests", () => {
                     res.should.have.status(200)
                     res.body.should.be
                         .an('object')
-                        .that.has.property('requests')
+                        .that.has.property('returnRequests')
                         .that.is.an('array')
                         .and.has.lengthOf(1)
                     done()
@@ -277,7 +277,7 @@ describe("userController's tests", () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.be.an('object').that.has.property('requests').that.is.an('array').and.is.empty
+                    res.body.should.be.an('object').that.has.property('returnRequests').that.is.an('array').and.is.empty
                     done()
                 })
         })
