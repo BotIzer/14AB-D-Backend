@@ -9,7 +9,7 @@ const mongoose = require('mongoose')
 
 
 const createForum = tryCatchWrapper(async (req, res) => {
-    const { forum_name: forumName, banner: banner } = req.body
+    const { forum_name: forumName, banner: banner, tags: tags, desciprtion: description } = req.body
     if (!forumName) {
         res.status(StatusCodes.BAD_REQUEST).json({
             message: 'Please provide a forum name',
@@ -24,6 +24,8 @@ const createForum = tryCatchWrapper(async (req, res) => {
         },
         forum_name: forumName,
         banner: banner,
+        tags: tags,
+        description: description
     })
     newForum.save()
     res.status(StatusCodes.CREATED).json({ success: true, forumId: newForum._id.forum_id})
