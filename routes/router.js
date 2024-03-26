@@ -4,6 +4,8 @@ const {
     loginUser,
     registerUser,
     getUsersChats,
+    changePassword,
+    confirmPasswordChange,
     userController: {
         getAllUsers,
         getUserDataById,
@@ -59,6 +61,7 @@ router.route('/user/friends/requests').get(protectPath, getUserRequests)
 router.route('/user/friends/sentRequests').get(protectPath, getUsersSentRequests)
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/user/addHobby').post(protectPath, addHobby)
+router.route('/user/changePassword').post(/*protectPath, */changePassword, confirmPasswordChange)
 
 router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(protectPath, deleteForum)
 router.route('/forum/getAllThreads/:forumId').get(protectPath, checkWetherBannedFromForum, getAllThreads)
