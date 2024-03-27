@@ -12,6 +12,11 @@ const forumSchema = new mongoose.Schema({
             auto: true,
         },
     },
+    description: {
+        type: String,
+        maxlength: [5000, 'The description cannot be more than 5000 characters!'],
+        trim: true,
+    },
     forum_name: {
         type: String,
         required: true,

@@ -9,7 +9,7 @@ const mongoose = require('mongoose')
 
 
 const createForum = tryCatchWrapper(async (req, res) => {
-    const { forum_name: forumName, banner: banner } = req.body
+    const { forum_name: forumName, banner: banner, tags: tags, description: description } = req.body
     if (!forumName) {
         res.status(StatusCodes.BAD_REQUEST).json({
             message: 'Please provide a forum name',
@@ -24,9 +24,11 @@ const createForum = tryCatchWrapper(async (req, res) => {
         },
         forum_name: forumName,
         banner: banner,
+        tags: tags,
+        description: description
     })
     newForum.save()
-    res.status(StatusCodes.CREATED).json({ success: true })
+    res.status(StatusCodes.CREATED).json({ success: true, forumId: newForum._id.forum_id})
     return
 })
 
@@ -43,7 +45,10 @@ const getAllThreads = tryCatchWrapper(async (req, res) => {
 })
 
 const getAllForums = tryCatchWrapper(async (req, res) => {
-    const forums = await Forum.find()
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
+    const forums = await Forum.find().skip(skip).limit(limit)
     if (!forums) {
         res.status(StatusCodes.NOT_FOUND).json({
             message: 'No forums found',
@@ -77,6 +82,7 @@ const searchForumByTag = tryCatchWrapper(async (req, res) => {
 })
 
 const deleteForum = tryCatchWrapper(async (req, res) => {
+    console.log(req.headers.forumname)
     const forum = await Forum.findOne({ forum_name: req.headers.forumname })
     if (!forum) {
         res.status(StatusCodes.NOT_FOUND).json({
@@ -113,7 +119,8 @@ const banUserFromForum = tryCatchWrapper(async (req, res) => {
         })
         return
     }
-    const { user_id: userId } = req.body
+    const userName = req.body.user_name
+    const userId = (await User.findOne({ username: userName }))._id
     if (forum.blacklist.includes(userId)) {
         res.status(StatusCodes.BAD_REQUEST).json({
             message: 'User is already banned from this forum',
@@ -143,7 +150,8 @@ const unbanUserFromForum = tryCatchWrapper(async (req, res) => {
         })
         return
     }
-    const { user_id: userId } = req.body
+    const userName = req.body.user_name
+    const userId = ((await User.findOne({ username: userName }))._id).toString()
     if (!forum.blacklist.includes(userId)) {
         res.status(StatusCodes.BAD_REQUEST).json({
             message: 'User is not banned from this forum',

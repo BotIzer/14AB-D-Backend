@@ -24,16 +24,16 @@ const threadSchema = new mongoose.Schema({
             type: Number,
             default: 0,
         },
-        users: [mongoose.ObjectId],
+        users: [String],
     },
     dislikes: {
         count: {
             type: Number,
             default: 0,
         },
-        users: [mongoose.ObjectId],
+        users: [String],
     },
-    editors: [mongoose.ObjectId],
+    editors: [String],
     emoticons: [String],
     creation_date: {
         type: Date,

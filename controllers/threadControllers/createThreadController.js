@@ -3,10 +3,28 @@ const Forum = require('../../models/forumModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
-const { noForumFoundError }= require('../../errors/forumErrors/forumErrors')
+const { noForumFoundError } = require('../../errors/forumErrors/forumErrors')
 
 const createThread = tryCatchWrapper(async (req, res) => {
     const { forum_name: forumName, name: name, content: content, images: images } = req.body
+    if (!forumName || forumName.trim() === '') {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            message: 'Please provide a forum name',
+        })
+        return
+    }
+    if (!name || name.trim() === '') {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            message: 'Please provide a thread name',
+        })
+        return
+    }
+    if (!content || content.trim() === '') {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            message: 'Please provide a thread content',
+        })
+        return
+    }
     const decodedCreatorId = await getCreatorIdFromHeaders(req.headers)
     const forumId = await Forum.getForumIdByName(forumName)
     if (!forumId) {
@@ -22,7 +40,7 @@ const createThread = tryCatchWrapper(async (req, res) => {
         creation_date: Date.now(),
         content: content,
     })
-    images.forEach(image => {
+    images.forEach((image) => {
         newThread.image_array.push(image)
     })
     newThread.save()

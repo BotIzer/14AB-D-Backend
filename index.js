@@ -20,10 +20,12 @@ const hpp = require('hpp')
 const swaggerUi = require('swagger-ui-express')
 const swaggerOutput = require('./swagger_output.json')
 const { ObjectId } = require('mongodb')
+const jwt = require('jsonwebtoken')
+const { Realtime } = require('ably')
 
 const app = express()
 app.set('trust proxy', 1)
-app.get('/ip', (request, response) => response.send(request.ip))
+// app.get('/ip', (request, response) => response.send(request.ip))
 const server = http.createServer(app)
 const io = socketIo(server, {
     cors: { origin: process.env.FRONTEND_URL, credentials: true },
@@ -58,14 +60,27 @@ const startServer = async () => {
         await connectDB(process.env.DB)
         console.log('MongoDB connected')
         // Set up MongoDB change stream for Comments collection
+        const ably = new Realtime(process.env.ABLY_API_KEY)
+        console.log("Ably connected")
         const commentChangeStream = Comment.watch()
         // Start listening to changes in the Comments collection
+        // BEFORE ABLY
+        // commentChangeStream.on('change', async (change) => {
+        //     // Emit the change to connected clients
+        //     io.emit('commentChange', change)
+        //     // console.log(await createEmitResponse(change))
+        //     io.emit('message', await createEmitResponse(change))
+        // })
+        // AFTER ABLY
         commentChangeStream.on('change', async (change) => {
-            // Emit the change to connected clients
-            io.emit('commentChange', change)
-            // console.log(await createEmitResponse(change))
-            io.emit('message', await createEmitResponse(change))
-        })
+            // Get the channel for emitting changes
+            const channel = ably.channels.get('commentChanges');
+
+            // Publish the change to connected clients
+            channel.publish('commentChanges', await createEmitResponse(change));
+
+            // await channel.publish('message', await createEmitResponse(change));
+        });
         // Start the server after MongoDB connection is established
         server.listen(port, () => console.log(`Server is listening on port: ${port}...`))
     } catch (error) {
@@ -75,33 +90,11 @@ const startServer = async () => {
 }
 
 // Socket.IO logic
-io.on('connection', (socket) => {
-    socket.on('disconnect', () => {
-        console.log('User disconnected')
-    })
-
-    // WARNING: THIS PIECE OF CODE CAN CAUSE MEMORY LEAKS
-    // AND MAY LEAD TO CRASHES AND OTHER UNDEFINED BEHAVIOUR!
-    // IMMEDIATE FIX IS NEEDED
-    socket.on('onOpinionChanged', async (data) => {
-        console.log('Something changed')
-        const thread = await Thread.findOne({ '_id.thread_id': data.threadId })
-        if(data.isLiked){
-            if (!thread.likes.users.includes(data.userId)) {
-                if (thread.dislikes.users.pop(userId)) {
-                    thread.dislikes.count -= 1
-                }
-                thread.likes.count += 1
-                thread.likes.users.push(data.userId)
-            }
-        }
-        else{
-
-        }
-        console.log(thread)
-        thread.save()
-    })
-})
+// io.on('connection', (socket) => {
+//     socket.on('disconnect', () => {
+//         console.log('User disconnected')
+//     })
+// })
 
 // Start the server
 startServer()

@@ -9,6 +9,7 @@ const getFriends = tryCatchWrapper(async (req, res) => {
     const friendIds = await User.findById(id).select('friends -_id')
     if (!friendIds) {
         res.status(StatusCodes.NOT_FOUND).json({ message: 'No friends found' })
+        return
     }
     const friends = []
     for (const id of friendIds.friends) {
@@ -17,7 +18,11 @@ const getFriends = tryCatchWrapper(async (req, res) => {
             username: friend.username,
         })
     }
-    res.status(StatusCodes.OK).json(friends)
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
+    const returnFriends = friends.splice(skip, limit)
+    res.status(StatusCodes.OK).json(returnFriends)
     return
 })
 
@@ -26,6 +31,7 @@ const deleteFriend = tryCatchWrapper(async (req, res) => {
     const friend = await User.findOne({ username: req.params.friendName })
     if (!friend) {
         res.status(StatusCodes.NOT_FOUND).json({ message: 'No friend found!' })
+        return
     }
     const deletersProfile = await User.findById(id)
     deletersProfile.friends.pull(friend._id)
@@ -42,12 +48,19 @@ const makeFriendRequest = tryCatchWrapper(async (req, res) => {
     const user = await User.findOne({ username: req.params.friendName })
     if (!user) {
         res.status(StatusCodes.NOT_FOUND).json({ message: 'No user found to send friend request to!' })
+        return
     }
     if (user.username === sender.username) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: 'You cannot send a friend request to yourself!' })
+        return
+    }
+    if (user.friend_requests.includes(sender.username)) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'You already sent a friend request to this user!' })
+        return
     }
     if (sender.friends.includes(user._id)) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: 'You are already friends with this user!' })
+        return
     }
     user.friend_requests.push(sender.username)
     await user.save()
@@ -61,7 +74,10 @@ const acceptFriendRequest = tryCatchWrapper(async (req, res) => {
     const id = await getCreatorIdFromHeaders(req.headers)
     const accepter = await User.findById(id)
     const friend = await User.findOne({ username: req.params.requestCreatorName })
-
+    if (!accepter.friend_requests.includes(req.params.requestCreatorName)) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'You have no pending friend requests from this user!' })
+        return
+    }
     accepter.friends.push(friend._id)
     accepter.friend_requests.pull(req.params.requestCreatorName)
     await accepter.save()
@@ -75,6 +91,10 @@ const acceptFriendRequest = tryCatchWrapper(async (req, res) => {
 const declineFriendRequest = tryCatchWrapper(async (req, res) => {
     const id = await getCreatorIdFromHeaders(req.headers)
     const decliner = await User.findById(id)
+    if (!decliner.friend_requests.includes(req.params.requestCreatorName)) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'You have no pending friend requests from this user!' })
+        return
+    }
     decliner.friend_requests.pull(req.params.requestCreatorName)
     await decliner.save()
     const requester = await User.findOne({ username: req.params.requestCreatorName })

@@ -56,7 +56,33 @@ const getUserProfileByUsername = tryCatchWrapper(async (req, res) => {
 
 const updateUser = tryCatchWrapper(async (req, res) => {
     const userId = await getCreatorIdFromHeaders(req.headers)
-    const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions).select('-_id -password')
+    if (req.body.username && req.body.username.length < 2) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'Username must be at least 2 characters long' })
+        return
+    }
+    if (req.body.username && req.body.username.length > 20) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'Username cannot be longer than 20 characters!' })
+        return
+    }
+    if (/^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/.test(req.body.username) === false) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            message: 'Username must start with a letter and can only contain letters, numbers, dashes and underscores',
+        })
+        return
+    }
+    if (req.body.full_name && req.body.full_name.length < 5) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'Full name must be at least 5 characters long' })
+        return
+    }
+    if (req.body.full_name && req.body.full_name.length > 100) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'Full name cannot be longer than 100 characters!' })
+        return
+    }
+    if (req.body.description && req.body.description.length > 5000) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'Description cannot be longer than 5000 characters!' })
+        return
+    }
+    const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions).select('-email -_id -password')
     if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })
     return
@@ -104,7 +130,11 @@ const getUserRequests = tryCatchWrapper(async (req, res) => {
     const user = await User.findById(userId)
     if (!user) throw new noUserFoundError(userId)
     const requests = user.friend_requests
-    res.status(StatusCodes.OK).json({ requests })
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
+    const returnRequests = requests.slice(skip, skip + limit)
+    res.status(StatusCodes.OK).json({ returnRequests })
     return
 })
 
@@ -112,7 +142,6 @@ const getUsersSentRequests = tryCatchWrapper(async (req, res) => {
     const userId = await getCreatorIdFromHeaders(req.headers)
     const user = await User.findById(userId)
     if (!user) throw new noUserFoundError(userId)
-    console.log(user)
     const sentRequests = user.sent_friend_requests
     res.status(StatusCodes.OK).json({ sentRequests })
     return
@@ -128,7 +157,6 @@ function generateRandomString(length) {
     password += specialChar // Add the special character
     return password
 }
-
 
 module.exports = {
     getAllUsers,
