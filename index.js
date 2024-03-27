@@ -21,6 +21,7 @@ const swaggerUi = require('swagger-ui-express')
 const swaggerOutput = require('./swagger_output.json')
 const { ObjectId } = require('mongodb')
 const jwt = require('jsonwebtoken')
+const { Realtime } = require('ably')
 
 const app = express()
 app.set('trust proxy', 1)
@@ -59,14 +60,27 @@ const startServer = async () => {
         await connectDB(process.env.DB)
         console.log('MongoDB connected')
         // Set up MongoDB change stream for Comments collection
+        const ably = new Realtime(process.env.ABLY_API_KEY)
+        console.log("Ably connected")
         const commentChangeStream = Comment.watch()
         // Start listening to changes in the Comments collection
+        // BEFORE ABLY
+        // commentChangeStream.on('change', async (change) => {
+        //     // Emit the change to connected clients
+        //     io.emit('commentChange', change)
+        //     // console.log(await createEmitResponse(change))
+        //     io.emit('message', await createEmitResponse(change))
+        // })
+        // AFTER ABLY
         commentChangeStream.on('change', async (change) => {
-            // Emit the change to connected clients
-            io.emit('commentChange', change)
-            // console.log(await createEmitResponse(change))
-            io.emit('message', await createEmitResponse(change))
-        })
+            // Get the channel for emitting changes
+            const channel = ably.channels.get('commentChanges');
+
+            // Publish the change to connected clients
+            channel.publish('commentChanges', await createEmitResponse(change));
+
+            // await channel.publish('message', await createEmitResponse(change));
+        });
         // Start the server after MongoDB connection is established
         server.listen(port, () => console.log(`Server is listening on port: ${port}...`))
     } catch (error) {
@@ -76,54 +90,11 @@ const startServer = async () => {
 }
 
 // Socket.IO logic
-io.on('connection', (socket) => {
-    socket.on('disconnect', () => {
-        console.log('User disconnected')
-    })
-    socket.on('onOpinionChanged', async (data) => {
-        const userId = jwt.verify(data.userToken, process.env.JWT_SECRET).id;
-        const thread = await Thread.findOne({ '_id.thread_id': data.threadId })
-        const userName = (await User.findById(userId).select('username -_id')).username
-        //TODO: throw error if this occurs
-        if (!userId || !thread) return;
-        if(data.isLiked && data.isDisliked){
-            // TODO: throw error if some bad things happen
-            return;
-        }
-        else if(data.isLiked){
-            if (!thread.likes.users.includes(userName)) {
-                if (thread.dislikes.users.pop(userName)) {
-                    thread.dislikes.count -= 1
-                }
-                thread.likes.count += 1
-                thread.likes.users.push(userName)
-            }
-        }
-        else if(data.isDisliked){
-            if (!thread.dislikes.users.includes(userName)) {
-                if (thread.likes.users.pop(userName)) {
-                    thread.likes.count -= 1
-                }
-                thread.dislikes.count += 1
-                thread.dislikes.users.push(userName)
-            }
-        }
-        else{
-            if (!thread.likes.users.includes(userName)) {
-                if (thread.dislikes.users.pop(userName)) {
-                    thread.dislikes.count -= 1
-                }
-            }
-            else if (!thread.dislikes.users.includes(userName)) {
-                if (thread.likes.users.pop(userName)) {
-                    thread.likes.count -= 1
-                }
-            }
-        }
-        thread.save()
-        io.emit('likesAndDislikes',{likeCount: thread.likes.count, dislikeCount: thread.dislikes.count})
-    })
-})
+// io.on('connection', (socket) => {
+//     socket.on('disconnect', () => {
+//         console.log('User disconnected')
+//     })
+// })
 
 // Start the server
 startServer()
