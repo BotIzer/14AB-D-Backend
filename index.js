@@ -60,18 +60,29 @@ const startServer = async () => {
         await connectDB(process.env.DB)
         console.log('MongoDB connected')
         // Set up MongoDB change stream for Comments collection
-        const ably = new Realtime(process.env.ABLY_API_KEY)
-        console.log("Ably connected")
         const commentChangeStream = Comment.watch()
         // Start listening to changes in the Comments collection
+        console.log(process.env.NODE_ENV)
         // BEFORE ABLY
-        // commentChangeStream.on('change', async (change) => {
-        //     // Emit the change to connected clients
-        //     io.emit('commentChange', change)
-        //     // console.log(await createEmitResponse(change))
-        //     io.emit('message', await createEmitResponse(change))
-        // })
+        if(process.env.NODE_ENV === "development"){
+            io.on('connection', (socket) => {
+                console.log("Socket IO connected")
+                socket.on('disconnect', () => {
+                    console.log('User disconnected')
+                })
+            })
+            commentChangeStream.on('change', async (change) => {
+            // Emit the change to connected clients
+            io.emit('commentChange', change)
+            // console.log(await createEmitResponse(change))
+            io.emit('message', await createEmitResponse(change))
+        })
+        }
         // AFTER ABLY
+
+        else{
+            const ably = new Realtime(process.env.ABLY_API_KEY)
+        console.log("Ably connected")
         commentChangeStream.on('change', async (change) => {
             // Get the channel for emitting changes
             const channel = ably.channels.get('commentChanges');
@@ -81,6 +92,7 @@ const startServer = async () => {
 
             // await channel.publish('message', await createEmitResponse(change));
         });
+        }
         // Start the server after MongoDB connection is established
         server.listen(port, () => console.log(`Server is listening on port: ${port}...`))
     } catch (error) {
@@ -88,13 +100,6 @@ const startServer = async () => {
         process.exit(1)
     }
 }
-
-// Socket.IO logic
-// io.on('connection', (socket) => {
-//     socket.on('disconnect', () => {
-//         console.log('User disconnected')
-//     })
-// })
 
 // Start the server
 startServer()
