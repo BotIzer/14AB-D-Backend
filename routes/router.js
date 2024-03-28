@@ -2,7 +2,10 @@ const express = require('express')
 const router = express.Router()
 const {
     loginUser,
-    registerUser,
+    registerUser: {
+        registerUser,
+        verifyEmail
+    },
     getUsersChats,
     changePassword,
     confirmPasswordChange,
@@ -53,6 +56,7 @@ const {
 
 router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)
+router.route('/verifyEmail/:emailToken').get(verifyEmail) //Swagger
 
 router.route('/search').post(search)
 

@@ -15,6 +15,10 @@ const loginUser = tryCatchWrapper(async (req, res) => {
     if (!user || !user.validPassword(user, req.body.password)) {
         throw new wrongLoginDataError()
     }
+    if (!user.isVerified && user.emailToken) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'Please verify your email address' })
+        return
+    }
     sendTokenResponse(user, StatusCodes.OK, res)
     return
 })

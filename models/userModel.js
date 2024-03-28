@@ -94,6 +94,11 @@ const userSchema = new mongoose.Schema({
     hobbies: [String],
     reset_password_token: String,
     reset_password_expire: Date,
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    emailToken: String,
 })
 userSchema.methods.generateHash = (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
