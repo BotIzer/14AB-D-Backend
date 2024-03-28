@@ -7,21 +7,20 @@ const nodemailer = require('nodemailer')
 
 const confirmPasswordChange = tryCatchWrapper(async (req, res) => {
     var transporter = nodemailer.createTransport({
-        service: 'gmailhu',
-        host: 'pop.gmail.hu',
-        port: 110,
-        secure: false,
+        service: 'gmail',
+        host: 'smtp.gmail.com',
         auth: {
-            user: 'blitzforfriends@gmail.hu',
-            pass: 'BffPasswd1234.',
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASS,
         },
     })
 
     var mailOptions = {
-        from: 'blitzforfriends@gmail.hu',
+        from: { name: 'BlitzForFriends', address: process.env.EMAIL },
         to: 'lajtai.benjamin@students.jedlik.eu',
         subject: 'Sending Email using Node.js',
         text: 'That was easy!',
+        html: '<b><i>That was easy!</i></b>',
     }
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -30,8 +29,8 @@ const confirmPasswordChange = tryCatchWrapper(async (req, res) => {
         } else {
             console.log('Email sent: ' + info.response)
         }
-    }) 
-    return res.status(200).json({'message': 'Password changed successfully!' })
+    })
+    return res.status(200).json({ message: 'Password changed successfully!' })
 })
 
 module.exports = confirmPasswordChange
