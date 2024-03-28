@@ -73,7 +73,7 @@ const sendRegisterEmail = tryCatchWrapper(async (userEmail, emailToken) => {
         from: { name: 'BlitzForFriends', address: process.env.EMAIL },
         to: userEmail,
         subject: 'Verify your email',
-        html: `Click <a href="http://localhost:3000/verifyEmail/${emailToken}">here</a> to verify your email`,
+        html: `Click <a href="${process.env.BACKEND_URL}/verifyEmail/${emailToken}">here</a> to verify your email`,
     }
 
     transporter.sendMail(mailOptions, function (error, info) {

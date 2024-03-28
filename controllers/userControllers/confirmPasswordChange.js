@@ -6,31 +6,22 @@ const { noUserFoundError } = require('../../errors/userErrors/userErrors')
 const nodemailer = require('nodemailer')
 
 const confirmPasswordChange = tryCatchWrapper(async (req, res) => {
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        host: 'smtp.gmail.com',
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.EMAIL_PASS,
-        },
-    })
-
-    var mailOptions = {
-        from: { name: 'BlitzForFriends', address: process.env.EMAIL },
-        to: 'lajtai.benjamin@students.jedlik.eu',
-        subject: 'Sending Email using Node.js',
-        text: 'That was easy!',
-        html: '<b><i>That was easy!</i></b>',
+    const passwordToken = req.params.passwordToken
+    if (!passwordToken) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'Password token is required' })
+        return
     }
-
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error)
-        } else {
-            console.log('Email sent: ' + info.response)
-        }
-    })
-    return res.status(200).json({ message: 'Password changed successfully!' })
+    const user = await User.findOne({ reset_password_token: passwordToken })
+    if (!user) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: 'Password token is invalid' })
+        return
+    }
+    user.password = user.reset_password
+    user.reset_password_token = null
+    user.reset_password = null
+    await user.save()
+    res.status(StatusCodes.OK).json({ message: 'Password changed successfully' })
+    return
 })
 
 module.exports = confirmPasswordChange

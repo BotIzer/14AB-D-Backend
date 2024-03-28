@@ -93,7 +93,7 @@ const userSchema = new mongoose.Schema({
     },
     hobbies: [String],
     reset_password_token: String,
-    reset_password_expire: Date,
+    reset_password: String,
     isVerified: {
         type: Boolean,
         default: false,

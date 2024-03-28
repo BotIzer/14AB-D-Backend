@@ -63,7 +63,8 @@ router.route('/search').post(search)
 router.route('/user').put(protectPath, updateUser).delete(protectPath, deleteUser)
 router.route('/user/friends/requests').get(protectPath, getUserRequests)
 router.route('/user/friends/sentRequests').get(protectPath, getUsersSentRequests)
-router.route('/user/changePassword').post(/*protectPath, */changePassword, confirmPasswordChange) //SWAGGER LATER
+router.route('/user/changePassword').post(protectPath, changePassword) //SWAGGER LATER
+router.route('/user/verifyNewPassword/:passwordToken').get(confirmPasswordChange) //SWAGGER
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/user/addHobby').post(protectPath, addHobby)
 
