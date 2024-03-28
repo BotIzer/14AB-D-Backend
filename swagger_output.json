@@ -262,6 +262,73 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "The user in not verified yet",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Please verify your email address"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/verifyEmail/:emailToken": {
+            "get": {
+                "tags": ["auth"],
+                "description": "Verify user email address",
+                "parameters": [
+                    {
+                        "name": "emailToken",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "7499d9123a6679274fbd990c46ad8c9910ff43931b1c7ed823c5bc7b1e82377eec0ee0ffccb2b65bc03003e19e03ccb7a66e0910d1c9c3ff9c2734c6e2cce8d2"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email address verified successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email verified successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid email token given",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid email token"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

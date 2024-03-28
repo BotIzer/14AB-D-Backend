@@ -56,14 +56,14 @@ const {
 
 router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)
-router.route('/verifyEmail/:emailToken').get(verifyEmail) //Swagger
+router.route('/verifyEmail/:emailToken').get(verifyEmail)
 
 router.route('/search').post(search)
 
 router.route('/user').put(protectPath, updateUser).delete(protectPath, deleteUser)
 router.route('/user/friends/requests').get(protectPath, getUserRequests)
 router.route('/user/friends/sentRequests').get(protectPath, getUsersSentRequests)
-router.route('/user/changePassword').post(/*protectPath, */changePassword, confirmPasswordChange)
+router.route('/user/changePassword').post(/*protectPath, */changePassword, confirmPasswordChange) //SWAGGER LATER
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/user/addHobby').post(protectPath, addHobby)
 
