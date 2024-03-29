@@ -11,9 +11,11 @@ const loginUser = tryCatchWrapper(async (req, res) => {
             throw new userIsAlreadyLoggedInError()
         }
     }
-    if (req.body.email.split('_')[0] == 'deleteduser') {
-        res.status(StatusCodes.BAD_REQUEST).json({ message: 'You cannot login to deleted user' })
-        return
+    if (req.body.email.includes('_')) {
+        if (req.body.email.split('_')[0] == 'deleteduser') {
+            res.status(StatusCodes.BAD_REQUEST).json({ message: 'You cannot login to deleted user' })
+            return
+        }
     }
     const user = await User.findOne({ email: req.body.email })
     if (!user || !user.validPassword(user, req.body.password)) {

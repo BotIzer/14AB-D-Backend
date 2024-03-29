@@ -3,10 +3,7 @@ const router = express.Router()
 const limiter = require('express-rate-limit')
 const {
     loginUser,
-    registerUser: {
-        registerUser,
-        verifyEmail
-    },
+    registerUser: { registerUser, verifyEmail },
     getUsersChats,
     changePassword,
     confirmPasswordChange,
@@ -36,14 +33,18 @@ const {
     updateForum,
 } = require('../controllers/forumControllers/forumControllers')
 const search = require('../controllers/searchController/searchController')
-const { createThread, deleteThreadConroller, likeDislikeStateChanged } = require('../controllers/threadControllers/threadControllers')
+const {
+    createThread,
+    deleteThreadConroller,
+    likeDislikeStateChanged,
+} = require('../controllers/threadControllers/threadControllers')
 const {
     getChatDataById,
     createChat,
     checkMutualChat,
     getChatsComments,
     deleteChat,
-    leaveChat
+    leaveChat,
 } = require('../controllers/chatControllers/chatControllers')
 const { createComment, updateComment, deleteComment } = require('../controllers/commentControllers/commentControllers')
 const {
@@ -55,12 +56,20 @@ const {
     addFriendToChat,
 } = require('../controllers/friendControllers/friendControllers')
 
+let maxLoginAttempts
+
+if (process.env.NODE_ENV === 'testing') {
+    maxLoginAttempts = 100
+} else {
+    maxLoginAttempts = 5
+}
+
 const loginLimiter = limiter({
     windowMs: 1000 * 60,
-    max: 5,
+    max: maxLoginAttempts,
     handler: (req, res) => {
-        res.status(429).json({message: 'Too many login requests! Please try again after a minute.'})
-    }
+        res.status(429).json({ message: 'Too many login requests! Please try again after a minute.' })
+    },
 })
 
 router.route('/register').post(registerUser)
