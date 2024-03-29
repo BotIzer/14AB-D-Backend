@@ -16,7 +16,9 @@ const protectPath = tryCatchWrapper(async (req, res, next) => {
         throw new noPermissionToUsePathError(req.originalUrl)
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
-
+    if (decoded.exp < Date.now() / 1000) {
+        res.status(StatusCodes.UNAUTHORIZED).json({ message: 'You need to log in again to access the chats page!' })
+    }
     req.user = await User.findById(decoded.id)
     next()
 })

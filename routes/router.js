@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const limiter = require('express-rate-limit')
 const {
     loginUser,
     registerUser: {
@@ -54,8 +55,16 @@ const {
     addFriendToChat,
 } = require('../controllers/friendControllers/friendControllers')
 
+const loginLimiter = limiter({
+    windowMs: 1000 * 60,
+    max: 5,
+    handler: (req, res) => {
+        res.status(429).json({message: 'Too many login requests! Please try again after a minute.'})
+    }
+})
+
 router.route('/register').post(registerUser)
-router.route('/login').post(loginUser)
+router.route('/login').post(loginLimiter, loginUser)
 router.route('/verifyEmail/:emailToken').get(verifyEmail)
 
 router.route('/search').post(search)

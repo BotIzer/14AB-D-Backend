@@ -40,7 +40,6 @@ const registerUser = tryCatchWrapper(async (req, res) => {
     newUser.save()
     await sendRegisterEmail(newUser.email, newUser.emailToken,newUser.username)
     sendTokenResponse(newUser, StatusCodes.CREATED, res)
-    return
 })
 
 const verifyEmail = tryCatchWrapper(async (req, res) => {
@@ -60,21 +59,33 @@ const verifyEmail = tryCatchWrapper(async (req, res) => {
     res.status(StatusCodes.OK).json({ message: 'Email verified successfully' })
 })
 
-const sendRegisterEmail = tryCatchWrapper(async (userEmail, emailToken,userName) => {
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        host: 'smtp.gmail.com',
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.EMAIL_PASS,
-        },
-    })
-    const htmlContent = fs.readFileSync('email_template.html','utf8')
+const sendRegisterEmail = tryCatchWrapper(async (userEmail, emailToken) => {
+    var transporter 
+    if (process.env.NODE_ENV === 'testing') {
+        transporter = nodemailer.createTransport({
+            host: process.env.EMAIL_HOST,
+            port: 2525,
+            auth: {
+                user: process.env.EMAIL,
+                pass: process.env.EMAIL_PASS,
+            },
+        })
+    }
+    else {
+        transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: process.env.EMAIL_HOST,
+            auth: {
+                user: process.env.EMAIL,
+                pass: process.env.EMAIL_PASS,
+            },
+        })
+    }
+
     var mailOptions = {
         from: { name: 'BlitzForFriends', address: process.env.EMAIL },
         to: userEmail,
         subject: 'Verify your email',
-        html: `Click <a href="${process.env.BACKEND_URL}/verifyEmail/${emailToken}">here</a> to verify your email`,
         html: htmlContent.replace('{{verificationLink}}', `${process.env.BACKEND_URL}/verifyEmail/${emailToken}`
         ).replace('{{username}}',userName)
     }
@@ -82,11 +93,13 @@ const sendRegisterEmail = tryCatchWrapper(async (userEmail, emailToken,userName)
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             console.log(error)
+            return
         } else {
             console.log('Email sent: ' + info.response)
+            return
         }
     })
-    return res.status(StatusCodes.OK).json({ message: `Email verification email sent to: ${userEmail}!` })
+    return
 })
 
 module.exports = { registerUser, verifyEmail }
