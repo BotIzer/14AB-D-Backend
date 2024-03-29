@@ -5,6 +5,7 @@ const { StatusCodes } = require('http-status-codes')
 const sendTokenResponse = require('../../middlewares/sendTokenResponse')
 const crypro = require('crypto')
 const nodemailer = require('nodemailer')
+const fs = require('fs')
 
 const registerUser = tryCatchWrapper(async (req, res) => {
     if (req.cookies['token'] || req.headers.authorization) {
@@ -37,7 +38,7 @@ const registerUser = tryCatchWrapper(async (req, res) => {
     })
     newUser.password = newUser.generateHash(req.body.password)
     newUser.save()
-    await sendRegisterEmail(newUser.email, newUser.emailToken)
+    await sendRegisterEmail(newUser.email, newUser.emailToken,newUser.username)
     sendTokenResponse(newUser, StatusCodes.CREATED, res)
     return
 })
@@ -59,7 +60,7 @@ const verifyEmail = tryCatchWrapper(async (req, res) => {
     res.status(StatusCodes.OK).json({ message: 'Email verified successfully' })
 })
 
-const sendRegisterEmail = tryCatchWrapper(async (userEmail, emailToken) => {
+const sendRegisterEmail = tryCatchWrapper(async (userEmail, emailToken,userName) => {
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         host: 'smtp.gmail.com',
@@ -68,12 +69,14 @@ const sendRegisterEmail = tryCatchWrapper(async (userEmail, emailToken) => {
             pass: process.env.EMAIL_PASS,
         },
     })
-
+    const htmlContent = fs.readFileSync('email_template.html','utf8')
     var mailOptions = {
         from: { name: 'BlitzForFriends', address: process.env.EMAIL },
         to: userEmail,
         subject: 'Verify your email',
         html: `Click <a href="${process.env.BACKEND_URL}/verifyEmail/${emailToken}">here</a> to verify your email`,
+        html: htmlContent.replace('{{verificationLink}}', `${process.env.BACKEND_URL}/verifyEmail/${emailToken}`
+        ).replace('{{username}}',userName)
     }
 
     transporter.sendMail(mailOptions, function (error, info) {

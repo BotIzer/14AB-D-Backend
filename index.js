@@ -86,7 +86,7 @@ const startServer = async () => {
         commentChangeStream.on('change', async (change) => {
             // Get the channel for emitting changes
             const channel = ably.channels.get('commentChanges');
-
+            // change.room_id
             // Publish the change to connected clients
             channel.publish('commentChanges', await createEmitResponse(change));
 
