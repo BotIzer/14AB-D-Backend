@@ -39,7 +39,6 @@ const registerUser = tryCatchWrapper(async (req, res) => {
     newUser.save()
     await sendRegisterEmail(newUser.email, newUser.emailToken)
     sendTokenResponse(newUser, StatusCodes.CREATED, res)
-    return
 })
 
 const verifyEmail = tryCatchWrapper(async (req, res) => {
@@ -60,15 +59,27 @@ const verifyEmail = tryCatchWrapper(async (req, res) => {
 })
 
 const sendRegisterEmail = tryCatchWrapper(async (userEmail, emailToken) => {
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        host: 'smtp.gmail.com',
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.EMAIL_PASS,
-        },
-    })
-
+    var transporter
+    if (process.env.NODE_ENV === 'testing') {
+        transporter = nodemailer.createTransport({
+            host: process.env.EMAIL_HOST,
+            port: 2525,
+            auth: {
+                user: process.env.EMAIL,
+                pass: process.env.EMAIL_PASS,
+            },
+        })
+    }
+    else {
+        transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: process.env.EMAIL_HOST,
+            auth: {
+                user: process.env.EMAIL,
+                pass: process.env.EMAIL_PASS,
+            },
+        })
+    }
     var mailOptions = {
         from: { name: 'BlitzForFriends', address: process.env.EMAIL },
         to: userEmail,
@@ -79,11 +90,13 @@ const sendRegisterEmail = tryCatchWrapper(async (userEmail, emailToken) => {
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             console.log(error)
+            return
         } else {
             console.log('Email sent: ' + info.response)
+            return
         }
     })
-    return res.status(StatusCodes.OK).json({ message: `Email verification email sent to: ${userEmail}!` })
+    return
 })
 
 module.exports = { registerUser, verifyEmail }
