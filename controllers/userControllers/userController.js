@@ -97,7 +97,7 @@ const deleteUser = tryCatchWrapper(async (req, res) => {
         return
     }
     const deletedUsername =
-        'deletedUser_' + (await User.find({ username: { $regex: `^deletedUser`, $options: 'i' } })).length
+        'deletedUser_' + (await User.find({ username: { $regex: `^deletedUser`, $options: 'i' } })).length + 10
     user.username = deletedUsername
     user.generateHash(generateRandomString(10) + 'Pass12345%!')
     user.full_name = 'Deleted User'
