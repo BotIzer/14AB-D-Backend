@@ -59,7 +59,7 @@ const verifyEmail = tryCatchWrapper(async (req, res) => {
     res.status(StatusCodes.OK).json({ message: 'Email verified successfully' })
 })
 
-const sendRegisterEmail = tryCatchWrapper(async (userEmail, emailToken) => {
+const sendRegisterEmail = tryCatchWrapper(async (userEmail, emailToken, userName) => {
     var transporter 
     if (process.env.NODE_ENV === 'testing') {
         transporter = nodemailer.createTransport({
@@ -81,7 +81,7 @@ const sendRegisterEmail = tryCatchWrapper(async (userEmail, emailToken) => {
             },
         })
     }
-
+    const htmlContent = fs.readFileSync('email_template.html', 'utf8');
     var mailOptions = {
         from: { name: 'BlitzForFriends', address: process.env.EMAIL },
         to: userEmail,
