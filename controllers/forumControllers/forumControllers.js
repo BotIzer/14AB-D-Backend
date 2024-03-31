@@ -181,9 +181,13 @@ const updateForum = tryCatchWrapper(async (req, res) => {
 })
 
 const recommendForums = tryCatchWrapper(async (req, res) => {
-    const numberOfForums = await Forum.countDocuments()
+    const numberOfForums = req.query.numberOfForums || 5
+    const numberOfDocuments = await Forum.countDocuments()
+    if (numberOfDocuments < numberOfForums) {
+        numberOfForums = numberOfDocuments
+    }
     const randomForums = []
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < numberOfForums; i++) {
         const randomNumber = Math.floor(Math.random() * numberOfForums)
         randomForums.push(await Forum.findOne().skip(randomNumber).limit(1))
     }
