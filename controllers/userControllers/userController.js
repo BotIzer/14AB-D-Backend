@@ -51,6 +51,7 @@ const getUserProfileByUsername = tryCatchWrapper(async (req, res) => {
     const user = await User.findOne({ username: username }).select('-email -_id -password')
     if (!user) throw new noUserFoundError(username)
     res.status(StatusCodes.OK).json({ user })
+    console.log(user)
     return
 })
 
