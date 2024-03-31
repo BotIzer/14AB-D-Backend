@@ -180,6 +180,18 @@ const updateForum = tryCatchWrapper(async (req, res) => {
     })
 })
 
+const recommendForums = tryCatchWrapper(async (req, res) => {
+    const numberOfForums = await Forum.countDocuments()
+    const randomForums = []
+    for (let i = 0; i < 5; i++) {
+        const randomNumber = Math.floor(Math.random() * numberOfForums)
+        randomForums.push(await Forum.findOne().skip(randomNumber).limit(1))
+    }
+    return res.status(StatusCodes.OK).json({
+        message: randomForums,
+    })
+})
+
 module.exports = {
     createForum,
     getAllThreads,
@@ -190,4 +202,5 @@ module.exports = {
     banUserFromForum,
     unbanUserFromForum,
     updateForum,
+    recommendForums
 }
