@@ -12,24 +12,42 @@ describe('forumController tests', () => {
     let otherUserToken
     let forumId
     let threadId
+    let ids = []
+    let emailTokens = []
     before(async () => {
         await User.deleteMany({})
         await Forum.deleteMany({})
+        await chai.request('http://localhost:8090/api/messages/*').delete('/')
         await chai.request(server).post('/register').send({
             username: 'randomTestUser',
             email: 'randomTestUser@randomTestUser.com',
             password: 'StrongTestPassword1234!',
         })
-        const loginRes = await chai.request(server).post('/login').send({
-            email: 'randomTestUser@randomTestUser.com',
-            password: 'StrongTestPassword1234!',
-        })
-        userToken = loginRes.body.token
         await chai.request(server).post('/register').send({
             username: 'otherTestUser',
             email: 'otherTestUser@otherTestUser.com',
             password: 'StrongTestPassword1234!',
         })
+        await chai
+            .request('http://localhost:8090/api/messages')
+            .get('/')
+            .then(async (res) => {
+                for (const email of res.body) {
+                    ids.push(email.id)
+                }
+                for (const id of ids) {
+                    const res = await chai.request('http://localhost:8090/api/messages/' + id + '/raw').get('/')
+                    emailTokens.push(res.text.split('verifyEmail/')[1].split('"')[0].replace(/=\r\n/g, ''))
+                }
+                for await (const emailToken of emailTokens) {
+                    await chai.request(server).get('/verifyEmail/' + emailToken)
+                }
+            })
+        const loginRes = await chai.request(server).post('/login').send({
+            email: 'randomTestUser@randomTestUser.com',
+            password: 'StrongTestPassword1234!',
+        })
+        userToken = loginRes.body.token
         const otherLoginRes = await chai.request(server).post('/login').send({
             email: 'otherTestUser@otherTestUser.com',
             password: 'StrongTestPassword1234!',

@@ -94,12 +94,13 @@ const sendRegisterEmail = tryCatchWrapper(async (userEmail, emailToken, userName
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             console.log(error)
-            return
         } else {
             console.log('Email sent: ' + info.response)
-            return
         }
     })
+    if (process.env.NODE_ENV === 'testing') {
+        await new Promise((r) => setTimeout(r, 1000))
+    }
     return
 })
 
