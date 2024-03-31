@@ -22,6 +22,7 @@ const swaggerOutput = require('./swagger_output.json')
 const { ObjectId } = require('mongodb')
 const jwt = require('jsonwebtoken')
 const { Realtime } = require('ably')
+const Forum = require('./models/forumModel')
 
 const app = express()
 app.set('trust proxy', 1)
@@ -64,34 +65,33 @@ const startServer = async () => {
         // Start listening to changes in the Comments collection
         console.log(process.env.NODE_ENV)
         // BEFORE ABLY
-        if(process.env.NODE_ENV === "development"){
+        if (process.env.NODE_ENV === 'development') {
             io.on('connection', (socket) => {
-                console.log("Socket IO connected")
+                console.log('Socket IO connected')
                 socket.on('disconnect', () => {
                     console.log('User disconnected')
                 })
             })
             commentChangeStream.on('change', async (change) => {
-            // Emit the change to connected clients
-            io.emit('commentChange', change)
-            // console.log(await createEmitResponse(change))
-            io.emit('message', await createEmitResponse(change))
-        })
+                // Emit the change to connected clients
+                io.emit('commentChange', change)
+                // console.log(await createEmitResponse(change))
+                io.emit('message', await createEmitResponse(change))
+            })
         }
         // AFTER ABLY
-
-        else{
+        else {
             const ably = new Realtime(process.env.ABLY_API_KEY)
-        console.log("Ably connected")
-        commentChangeStream.on('change', async (change) => {
-            // Get the channel for emitting changes
-            const channel = ably.channels.get('commentChanges');
-            // change.room_id
-            // Publish the change to connected clients
-            channel.publish('commentChanges', await createEmitResponse(change));
+            console.log('Ably connected')
+            commentChangeStream.on('change', async (change) => {
+                // Get the channel for emitting changes
+                const channel = ably.channels.get('commentChanges')
+                // change.room_id
+                // Publish the change to connected clients
+                channel.publish('commentChanges', await createEmitResponse(change))
 
-            // await channel.publish('message', await createEmitResponse(change));
-        });
+                // await channel.publish('message', await createEmitResponse(change));
+            })
         }
         // Start the server after MongoDB connection is established
         server.listen(port, () => console.log(`Server is listening on port: ${port}...`))
@@ -114,6 +114,22 @@ const createEmitResponse = async (change) => {
         emoticons: change.fullDocument.emotions,
         creation_date: change.fullDocument.creation_date,
         creator_name: (await User.findById(change.fullDocument._id.creator_id).select('username -_id')).username,
+    }
+}
+
+const getForumsUsersById = async (forum_id) => {
+    try {
+        const forum = await Forum.findOne({ '_id.forum_id': forum_id })
+        if (!forum) return []
+        const userids = forum.users.map((user) => user.user_id)
+        const usernames = []
+        for (const userid of userids) {
+            const user = await User.findById(userid)
+            usernames.push(user.username)
+        }
+        return usernames
+    } catch (error) {
+        console.log(error)
     }
 }
 
