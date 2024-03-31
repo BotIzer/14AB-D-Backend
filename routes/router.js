@@ -91,7 +91,7 @@ router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(p
 router.route('/forum/getAllThreads/:forumId').get(protectPath, checkWetherBannedFromForum, getAllThreads)
 router.route('/forum/getForumsByTag/:tag').get(searchForumByTag)
 router.route('/forum/ban').post(protectPath, banUserFromForum).put(protectPath, unbanUserFromForum)
-router.route('/forum/recommendForums').get(recommendForums)         //SWAGGER AND TEST
+router.route('/forum/recommendForums').get(recommendForums)         //TEST
 router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum)
 
 router.route('/thread').post(protectPath, createThread)

@@ -131,9 +131,9 @@ const getUserRequests = tryCatchWrapper(async (req, res) => {
     const user = await User.findById(userId)
     if (!user) throw new noUserFoundError(userId)
     const requests = user.friend_requests
-    const page = parseInt(req.query.page) || 1
+    const page = parseInt(req.query.page) || 0
     const limit = parseInt(req.query.limit) || 10
-    const skip = (page - 1) * limit
+    const skip = (page * 10)
     const returnRequests = requests.slice(skip, skip + limit)
     res.status(StatusCodes.OK).json({ returnRequests })
     return

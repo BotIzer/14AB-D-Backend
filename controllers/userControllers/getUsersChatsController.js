@@ -35,14 +35,14 @@ const getUsersChats = tryCatchWrapper(async (req, res) => {
             })
         }
     }
-    const privatePage = parseInt(req.query.private_page) || 1
+    const privatePage = parseInt(req.query.private_page) || 0
     const privateLimit = parseInt(req.query.private_limit) || 10
-    const privateSkip = (privatePage - 1) * privateLimit
+    const privateSkip = (privatePage) * privateLimit
     const retPrivChats = privateChats.splice(privateSkip, privateLimit)
 
-    const publicPage = parseInt(req.query.public_page) || 1
+    const publicPage = parseInt(req.query.public_page) || 0
     const publicLimit = parseInt(req.query.public_limit) || 10
-    const publicSkip = (publicPage - 1) * publicLimit
+    const publicSkip = (publicPage) * publicLimit
     const retPubChats = publicChats.splice(publicSkip, publicLimit)
 
     const returnArray = retPrivChats.concat(...retPubChats)

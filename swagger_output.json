@@ -336,6 +336,24 @@
         "/search": {
             "post": {
                 "tags": ["search"],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 2
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 5
+                        }
+                    }
+                ],
                 "description": "Search after forums and users, is noting is found, returns an [ [], [] ]",
                 "requestBody": {
                     "required": true,
@@ -827,6 +845,24 @@
         "/user/friends/sentRequests": {
             "get": {
                 "tags": ["user"],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 2
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 5
+                        }
+                    }
+                ],
                 "description": "Get users sent friend requests. LOGIN REQUIRED",
                 "security": [
                     {
@@ -971,6 +1007,24 @@
         "/forum": {
             "get": {
                 "tags": ["forum"],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 2
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 5
+                        }
+                    }
+                ],
                 "description": "Get all forums",
                 "responses": {
                     "200": {
@@ -1885,7 +1939,7 @@
                         "name": "numberOfForums",
                         "in": "query",
                         "schema": {
-                            "type": "string",
+                            "type": "number",
                             "example": 10
                         }
                     }
@@ -2790,6 +2844,40 @@
         "/chats": {
             "get": {
                 "tags": ["chat"],
+                "parameters": [
+                    {
+                        "name": "private_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 2
+                        }
+                    },
+                    {
+                        "name": "private_limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 5
+                        }
+                    },
+                    {
+                        "name": "public_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 2
+                        }
+                    },
+                    {
+                        "name": "public_limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 5
+                        }
+                    }
+                ],
                 "description": "Return the chats of the user who is logged in. LOGIN REQUIRED",
                 "security": [
                     {
@@ -3347,6 +3435,24 @@
         "/friends": {
             "get": {
                 "tags": ["friend"],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 2
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 5
+                        }
+                    }
+                ],
                 "description": "Retrieves all the friends of the user. LOGIN REQUIRED",
                 "security": [
                     {
