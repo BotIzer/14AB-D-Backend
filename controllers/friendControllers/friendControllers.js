@@ -28,12 +28,12 @@ const getFriends = tryCatchWrapper(async (req, res) => {
 
 const deleteFriend = tryCatchWrapper(async (req, res) => {
     const id = await getCreatorIdFromHeaders(req.headers)
+    const deletersProfile = await User.findById(id)
     const friend = await User.findOne({ username: req.params.friendName })
-    if (!friend) {
+    if (!friend || !deletersProfile.friends.includes(friend._id)) {
         res.status(StatusCodes.NOT_FOUND).json({ message: 'No friend found!' })
         return
     }
-    const deletersProfile = await User.findById(id)
     deletersProfile.friends.pull(friend._id)
     await deletersProfile.save()
     friend.friends.pull(id)
