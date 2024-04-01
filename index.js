@@ -60,6 +60,7 @@ const startServer = async () => {
         await connectDB(process.env.DB)
         console.log('MongoDB connected')
         const commentChangeStream = Comment.watch()
+        const forumChangeStream = Forum.watch()
         console.log(process.env.NODE_ENV)
         if (process.env.NODE_ENV === 'development') {
             io.on('connection', (socket) => {
@@ -72,6 +73,20 @@ const startServer = async () => {
                 io.emit('commentChange', change)
                 io.emit('message', await createEmitResponse(change))
             })
+            //TODO: add notification system
+            forumChangeStream.on('change', async (change) => { 
+                if(change.operationType === 'update') 
+                { 
+                    console.log('Forum updated'); 
+                } 
+                else if(change.operationType === 'delete')
+                { 
+                    console.log('Forum deleted') 
+                } 
+                else if(change.operationType === 'insert')
+                { 
+                    console.log('Forum created') 
+                }})
         }
         else {
             const ably = new Realtime(process.env.ABLY_API_KEY)
