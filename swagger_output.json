@@ -89,7 +89,7 @@
                                                     "type": "boolean",
                                                     "example": false
                                                 },
-                                                "roles": {
+                                                "role": {
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string",
@@ -208,7 +208,7 @@
                                                     "type": "boolean",
                                                     "example": false
                                                 },
-                                                "roles": {
+                                                "role": {
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string",
@@ -515,7 +515,7 @@
                                                     "type": "boolean",
                                                     "example": false
                                                 },
-                                                "roles": {
+                                                "role": {
                                                     "type": "string",
                                                     "example": "user"
                                                 },
@@ -720,7 +720,7 @@
                                             "type": "boolean",
                                             "example": false
                                         },
-                                        "roles": {
+                                        "role": {
                                             "type": "string",
                                             "example": "user"
                                         },

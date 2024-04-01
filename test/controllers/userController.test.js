@@ -157,7 +157,7 @@ describe("userController's tests", async () => {
                     res.body.user.should.have.property('chats')
                     res.body.user.should.have.property('profile_image')
                     res.body.user.should.have.property('custom_ui')
-                    res.body.user.should.have.property('roles')
+                    res.body.user.should.have.property('role')
                     res.body.user.should.have.property('username')
                     res.body.user.should.have.property('friends')
                     res.body.user.should.have.property('friend_requests')
@@ -172,8 +172,8 @@ describe("userController's tests", async () => {
                     expect(res.body.user.profile_image).to.be.equal('default')
                     expect(res.body.user.custom_ui).to.be.a('boolean')
                     expect(res.body.user.custom_ui).to.be.equal(false)
-                    expect(res.body.user.roles).to.be.a('string')
-                    expect(res.body.user.roles).to.be.equal('user')
+                    expect(res.body.user.role).to.be.a('string')
+                    expect(res.body.user.role).to.be.equal('user')
                     expect(res.body.user.friends).to.be.a('array').that.is.empty
                     expect(res.body.user.friend_requests).to.be.a('array').that.is.empty
                     expect(res.body.user.sent_friend_requests).to.be.a('array').that.is.empty
@@ -217,7 +217,7 @@ describe("userController's tests", async () => {
                     res.body.should.have.property('userInfo')
                     res.body.userInfo.should.have.property('profile_image').that.is.a('string')
                     res.body.userInfo.should.have.property('custom_ui').that.is.a('boolean')
-                    res.body.userInfo.should.have.property('roles').that.is.a('string')
+                    res.body.userInfo.should.have.property('role').that.is.a('string')
                     res.body.userInfo.should.have.property('username').that.is.a('string')
                     res.body.userInfo.should.have.property('created_at').that.is.a('string')
                     userToken = res.body.token

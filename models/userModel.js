@@ -49,11 +49,7 @@ const userSchema = new mongoose.Schema({
         default: 'default',
         trim: true,
     },
-    custom_ui: {
-        type: Boolean,
-        default: false,
-    },
-    roles: {
+    role: {
         type: String,
         default: 'user',
         trim: true,

@@ -111,7 +111,7 @@ const banUserFromForum = tryCatchWrapper(async (req, res) => {
         return
     }
     const bannerId = await getCreatorIdFromHeaders(req.headers)
-    if (bannerId != forum._id.creator_id.toString() && (await User.findById(bannerId).roles) != 'admin') {
+    if (bannerId != forum._id.creator_id.toString() && (await User.findById(bannerId).role) != 'admin') {
         res.status(StatusCodes.UNAUTHORIZED).json({
             message: 'You are not authorized to ban users from this forum',
         })
@@ -142,7 +142,7 @@ const unbanUserFromForum = tryCatchWrapper(async (req, res) => {
         return
     }
     const unbannerId = await getCreatorIdFromHeaders(req.headers)
-    if (unbannerId != forum._id.creator_id.toString() && (await User.findById(unbannerId).roles) != 'admin') {
+    if (unbannerId != forum._id.creator_id.toString() && (await User.findById(unbannerId).role) != 'admin') {
         res.status(StatusCodes.UNAUTHORIZED).json({
             message: 'You are not authorized to unban users from this forum',
         })

@@ -38,7 +38,7 @@ const getUserInfoFromToken = tryCatchWrapper(async (token) => {
     const userInfoObject = {
         profile_image: userInformation.profile_image,
         custom_ui: userInformation.custom_ui,
-        roles: userInformation.roles,
+        role: userInformation.role,
         username: userInformation.username,
         created_at: userInformation.created_at,
         full_name: userInformation.full_name,
