@@ -1,6 +1,5 @@
 const Chat = require('../../models/chatroomModel')
 const Comment = require('../../models/commentModel')
-const User = require('../../models/userModel')
 const { StatusCodes } = require('http-status-codes')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { noChatFoundError } = require('../../errors/chatErrors/chatErrors')

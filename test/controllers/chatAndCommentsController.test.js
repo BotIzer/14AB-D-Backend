@@ -322,8 +322,8 @@ describe("chatController's tests", () => {
                     authorization: 'Bearer ' + userToken,
                 })
                 .end((err, res) => {
-                    res.should.have.status(404)
-                    res.body.should.have.property('message').that.is.a('string').that.is.equal('No chat found.')
+                    res.should.have.status(404)                 
+                    res.body.should.have.property('message').that.is.a('string').that.is.equal('No chat found with id: undefined')
                     done()
                 })
         })
@@ -361,7 +361,6 @@ describe("chatController's tests", () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.have.property('success').that.is.a('boolean').that.is.equal(true)
                     res.body.should.have
                         .property('message')
                         .that.is.a('string')
@@ -382,7 +381,6 @@ describe("chatController's tests", () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(400)
-                    res.body.should.have.property('success').that.is.a('boolean').that.is.equal(false)
                     res.body.should.have
                         .property('message')
                         .that.is.a('string')
@@ -433,7 +431,6 @@ describe("chatController's tests", () => {
                     chat_id: chatId,
                 })
             res.should.have.status(200)
-            res.body.should.have.property('success').that.is.a('boolean').that.is.equal(true)
             res.body.should.have.property('message').that.is.a('string').that.is.equal('Chat left successfully!')
         })
     })

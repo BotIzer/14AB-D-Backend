@@ -4,6 +4,7 @@ const User = require('../../models/userModel')
 const Comment = require('../../models/commentModel')
 const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
+const { notAllowedToDeleteChatError, noChatFoundError } = require('../../errors/chatErrors/chatErrors')
 
 const deleteChat = tryCatchWrapper(async (req, res) => {
     const chatId = req.params.chatId
@@ -16,9 +17,9 @@ const deleteChat = tryCatchWrapper(async (req, res) => {
             await Comment.deleteMany({ '_id.room_id': chatId })
             return res.status(StatusCodes.OK).json({ message: 'Chat deleted successfully.' })
         }
-        return res.status(StatusCodes.FORBIDDEN).json({ message: 'You are not allowed to delete this chat.' })
+        throw new notAllowedToDeleteChatError()
     }
-    return res.status(StatusCodes.NOT_FOUND).json({ message: 'No chat found.' })
+    throw new noChatFoundError()
 })
 
 module.exports = deleteChat

@@ -10,11 +10,6 @@ const updaterOptions = {
     runValidators: true,
 }
 
-const getUserIdFromUrl = (params) => {
-    const { userId: userId } = params
-    return userId
-}
-
 const getAllUsers = tryCatchWrapper(async (req, res) => {
     const users = await User.find().select('-email -_id')
     if (!users) {
