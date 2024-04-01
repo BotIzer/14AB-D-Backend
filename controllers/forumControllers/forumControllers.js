@@ -7,7 +7,6 @@ const { forumAlreadyExistsError } = require('../../errors/forumErrors/forumError
 const Thread = require('../../models/threadModel')
 const mongoose = require('mongoose')
 
-
 const createForum = tryCatchWrapper(async (req, res) => {
     const { forum_name: forumName, banner: banner, tags: tags, description: description } = req.body
     if (!forumName) {
@@ -25,10 +24,10 @@ const createForum = tryCatchWrapper(async (req, res) => {
         forum_name: forumName,
         banner: banner,
         tags: tags,
-        description: description
+        description: description,
     })
     newForum.save()
-    res.status(StatusCodes.CREATED).json({ success: true, forumId: newForum._id.forum_id})
+    res.status(StatusCodes.CREATED).json({ success: true, forumId: newForum._id.forum_id })
     return
 })
 
@@ -47,7 +46,7 @@ const getAllThreads = tryCatchWrapper(async (req, res) => {
 const getAllForums = tryCatchWrapper(async (req, res) => {
     const page = parseInt(req.query.page) || 0
     const limit = parseInt(req.query.limit) || 10
-    const skip = (page * 10)
+    const skip = page * 10
     const forums = await Forum.find().skip(skip).limit(limit)
     if (!forums) {
         res.status(StatusCodes.NOT_FOUND).json({
@@ -151,7 +150,7 @@ const unbanUserFromForum = tryCatchWrapper(async (req, res) => {
         return
     }
     const userName = req.body.user_name
-    const userId = ((await User.findOne({ username: userName }))._id).toString()
+    const userId = (await User.findOne({ username: userName }))._id.toString()
     if (!forum.blacklist.includes(userId)) {
         res.status(StatusCodes.BAD_REQUEST).json({
             message: 'User is not banned from this forum',
@@ -181,7 +180,7 @@ const updateForum = tryCatchWrapper(async (req, res) => {
 })
 
 const recommendForums = tryCatchWrapper(async (req, res) => {
-    const numberOfForums = req.query.numberOfForums || 5
+    let numberOfForums = req.query.numberOfForums || 5
     const numberOfDocuments = await Forum.countDocuments()
     if (numberOfDocuments < numberOfForums) {
         numberOfForums = numberOfDocuments
@@ -191,9 +190,7 @@ const recommendForums = tryCatchWrapper(async (req, res) => {
         const randomNumber = Math.floor(Math.random() * numberOfForums)
         randomForums.push(await Forum.findOne().skip(randomNumber).limit(1))
     }
-    return res.status(StatusCodes.OK).json({
-        message: randomForums,
-    })
+    return res.status(StatusCodes.OK).json(randomForums)
 })
 
 module.exports = {
@@ -206,5 +203,5 @@ module.exports = {
     banUserFromForum,
     unbanUserFromForum,
     updateForum,
-    recommendForums
+    recommendForums,
 }

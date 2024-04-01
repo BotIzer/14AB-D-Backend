@@ -328,6 +328,154 @@ describe('forumController tests', () => {
                 })
         })
     })
+    describe('/forum/recommendForums route test', () => {
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum2' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum3' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum4' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum5' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum6' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum7' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum8' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum9' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum10' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum11' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 200 status code and an array with 5 forums', (done) => {
+            chai.request(server)
+                .get('/forum/recommendForums')
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').lengthOf(5)
+                    done()
+                })
+        })
+        it('should return with 200 status code and an array with 2 forums', (done) => {
+            chai.request(server)
+                .get('/forum/recommendForums?numberOfForums=2')
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').lengthOf(2)
+                    done()
+                })
+        })
+        it('should return with 200 status code and an array with 9 forums', (done) => {
+            chai.request(server)
+                .get('/forum/recommendForums?numberOfForums=9')
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').lengthOf(9)
+                    done()
+                })
+        })
+        it('should return with 200 status code and an array with 11 forums', (done) => {
+            chai.request(server)
+                .get('/forum/recommendForums?numberOfForums=100')
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').lengthOf(11)
+                    done()
+                })
+        })
+    })
     describe('/forum/ban POST route tests', () => {
         it('should return with 200 status code and success true', (done) => {
             chai.request(server)

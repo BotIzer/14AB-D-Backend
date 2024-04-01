@@ -77,7 +77,7 @@ router.route('/register').post(registerUser)
 router.route('/login').post(loginLimiter, loginUser)
 router.route('/verifyEmail/:emailToken').get(verifyEmail)
 
-router.route('/search').post(search)
+router.route('/search').post(search)                        //PAGINATION TESTS!
 
 router.route('/user').put(protectPath, updateUser).delete(protectPath, deleteUser)
 router.route('/user/friends/requests').get(protectPath, getUserRequests)
@@ -91,7 +91,7 @@ router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(p
 router.route('/forum/getAllThreads/:forumId').get(protectPath, checkWetherBannedFromForum, getAllThreads)
 router.route('/forum/getForumsByTag/:tag').get(searchForumByTag)
 router.route('/forum/ban').post(protectPath, banUserFromForum).put(protectPath, unbanUserFromForum)
-router.route('/forum/recommendForums').get(recommendForums)         //TEST
+router.route('/forum/recommendForums').get(recommendForums)
 router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum)
 
 router.route('/thread').post(protectPath, createThread)
