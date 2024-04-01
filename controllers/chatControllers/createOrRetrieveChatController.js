@@ -21,7 +21,6 @@ const checkMutualChat = tryCatchWrapper(async (req, res, next) => {
         throw new youHaveNoFriendWithThisNameError(friendName)
     }
 
-    // Check if mutual chat exists
     const mutualChat = await Chat.aggregate([
         {
             $match: {

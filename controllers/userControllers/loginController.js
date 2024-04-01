@@ -5,7 +5,6 @@ const sendTokenResponse = require('../../middlewares/sendTokenResponse')
 const { userIsAlreadyLoggedInError, wrongLoginDataError } = require('../../errors/userErrors/userErrors')
 
 const loginUser = tryCatchWrapper(async (req, res) => {
-    // checks whether or not the user is logged in
     if (req.cookies['token'] || req.headers.authorization) {
         if (req.headers.authorization != 'Bearer null') {
             throw new userIsAlreadyLoggedInError()

@@ -149,12 +149,12 @@ const getUsersSentRequests = tryCatchWrapper(async (req, res) => {
 
 function generateRandomString(length) {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()'
-    const specialChar = chars[Math.floor(Math.random() * (chars.length - 10)) + 52] // Choose a special character
+    const specialChar = chars[Math.floor(Math.random() * (chars.length - 10)) + 52]
     let password = ''
     for (let i = 0; i < length - 1; i++) {
         password += chars.charAt(Math.floor(Math.random() * chars.length))
     }
-    password += specialChar // Add the special character
+    password += specialChar
     return password
 }
 

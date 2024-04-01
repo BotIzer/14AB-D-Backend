@@ -26,7 +26,6 @@ const Forum = require('./models/forumModel')
 
 const app = express()
 app.set('trust proxy', 1)
-// app.get('/ip', (request, response) => response.send(request.ip))
 const server = http.createServer(app)
 const io = socketIo(server, {
     cors: { origin: process.env.FRONTEND_URL, credentials: true },
@@ -44,7 +43,7 @@ app.use(
     })
 )
 const limiter = rateLimit({
-    windowMs: 1000, // 1000 ms = 1 second
+    windowMs: 1000,
     max: 100,
 })
 app.use(limiter)
@@ -60,11 +59,8 @@ const startServer = async () => {
     try {
         await connectDB(process.env.DB)
         console.log('MongoDB connected')
-        // Set up MongoDB change stream for Comments collection
         const commentChangeStream = Comment.watch()
-        // Start listening to changes in the Comments collection
         console.log(process.env.NODE_ENV)
-        // BEFORE ABLY
         if (process.env.NODE_ENV === 'development') {
             io.on('connection', (socket) => {
                 console.log('Socket IO connected')
@@ -73,27 +69,18 @@ const startServer = async () => {
                 })
             })
             commentChangeStream.on('change', async (change) => {
-                // Emit the change to connected clients
                 io.emit('commentChange', change)
-                // console.log(await createEmitResponse(change))
                 io.emit('message', await createEmitResponse(change))
             })
         }
-        // AFTER ABLY
         else {
             const ably = new Realtime(process.env.ABLY_API_KEY)
             console.log('Ably connected')
             commentChangeStream.on('change', async (change) => {
-                // Get the channel for emitting changes
                 const channel = ably.channels.get('commentChanges')
-                // change.room_id
-                // Publish the change to connected clients
                 channel.publish('commentChanges', await createEmitResponse(change))
-
-                // await channel.publish('message', await createEmitResponse(change));
             })
         }
-        // Start the server after MongoDB connection is established
         server.listen(port, () => console.log(`Server is listening on port: ${port}...`))
     } catch (error) {
         console.error('MongoDB connection error:', error)
@@ -101,7 +88,6 @@ const startServer = async () => {
     }
 }
 
-// Start the server
 startServer()
 
 const createEmitResponse = async (change) => {

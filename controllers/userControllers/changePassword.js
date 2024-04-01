@@ -8,7 +8,6 @@ const crypro = require('crypto')
 
 const changePassword = tryCatchWrapper(async (req, res) => {
     const userId = await getCreatorIdFromHeaders(req.headers)
-    // const userId = '65ca57ef7b4f2295c385b4f9'
     const user = await User.findById(userId)
     if (!user) {
         throw new noUserFoundError(userId)
