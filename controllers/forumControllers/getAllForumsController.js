@@ -1,6 +1,7 @@
 const Forum = require('../../models/forumModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { StatusCodes } = require('http-status-codes')
+const { noForumFoundError } = require('../../errors/forumErrors/forumErrors')
 
 const getAllForums = tryCatchWrapper(async (req, res) => {
     const page = parseInt(req.query.page) || 0
@@ -8,10 +9,7 @@ const getAllForums = tryCatchWrapper(async (req, res) => {
     const skip = page * 10
     const forums = await Forum.find().skip(skip).limit(limit)
     if (!forums) {
-        res.status(StatusCodes.NOT_FOUND).json({
-            message: 'No forums found',
-        })
-        return
+        throw new noForumFoundError()
     }
     res.status(StatusCodes.OK).json(forums)
     return

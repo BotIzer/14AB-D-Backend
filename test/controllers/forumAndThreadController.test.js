@@ -629,7 +629,7 @@ describe('forumController tests', () => {
                         .an('object')
                         .that.has.property('message')
                         .that.is.a('string')
-                        .equals('No forum found')
+                        .equals('No forum found with this name: undefined')
                     done()
                 })
         })

@@ -3,14 +3,12 @@ const User = require('../../models/userModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
+const { noForumFoundError } = require('../../errors/forumErrors/forumErrors')
 
 const unbanUserFromForum = tryCatchWrapper(async (req, res) => {
     const forum = await Forum.findOne({ '_id.forum_id': req.body.forum_id })
     if (!forum) {
-        res.status(StatusCodes.NOT_FOUND).json({
-            message: 'No forum found',
-        })
-        return
+        throw new noForumFoundError()
     }
     const unbannerId = await getCreatorIdFromHeaders(req.headers)
     if (unbannerId != forum._id.creator_id.toString() && (await User.findById(unbannerId).role) != 'admin') {
