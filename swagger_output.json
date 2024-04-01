@@ -924,6 +924,158 @@
                 }
             }
         },
+        "/user/changePassword": {
+            "post": {
+                "tags": ["user"],
+                "description": "Change user password. LOGIN REQUIRED",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "old_password": {
+                                        "type": "string",
+                                        "example": "RandomPass1234!"
+                                    },
+                                    "new_password": {
+                                        "type": "string",
+                                        "example": "RandomNewPass1234!"
+                                    },
+                                    "new_password2": {
+                                        "type": "string",
+                                        "example": "RandomNewPass1234!"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Your password changing request sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password changing verification email sent to: randomemail@mail.com!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Your request data is invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "New passwords do not match"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: POST /user/changePassword"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No user found error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found with id: 65ca57ef7b4f2295c385b4f9"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/verifyNewPassword/{passwordToken}": {
+            "get": {
+                "tags": ["user"],
+                "description": "Verify your new password via email.",
+                "parameters": [
+                    {
+                        "required": true,
+                        "name": "passwordToken",
+                        "in": "path",
+                        "schema": {
+                            "type": "string",
+                            "example": "7499d9123a6679274fbd990c46ad8c9910ff43931b1c7ed823c5bc7b1e82377eec0ee0ffccb2b65bc03003e19e03ccb7a66e0910d1c9c3ff9c2734c6e2cce8d2"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Password changed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password changed successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }                        
+                    },
+                    "400": {
+                        "description": "Invalid token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password token is invalid"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/addHobby": {
             "post": {
                 "tags": ["user"],
@@ -2326,7 +2478,7 @@
                         "required": true,
                         "schema": {
                             "type": "string",
-                            "example": "65dc8b87ea70db4fabe4adb6"
+                            "example": "65cfb05bbd7448340f8993e2"
                         }
                     }
                 ],
@@ -2444,7 +2596,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "65cfb05bbd7448340f8993e2"
                         }
                     }
                 ],
@@ -3529,7 +3682,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "sanyi"
                         }
                     }
                 ],
@@ -3614,7 +3768,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "sanyi"
                         }
                     }
                 ],
@@ -3685,7 +3840,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "sanyi"
                         }
                     }
                 ],
@@ -3756,7 +3912,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "sanyi"
                         }
                     }
                 ],
