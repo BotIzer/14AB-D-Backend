@@ -9,9 +9,10 @@ const { notAllowedToDeleteChatError, noChatFoundError } = require('../../errors/
 const deleteChat = tryCatchWrapper(async (req, res) => {
     const chatId = req.params.chatId
     const deleterUser = await getCreatorIdFromHeaders(req.headers)
+    const deleter = await User.findById(deleterUser)
     const chat = await Chat.findOne({ _id: chatId })
     if (chat) {
-        if (JSON.stringify(chat.owner) == JSON.stringify(deleterUser) && chat.is_private) {
+        if ((JSON.stringify(chat.owner) == JSON.stringify(deleterUser) || deleter.role == 'admin') && chat.is_private) {
             await Chat.findByIdAndDelete(chatId)
             await User.updateMany({ chats: { $in: [chatId] } }, { $pull: { chats: chatId } })
             await Comment.deleteMany({ '_id.room_id': chatId })

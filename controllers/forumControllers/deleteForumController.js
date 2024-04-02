@@ -10,7 +10,7 @@ const deleteForum = tryCatchWrapper(async (req, res) => {
         throw new noForumFoundError()
     }
     const id = await getCreatorIdFromHeaders(req.headers)
-    if (id != forum._id.creator_id.toString()) {
+    if (id != forum._id.creator_id.toString() && (await User.findById(id).role) != 'admin') {
         throw new notAuthorizedToDeleteForumError()
     }
     await Forum.findByIdAndDelete(forum._id)
