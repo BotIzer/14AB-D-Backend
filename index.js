@@ -23,6 +23,7 @@ const { ObjectId } = require('mongodb')
 const jwt = require('jsonwebtoken')
 const { Realtime } = require('ably')
 const Forum = require('./models/forumModel')
+const getForumById = require('./controllers/forumControllers/getForumByIdController')
 
 const app = express()
 app.set('trust proxy', 1)
@@ -57,35 +58,52 @@ app.use(errorHandlerMiddleware)
 const port = process.env.PORT || 3000
 const startServer = async () => {
     try {
+
         await connectDB(process.env.DB)
         console.log('MongoDB connected')
         const commentChangeStream = Comment.watch()
         const forumChangeStream = Forum.watch()
-        console.log(process.env.NODE_ENV)
         if (process.env.NODE_ENV === 'development') {
-            io.on('connection', (socket) => {
+            const connectedClients = {}
+            io.on('connect', (socket) => {
                 console.log('Socket IO connected')
-                socket.on('disconnect', () => {
-                    console.log('User disconnected')
-                })
+                if(socket.handshake.query.username !== "null" && socket.handshake.query.username !== undefined){
+                    console.log(JSON.parse(socket.handshake.query.username).username)
+                    connectedClients[JSON.parse(socket.handshake.query.username).username] = socket
+                    socket.on('disconnect', () => {
+                        console.log('User disconnected')
+                        delete connectedClients[JSON.parse(socket.handshake.query.username).username]
+                    })
+                }
             })
             commentChangeStream.on('change', async (change) => {
                 io.emit('commentChange', change)
                 io.emit('message', await createEmitResponse(change))
             })
-            //TODO: add notification system
             forumChangeStream.on('change', async (change) => { 
                 if(change.operationType === 'update') 
                 { 
-                    console.log('Forum updated'); 
+                    console.log('Forum updated');
+                    const users = await getForumsUsersById(change.documentKey._id.forum_id)
+                    const creatorId = change.documentKey._id.creator_id
+                    const creatorName = (await User.findById(creatorId)).username
+                    const forumId = change.documentKey._id
+                    const forumName = (await Forum.findById(forumId)).forum_name
+                    for (const user in users) {
+                        
+                        if (connectedClients[user] !== undefined) {
+                            connectedClients[user].emit('forumUpdate', { forumName, users, creatorName });
+                        }
+                    }
+                    if(connectedClients[creatorName] !== undefined){
+                        connectedClients[creatorName].emit('forumUpdate', { forumName, users, creatorName });
+                        console.log("worked")
+                    }
+                    console.log(forumName)
                 } 
                 else if(change.operationType === 'delete')
                 { 
                     console.log('Forum deleted') 
-                } 
-                else if(change.operationType === 'insert')
-                { 
-                    console.log('Forum created') 
                 }})
         }
         else {
@@ -104,7 +122,6 @@ const startServer = async () => {
 }
 
 startServer()
-
 const createEmitResponse = async (change) => {
     return {
         _id: { message_id: change.fullDocument._id.message_id, room_id: change.fullDocument._id.room_id },
