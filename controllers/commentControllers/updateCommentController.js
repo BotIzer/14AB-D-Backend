@@ -22,7 +22,7 @@ const updateComment = tryCatchWrapper(async (req, res) => {
     if (!comment) {
         throw new noCommentFoundError()
     }
-    if (comment._id.creator_id.toString() != userId) {
+    if (comment._id.creator_id.toString() != userId && (await User.findById(userId).role) != 'admin') {
         throw new cannotEditCommentError()
     }
     if (req.body.text && req.body.text.length > 2000) {

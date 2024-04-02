@@ -11,7 +11,7 @@ const deleteComment = tryCatchWrapper(async (req, res) => {
     if (!comment) {
         throw new noCommentFoundError()
     }
-    if (comment._id.creator_id.toString() !== userId) {
+    if (comment._id.creator_id.toString() !== userId && (await User.findById(userId).role) != 'admin') {
         throw new cannotDeleteCommentError()
     }
     await Comment.deleteOne({ '_id.message_id': commentId })

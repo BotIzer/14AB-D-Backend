@@ -32,6 +32,8 @@ const {
     unbanUserFromForum,
     updateForum,
     recommendForums,
+    leaveForum,
+    subscribeToForum
 } = require('../controllers/forumControllers/forumControllers')
 const search = require('../controllers/searchController/searchController')
 const {
@@ -92,6 +94,8 @@ router.route('/forum/getAllThreads/:forumId').get(protectPath, checkWetherBanned
 router.route('/forum/getForumsByTag/:tag').get(searchForumByTag)
 router.route('/forum/ban').post(protectPath, banUserFromForum).put(protectPath, unbanUserFromForum)
 router.route('/forum/recommendForums').get(recommendForums)
+router.route('/forum/leaveForum').post(protectPath, leaveForum)
+router.route('/forum/subscribeToForum').post(protectPath, subscribeToForum)
 router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum)
 
 router.route('/thread').post(protectPath, createThread)
