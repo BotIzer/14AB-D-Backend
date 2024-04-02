@@ -33,6 +33,7 @@ const {
     updateForum,
     recommendForums,
     leaveForum,
+    subscribeToForum
 } = require('../controllers/forumControllers/forumControllers')
 const search = require('../controllers/searchController/searchController')
 const {
@@ -94,6 +95,7 @@ router.route('/forum/getForumsByTag/:tag').get(searchForumByTag)
 router.route('/forum/ban').post(protectPath, banUserFromForum).put(protectPath, unbanUserFromForum)
 router.route('/forum/recommendForums').get(recommendForums)
 router.route('/forum/leaveForum').post(protectPath, leaveForum)                     //SWAGGER
+router.route('/forum/subscribeToForum').post(protectPath, subscribeToForum)         //SWAGGER
 router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum)
 
 router.route('/thread').post(protectPath, createThread)

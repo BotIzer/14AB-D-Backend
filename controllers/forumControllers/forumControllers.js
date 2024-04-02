@@ -9,6 +9,7 @@ const recommendForums = require('./recommendForumsController')
 const getAllForums = require('./getAllForumsController')
 const getAllThreadsByForumId = require('./getAllThreadsByForumIdController')
 const leaveForum = require('./leaveForumController')
+const subscribeToForum = require('./subscribeToForumController')
 
 module.exports = {
     banUserFromForum,
@@ -21,5 +22,6 @@ module.exports = {
     recommendForums,
     getAllForums,
     getAllThreadsByForumId,
-    leaveForum
+    leaveForum,
+    subscribeToForum,
 }
