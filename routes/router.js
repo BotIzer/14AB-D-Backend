@@ -108,7 +108,7 @@ router.route('/thread').post(protectPath, createThread)
 router.route('/thread/:threadId').delete(protectPath, deleteThreadConroller)
 router.route('/thread/:threadId/likeDislike').post(protectPath, likeDislikeStateChanged)
 
-router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)
+router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)                               //QUERY ADDED
 router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPath, deleteChat)
 router.route('/chat/addFriend').post(protectPath, addFriendToChat)
 router.route('/createOrRetrieveChat').post(protectPath, checkMutualChat)
