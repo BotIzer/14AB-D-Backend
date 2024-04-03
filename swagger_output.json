@@ -709,49 +709,92 @@
                                                         "type": "string",
                                                         "example": "65cfb05bbd7448340f8993e2"
                                                     }
+                                                },
+                                                "profile_image": {
+                                                    "type": "string",
+                                                    "example": "default"
+                                                },
+                                                "custom_ui": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "role": {
+                                                    "type": "string",
+                                                    "example": "user"
+                                                },
+                                                "username": {
+                                                    "type": "string",
+                                                    "example": "pista"
+                                                },
+                                                "friends": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "65cfb05bbd7448340f8993e2"
+                                                    }
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2020-07-07T13:31:16.371Z",
+                                                    "format": "date-time"
+                                                },
+                                                "friend_requests": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "randomUsername"
+                                                    }
+                                                },
+                                                "hobbies": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "sports"
+                                                    }
+                                                },
+                                                "notifications": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "65cfb05bbd7448340f8993e2"
+                                                            },
+                                                            "text": {
+                                                                "type": "string",
+                                                                "example": "Random notification text 12345"
+                                                            },
+                                                            "seen": {
+                                                                "type": "boolean",
+                                                                "example": false
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "sent_friend_requests": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "randomUsername"
+                                                    }
+                                                },
+                                                "isVerified": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "reset_password": {
+                                                    "type": "string",
+                                                    "example": null
+                                                },
+                                                "reset_password_token": {
+                                                    "type": "string",
+                                                    "example": null
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Hello! This is my profile!"
                                                 }
-                                            }
-                                        },
-                                        "profile_image": {
-                                            "type": "string",
-                                            "example": "default"
-                                        },
-                                        "custom_ui": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "role": {
-                                            "type": "string",
-                                            "example": "user"
-                                        },
-                                        "username": {
-                                            "type": "string",
-                                            "example": "pista"
-                                        },
-                                        "friends": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "example": "65cfb05bbd7448340f8993e2"
-                                            }
-                                        },
-                                        "created_at": {
-                                            "type": "string",
-                                            "example": "2020-07-07T13:31:16.371Z",
-                                            "format": "date-time"
-                                        },
-                                        "friend_requests": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "example": "randomUsername"
-                                            }
-                                        },
-                                        "hobbies": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "example": "sports"
                                             }
                                         }
                                     }
