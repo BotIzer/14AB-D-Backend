@@ -27,7 +27,7 @@ const leaveChat = tryCatchWrapper(async (req, res) => {
         if (chat.users.length == 0) {
             await Chat.deleteOne({ _id: chatId })
             user.chats.pull(chatId)
-            user.save()
+            await user.save()
             res.status(StatusCodes.OK).json({
                 message: 'Chat left successfully!',
             })
@@ -35,9 +35,9 @@ const leaveChat = tryCatchWrapper(async (req, res) => {
         }
         chat.owner = chat.users[0].user_id
         chat.users.shift()
-        chat.save()
+        await chat.save()
         user.chats.pull(chatId)
-        user.save()
+        await user.save()
         res.status(StatusCodes.OK).json({
             message: 'Chat left successfully!',
         })

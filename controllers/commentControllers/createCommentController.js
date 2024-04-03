@@ -40,7 +40,7 @@ const createComment = tryCatchWrapper(async (req, res) => {
             sequential_number: sequentialNumber,
         },
     })
-    newComment.save()
+    await newComment.save()
     res.status(StatusCodes.CREATED).json({ success: true })
     return
 })
