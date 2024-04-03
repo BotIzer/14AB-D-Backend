@@ -3,6 +3,7 @@ const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
 const { noForumFoundError, notAuthorizedToDeleteForumError } = require('../../errors/forumErrors/forumErrors')
+const User = require('../../models/userModel')
 
 const deleteForum = tryCatchWrapper(async (req, res) => {
     const forum = await Forum.findOne({ forum_name: req.headers.forumname })
