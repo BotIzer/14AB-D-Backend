@@ -21,7 +21,7 @@ const subscribeToForum = tryCatchWrapper(async (req, res) => {
     if (!forum) {
         throw new noForumFoundError()
     }
-    if (forum.blacklisted_users.map((user) => user.user_id.toString()).includes(id.toString())) {
+    if (forum.blacklist.map((user) => user.user_id.toString()).includes(id.toString())) {
         throw new youAreBannedFromThisForumError()
     }
     if (
@@ -33,7 +33,7 @@ const subscribeToForum = tryCatchWrapper(async (req, res) => {
     forum.users.push({ user_id: id, is_moderator: false })
     await forum.save()
     res.status(StatusCodes.OK).json({
-        message: 'Forum subscribed successfully!',
+        message: 'Subscribed to forum successfully!',
     })
     return
 })
