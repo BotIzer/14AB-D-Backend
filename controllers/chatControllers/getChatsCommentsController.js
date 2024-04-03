@@ -10,7 +10,6 @@ const getChatsComments = tryCatchWrapper(async (req, res) => {
     const page = parseInt(req.query.page) || 0
     const limit = parseInt(req.query.limit) || 10
     const skip = page * 10
-
     if (!chat) {
         throw new noChatFoundError(req.params.chatId)
     }

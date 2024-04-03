@@ -10,7 +10,8 @@ const getUsersNotifications = tryCatchWrapper(async (req, res) => {
     if (!user) {
         throw new noUserFoundError()
     }
-    res.status(StatusCodes.OK).json(user.notifications)
+    const notifications = user.notifications.reverse()
+    res.status(StatusCodes.OK).json(notifications)
     return
 })
 
