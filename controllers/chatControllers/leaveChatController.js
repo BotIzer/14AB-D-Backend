@@ -17,7 +17,7 @@ const leaveChat = tryCatchWrapper(async (req, res) => {
     if (user.chats.map((chat) => chat.toString()).includes(chatId)) {
         if (chat.owner.toString() != decodedId.toString()) {
             user.chats.pull(chatId)
-            user.save()
+            await user.save()
             chat = await Chat.updateOne({ _id: chatId }, { $pull: { users: { user_id: decodedId } } }, updaterOptions)
             res.status(StatusCodes.OK).json({
                 message: 'Chat left successfully!'
