@@ -33,7 +33,7 @@ const {
     updateForum,
     recommendForums,
     leaveForum,
-    subscribeToForum
+    subscribeToForum,
 } = require('../controllers/forumControllers/forumControllers')
 const search = require('../controllers/searchController/searchController')
 const {
@@ -58,6 +58,12 @@ const {
     declineFriendRequest,
     addFriendToChat,
 } = require('../controllers/friendControllers/friendControllers')
+
+const {
+    createNotification,
+    deleteNotification,
+    getUsersNotifications,
+} = require('../controllers/notificationController/notificationsController')
 
 let maxLoginAttempts
 
@@ -117,5 +123,8 @@ router.route('/friends').get(protectPath, getFriends)
 router.route('/friend/:friendName').post(protectPath, makeFriendRequest).delete(protectPath, deleteFriend)
 router.route('/acceptFriendRequest/:requestCreatorName').post(protectPath, acceptFriendRequest)
 router.route('/declineFriendRequest/:requestCreatorName').post(protectPath, declineFriendRequest)
+
+router.route('/notification').get(protectPath, getUsersNotifications).post(protectPath, createNotification)
+router.route('/notification/notificationId').delete(protectPath, deleteNotification)
 
 module.exports = router
