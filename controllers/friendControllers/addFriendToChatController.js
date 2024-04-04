@@ -18,9 +18,11 @@ const addFriendToChat = tryCatchWrapper(async (req, res) => {
     }
     for (const addersFriend of adder.friends) {
         if (JSON.stringify(addersFriend) == JSON.stringify(friend._id)) {
-            if (chat.users.find((user) => user.user_id == friend._id)) {
-                res.status(StatusCodes.BAD_REQUEST).json({ message: 'You are already in this chat!' })
-                return
+            for (const user of chat.users) {
+                if (user.user_id.toString() == friend._id.toString()) {
+                    res.status(StatusCodes.BAD_REQUEST).json({ message: 'You are already in this chat!' })
+                    return
+                }
             }
             chat.users.push({
                 user_id: friend._id,
