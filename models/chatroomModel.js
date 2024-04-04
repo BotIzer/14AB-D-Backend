@@ -48,7 +48,7 @@ const chatroomSchema = new mongoose.Schema({
     },
 })
 
-chatroomSchema.virtual('users', {
+chatroomSchema.virtual('getUsers', {
     ref: 'User',
     localField: 'users.user_id',
     foreignField: '_id',

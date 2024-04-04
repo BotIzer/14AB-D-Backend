@@ -115,10 +115,10 @@ userSchema.methods.getSignedJwtToken = function () {
     })
 }
 
-userSchema.virtual('chatrooms', {
+userSchema.virtual('getChatrooms', {
     ref: 'Chatroom',
     localField: 'chats',
-    foreignField: '_id',
+    foreignField: 'users.user_id',
     justOne: false,
 })
 module.exports = mongoose.model('User', userSchema, 'Users')
