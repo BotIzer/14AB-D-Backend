@@ -33,7 +33,7 @@ const {
     updateForum,
     recommendForums,
     leaveForum,
-    subscribeToForum
+    subscribeToForum,
 } = require('../controllers/forumControllers/forumControllers')
 const search = require('../controllers/searchController/searchController')
 const {
@@ -58,6 +58,12 @@ const {
     declineFriendRequest,
     addFriendToChat,
 } = require('../controllers/friendControllers/friendControllers')
+
+const {
+    createNotification,
+    deleteNotification,
+    getUsersNotifications,
+} = require('../controllers/notificationController/notificationsController')
 
 let maxLoginAttempts
 
@@ -102,7 +108,7 @@ router.route('/thread').post(protectPath, createThread)
 router.route('/thread/:threadId').delete(protectPath, deleteThreadConroller)
 router.route('/thread/:threadId/likeDislike').post(protectPath, likeDislikeStateChanged)
 
-router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)
+router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)                               //QUERY ADDED
 router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPath, deleteChat)
 router.route('/chat/addFriend').post(protectPath, addFriendToChat)
 router.route('/createOrRetrieveChat').post(protectPath, checkMutualChat)
@@ -117,5 +123,8 @@ router.route('/friends').get(protectPath, getFriends)
 router.route('/friend/:friendName').post(protectPath, makeFriendRequest).delete(protectPath, deleteFriend)
 router.route('/acceptFriendRequest/:requestCreatorName').post(protectPath, acceptFriendRequest)
 router.route('/declineFriendRequest/:requestCreatorName').post(protectPath, declineFriendRequest)
+
+router.route('/notification').get(protectPath, getUsersNotifications).post(protectPath, createNotification) //SWAGGER
+router.route('/notification/notificationId').delete(protectPath, deleteNotification)                        //SWAGGER
 
 module.exports = router

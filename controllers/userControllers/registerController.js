@@ -37,7 +37,7 @@ const registerUser = tryCatchWrapper(async (req, res) => {
         emailToken: crypro.randomBytes(64).toString('hex'),
     })
     newUser.password = newUser.generateHash(req.body.password)
-    newUser.save()
+    await newUser.save()
     await sendRegisterEmail(newUser.email, newUser.emailToken,newUser.username)
     sendTokenResponse(newUser, StatusCodes.CREATED, res)
 })

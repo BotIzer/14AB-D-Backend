@@ -36,21 +36,21 @@ const createChat = tryCatchWrapper(async (req, res) => {
 
     let creatorUser = await User.findById(decodedCreatorId)
     creatorUser.chats.push(newChat._id)
-    creatorUser.save()
+    await creatorUser.save()
     if (isPrivate) {
         let otherUser = await User.findOne({ username: usernames[0] })
         otherUser.chats.push(newChat._id)
-        otherUser.save()
+        await otherUser.save()
         newChat.users.push({ user_id: otherUser._id, is_moderator: true })
-        newChat.save()
+        await newChat.save()
     } else {
         for (const username of usernames) {
             let otherUser = await User.findOne({ username: username })
             newChat.users.push({ user_id: otherUser._id, is_moderator: false })
             otherUser.chats.push(newChat._id)
-            otherUser.save()
+            await otherUser.save()
         }
-        newChat.save()
+        await newChat.save()
     }
     res.status(StatusCodes.CREATED).json({ roomId: newChat._id })
     return
