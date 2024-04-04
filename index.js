@@ -89,17 +89,27 @@ const startServer = async () => {
                     const creatorName = (await User.findById(creatorId)).username
                     const forumId = change.documentKey._id
                     const forumName = (await Forum.findById(forumId)).forum_name
+                    const updatedData = change.updateDescription.updatedFields
+                    let updateMessage = 'A forum you have subscribed to has changed their data!'
+                    console.log(updatedData)
+                    updatedData.forum_name !== undefined && (updateMessage += ` Their new name is: ${updatedData.forum_name}`)
+                            const otherUpdatedFields = Object.keys(updatedData).filter(key => key !== 'forum_name');
+                            if (otherUpdatedFields.length > 0) {
+                                    updateMessage += ' Updated fields are:';
+                                updateMessage += ` ${otherUpdatedFields.join(', ')}`;
+                            }
+                    // TODO: send notifications to offline people too
                     for (const user in users) {
                         
                         if (connectedClients[user] !== undefined) {
-                            connectedClients[user].emit('forumUpdate', { forumName, users, creatorName });
+                            
+                            
+                            connectedClients[user].emit('forumUpdate', {updateMessage});
                         }
                     }
                     if(connectedClients[creatorName] !== undefined){
-                        connectedClients[creatorName].emit('forumUpdate', { forumName, users, creatorName });
-                        console.log("worked")
+                        connectedClients[creatorName].emit('forumUpdate', {updateMessage});
                     }
-                    console.log(forumName)
                 } 
                 else if(change.operationType === 'delete')
                 { 
