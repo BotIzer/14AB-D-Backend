@@ -40,6 +40,7 @@ const {
     createThread,
     deleteThreadConroller,
     likeDislikeStateChanged,
+    getThreadById
 } = require('../controllers/threadControllers/threadControllers')
 const {
     getChatDataById,
@@ -105,7 +106,7 @@ router.route('/forum/subscribeToForum').post(protectPath, subscribeToForum)
 router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum)
 
 router.route('/thread').post(protectPath, createThread)
-router.route('/thread/:threadId').delete(protectPath, deleteThreadConroller)
+router.route('/thread/:threadId').get(getThreadById).delete(protectPath, deleteThreadConroller)
 router.route('/thread/:threadId/likeDislike').post(protectPath, likeDislikeStateChanged)
 
 router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)                               //QUERY ADDED
