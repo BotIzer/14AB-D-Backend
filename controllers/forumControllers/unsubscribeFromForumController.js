@@ -21,7 +21,19 @@ const unsubscribeFromForum = tryCatchWrapper(async (req, res) => {
     if (!forum) {
         throw new noForumFoundError()
     }
-
+    let isContains = false
+    for (const user of forum.users) {
+        if (user.user_id.toString() == id.toString()) {
+            isContains = true
+            break
+        }
+    }
+    if (!isContains) {
+        res.status(StatusCodes.OK).json({
+            message: 'You are not subscribed to this forum!',
+        })
+        return
+    }
     if (forum._id.creator_id.toString() == id.toString()) {
         if (forum.users.length == 0) {
             await Forum.deleteOne({ '_id.forum_id': forumId })
