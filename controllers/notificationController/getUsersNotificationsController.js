@@ -10,8 +10,13 @@ const getUsersNotifications = tryCatchWrapper(async (req, res) => {
     if (!user) {
         throw new noUserFoundError()
     }
-    const notifications = user.notifications.reverse()
-    res.status(StatusCodes.OK).json(notifications)
+    let notifications = user.notifications.reverse()
+    const notificationsPageCount = Math.ceil(notifications.length / 10)
+    const page = req.query.page || 0
+    const limit = req.query.limit || 10
+    const skip = page * 10
+    notifications = notifications.slice(skip, limit)
+    res.status(StatusCodes.OK).json({ notificationsPageCount, notifications })
     return
 })
 

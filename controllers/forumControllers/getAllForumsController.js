@@ -7,11 +7,12 @@ const getAllForums = tryCatchWrapper(async (req, res) => {
     const page = parseInt(req.query.page) || 0
     const limit = parseInt(req.query.limit) || 10
     const skip = page * 10
+    const pagesCount = Math.ceil((await Forum.countDocuments()) / 10)
     const forums = await Forum.find().skip(skip).limit(limit)
     if (!forums) {
         throw new noForumFoundError()
     }
-    res.status(StatusCodes.OK).json(forums)
+    res.status(StatusCodes.OK).json({ pagesCount, forums })
     return
 })
 
