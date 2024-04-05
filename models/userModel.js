@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         maxlength: [5000, 'The description cannot be more than 5000 characters!'],
         trim: true,
-        default: ""
+        default: '',
     },
     email: {
         type: String,
@@ -115,4 +115,10 @@ userSchema.methods.getSignedJwtToken = function () {
     })
 }
 
+userSchema.virtual('getChatrooms', {
+    ref: 'Chatroom',
+    localField: 'chats',
+    foreignField: 'users.user_id',
+    justOne: false,
+})
 module.exports = mongoose.model('User', userSchema, 'Users')
