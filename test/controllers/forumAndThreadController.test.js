@@ -60,7 +60,9 @@ describe('forumController tests', () => {
                 .get('/forum')
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.be.an('array').and.is.empty
+                    res.body.should.be.an('object')
+                    res.body.pagesCount.should.be.a('number').that.equals(0)
+                    res.body.forums.should.be.an('array').that.has.lengthOf(0)
                     done()
                 })
         })
@@ -98,27 +100,27 @@ describe('forumController tests', () => {
                 .get('/forum')
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.be.an('array').lengthOf(1)
-                    res.body[0].should.be
+                    res.body.should.be.an('object')
+                    res.body.forums[0].should.be
                         .an('object')
                         .that.has.property('forum_name')
                         .that.is.a('string')
                         .that.equals('testForum')
-                    res.body[0].should.be.an('object').that.has.property('blacklist').that.is.a('array').that.is.empty
-                    res.body[0].should.be.an('object').that.has.property('users').that.is.a('array').that.is.empty
-                    res.body[0].should.be.an('object').that.has.property('tags').that.is.a('array').that.is.empty
-                    res.body[0].should.be.an('object').that.has.property('rating').that.is.a('number').that.is.equal(0)
-                    res.body[0].should.be
+                    res.body.forums[0].should.be.an('object').that.has.property('blacklist').that.is.a('array').that.is.empty
+                    res.body.forums[0].should.be.an('object').that.has.property('users').that.is.a('array').that.is.empty
+                    res.body.forums[0].should.be.an('object').that.has.property('tags').that.is.a('array').that.is.empty
+                    res.body.forums[0].should.be.an('object').that.has.property('rating').that.is.a('number').that.is.equal(0)
+                    res.body.forums[0].should.be
                         .an('object')
                         .that.has.property('_id')
                         .that.is.a('object')
                         .that.has.property('creator_id')
-                    res.body[0].should.be
+                    res.body.forums[0].should.be
                         .an('object')
                         .that.has.property('_id')
                         .that.is.a('object')
                         .that.has.property('forum_id')
-                    forumId = res.body[0]._id.forum_id
+                    forumId = res.body.forums[0]._id.forum_id
                     done()
                 })
         })

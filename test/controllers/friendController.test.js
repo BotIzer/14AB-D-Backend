@@ -65,7 +65,9 @@ describe("userController's tests", () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.be.an('array').that.is.empty
+                    res.body.should.be.an('object')
+                    res.body.pagesCount.should.be.a('number').that.is.equal(0)
+                    res.body.returnFriends.should.be.an('array').that.is.empty
                     done()
                 })
         })
@@ -85,7 +87,7 @@ describe("userController's tests", () => {
                 })
         })
     })
-    
+
     describe('/user/friends/sentRequests GET route test when there are no sent friend requests', () => {
         it('should return with 200 status code and an empty array', (done) => {
             chai.request(server)
@@ -100,7 +102,7 @@ describe("userController's tests", () => {
                 })
         })
     })
-    
+
     describe('/friend/:friendName POST but with declined friend request', () => {
         it('should return with 200 status code and success message', (done) => {
             chai.request(server)
@@ -141,8 +143,9 @@ describe("userController's tests", () => {
                     authorization: 'Bearer ' + userToken,
                 })
                 .end((err, res) => {
-                    res.should.have.status(200)
-                    res.body.should.be.an('array').that.is.empty
+                    res.body.should.be.an('object')
+                    res.body.pagesCount.should.be.a('number').that.is.equal(0)
+                    res.body.returnFriends.should.be.an('array').that.is.empty
                     done()
                 })
         })
@@ -153,8 +156,9 @@ describe("userController's tests", () => {
                     authorization: 'Bearer ' + otherUserToken,
                 })
                 .end((err, res) => {
-                    res.should.have.status(200)
-                    res.body.should.be.an('array').that.is.empty
+                    res.body.should.be.an('object')
+                    res.body.pagesCount.should.be.a('number').that.is.equal(0)
+                    res.body.returnFriends.should.be.an('array').that.is.empty
                     done()
                 })
         })
@@ -195,6 +199,7 @@ describe("userController's tests", () => {
                 })
         })
     })
+
     describe('/user/friends/sentRequests GET route test when there is a sent friend request', () => {
         it('should return with 200 status code and an array with one element', (done) => {
             chai.request(server)
@@ -254,7 +259,9 @@ describe("userController's tests", () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.be.an('array').and.has.lengthOf(1)
+                    res.body.should.be.an('object')
+                    res.body.pagesCount.should.be.a('number').that.is.equal(1)
+                    res.body.returnFriends.should.be.an('array').that.has.lengthOf(1)
                     done()
                 })
         })
@@ -286,7 +293,9 @@ describe("userController's tests", () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.be.an('array').and.has.lengthOf(1)
+                    res.body.should.be.an('object')
+                    res.body.pagesCount.should.be.a('number').that.is.equal(1)
+                    res.body.returnFriends.should.be.an('array').and.has.lengthOf(1)
                     done()
                 })
         })
@@ -460,5 +469,4 @@ describe("userController's tests", () => {
             })
         })
     })
-    
 })
