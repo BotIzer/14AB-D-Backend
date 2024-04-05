@@ -108,10 +108,10 @@ router.route('/forum/subscribeToForum').post(protectPath, subscribeToForum)
 router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum)
 
 router.route('/thread').post(protectPath, createThread)
-router.route('/thread/:threadId').get(getThreadById).put(protectPath, updateThread).delete(protectPath, deleteThreadConroller)         //SWAGGER
+router.route('/thread/:threadId').get(getThreadById).put(protectPath, updateThread).delete(protectPath, deleteThreadConroller)
 router.route('/thread/:threadId/likeDislike').post(protectPath, likeDislikeStateChanged)
 
-router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)                               //QUERY ADDED
+router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)
 router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPath, deleteChat)
 router.route('/chat/addFriend').post(protectPath, addFriendToChat)
 router.route('/createOrRetrieveChat').post(protectPath, checkMutualChat)
@@ -127,7 +127,7 @@ router.route('/friend/:friendName').post(protectPath, makeFriendRequest).delete(
 router.route('/acceptFriendRequest/:requestCreatorName').post(protectPath, acceptFriendRequest)
 router.route('/declineFriendRequest/:requestCreatorName').post(protectPath, declineFriendRequest)
 
-router.route('/notification').get(protectPath, getUsersNotifications).post(protectPath, createNotification) //SWAGGER, PAGINATION
-router.route('/notification/notificationId').delete(protectPath, deleteNotification)                        //SWAGGER
+router.route('/notification').get(protectPath, getUsersNotifications).post(protectPath, createNotification)
+router.route('/notification/:notificationId').delete(protectPath, deleteNotification)
 
 module.exports = router
