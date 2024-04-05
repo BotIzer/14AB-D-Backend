@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const limiter = require('express-rate-limit')
+const { StatusCodes } = require('http-status-codes')
 const {
     loginUser,
     registerUser: { registerUser, verifyEmail },
@@ -34,7 +35,6 @@ const {
     recommendForums,
     leaveForum,
     subscribeToForum,
-    unsubscribeFromForum,
 } = require('../controllers/forumControllers/forumControllers')
 const search = require('../controllers/searchController/searchController')
 const {
@@ -80,7 +80,7 @@ const loginLimiter = limiter({
     windowMs: 1000 * 60,
     max: maxLoginAttempts,
     handler: (req, res) => {
-        res.status(429).json({ message: 'Too many login requests! Please try again after a minute.' })
+        res.status(StatusCodes.TOO_MANY_REQUESTS).json({ message: 'Too many login requests! Please try again after a minute.' })
     },
 })
 
@@ -105,7 +105,6 @@ router.route('/forum/ban').post(protectPath, banUserFromForum).put(protectPath, 
 router.route('/forum/recommendForums').get(recommendForums)
 router.route('/forum/leaveForum').post(protectPath, leaveForum)
 router.route('/forum/subscribeToForum').post(protectPath, subscribeToForum)
-router.route('/forum/unsubscribeFromForum').post(protectPath, unsubscribeFromForum) //SWAGGER
 router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum)
 
 router.route('/thread').post(protectPath, createThread)

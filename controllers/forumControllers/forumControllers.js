@@ -10,7 +10,6 @@ const getAllForums = require('./getAllForumsController')
 const getAllThreadsByForumId = require('./getAllThreadsByForumIdController')
 const leaveForum = require('./leaveForumController')
 const subscribeToForum = require('./subscribeToForumController')
-const unsubscribeFromForum = require('./unsubscribeFromForumController')
 
 module.exports = {
     banUserFromForum,
@@ -25,5 +24,4 @@ module.exports = {
     getAllThreadsByForumId,
     leaveForum,
     subscribeToForum,
-    unsubscribeFromForum,
 }

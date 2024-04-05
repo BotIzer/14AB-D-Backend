@@ -218,10 +218,10 @@ describe('forumController tests', () => {
                 })
         })
     })
-    describe('/forum/unsubscribeFromForum tests', () => {
+    describe('/forum/leaveForum tests', () => {
         it('should return with 404 status code and an error message', (done) => {
             chai.request(server)
-                .post('/forum/unsubscribeFromForum')
+                .post('/forum/leaveForum')
                 .set({ authorization: 'Bearer ' + userToken })
                 .send({ forum_id: '507f1f77bcf86cd799439011' })
                 .end((err, res) => {
@@ -236,7 +236,7 @@ describe('forumController tests', () => {
             })
             it('should return with 401 status code and an error message', (done) => {
                 chai.request(server)
-                    .post('/forum/unsubscribeFromForum')
+                    .post('/forum/leaveForum')
                     .send({ forum_id: '507f1f77bcf86cd799439011' })
                     .end((err, res) => {
                         res.should.have.status(401)
@@ -244,13 +244,13 @@ describe('forumController tests', () => {
                             .an('object')
                             .that.has.property('message')
                             .that.is.a('string')
-                            .that.is.equal('You have no permission to use path: /forum/unsubscribeFromForum')
+                            .that.is.equal('You have no permission to use path: /forum/leaveForum')
                         done()
                     })
             })
             it('should return with 200 status code and success message', (done) => {
                 chai.request(server)
-                    .post('/forum/unsubscribeFromForum')
+                    .post('/forum/leaveForum')
                     .set({ authorization: 'Bearer ' + otherUserToken })
                     .send({ forum_id: forumId })
                     .end((err, res) => {
@@ -259,13 +259,13 @@ describe('forumController tests', () => {
                             .an('object')
                             .that.has.property('message')
                             .that.is.a('string')
-                            .that.is.equal('Unsubscribed from forum successfully!')
+                            .that.is.equal('Forum left successfully!')
                         done()
                     })
             })
             it('should return with 400 status code and an error message', (done) => {
                 chai.request(server)
-                    .post('/forum/unsubscribeFromForum')
+                    .post('/forum/leaveForum')
                     .set({ authorization: 'Bearer ' + otherUserToken })
                     .send({ forum_id: forumId })
                     .end((err, res) => {
@@ -274,7 +274,7 @@ describe('forumController tests', () => {
                             .an('object')
                             .that.has.property('message')
                             .that.is.a('string')
-                            .that.is.equal('You are not subscribed to this forum!')
+                            .that.is.equal('You are not in this forum!')
                         done()
                     })
             })
