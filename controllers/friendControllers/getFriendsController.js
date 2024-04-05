@@ -20,8 +20,9 @@ const getFriends = tryCatchWrapper(async (req, res) => {
     const page = parseInt(req.query.page) || 0
     const limit = parseInt(req.query.limit) || 10
     const skip = page * 10
+    const pagesCount = Math.ceil(friends.length / 10)
     const returnFriends = friends.splice(skip, limit)
-    res.status(StatusCodes.OK).json(returnFriends)
+    res.status(StatusCodes.OK).json({ pagesCount, returnFriends })
     return
 })
 

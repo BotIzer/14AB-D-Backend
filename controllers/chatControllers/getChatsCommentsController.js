@@ -13,7 +13,7 @@ const getChatsComments = tryCatchWrapper(async (req, res) => {
     if (!chat) {
         throw new noChatFoundError(req.params.chatId)
     }
-    const comments = await Comment.aggregate([
+    let comments = await Comment.aggregate([
         {
             $match: {
                 '_id.room_id': new mongoose.Types.ObjectId(chat._id),
@@ -44,15 +44,11 @@ const getChatsComments = tryCatchWrapper(async (req, res) => {
                     creator_id: 0,
                 },
             },
-        },
-        {
-            $skip: skip
-        },
-        {
-            $limit: limit
         }
     ])
-    res.status(StatusCodes.OK).json({ comments })
+    const pagesCount = Math.ceil(comments.length / 10)
+    comments = comments.slice(skip, limit)
+    res.status(StatusCodes.OK).json({ pagesCount, comments })
     return
 })
 
