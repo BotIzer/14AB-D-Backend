@@ -21,11 +21,21 @@ const subscribeToForum = tryCatchWrapper(async (req, res) => {
     if (!forum) {
         throw new noForumFoundError()
     }
-    if (forum.blacklist.map((user) => user.user_id.toString()).includes(id.toString())) {
-        throw new youAreBannedFromThisForumError()
+    if(forum.blacklist.length > 0){
+        if (forum.blacklist.map((user) => user._id.toString()).includes(id.toString())) {
+            throw new youAreBannedFromThisForumError()
+        }
+    }
+    // TODO: FIX THIS
+    if(forum.users.length > 0){
+        if (
+            forum.users.map((user) => user._id.toString()).includes(id.toString()) ||
+            forum._id.creator_id.toString() == id.toString()
+        ) {
+            throw new youAreAlreadySubscribedToThisForumError()
+        }
     }
     if (
-        forum.users.map((user) => user.user_id.toString()).includes(id.toString()) ||
         forum._id.creator_id.toString() == id.toString()
     ) {
         throw new youAreAlreadySubscribedToThisForumError()
