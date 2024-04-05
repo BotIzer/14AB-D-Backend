@@ -3,7 +3,12 @@ const { StatusCodes } = require('http-status-codes')
 
 class noForumFoundError extends CustomAPIError {
     constructor(message) {
-        super('No forum found with this name: ' + message)
+        if (message) {
+            super('No forum found with this name: ' + message)
+        }
+        else {
+            super('No forum found')
+        }
         this.statusCode = StatusCodes.NOT_FOUND
     }
 }

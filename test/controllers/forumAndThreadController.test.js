@@ -106,10 +106,16 @@ describe('forumController tests', () => {
                         .that.has.property('forum_name')
                         .that.is.a('string')
                         .that.equals('testForum')
-                    res.body.forums[0].should.be.an('object').that.has.property('blacklist').that.is.a('array').that.is.empty
-                    res.body.forums[0].should.be.an('object').that.has.property('users').that.is.a('array').that.is.empty
+                    res.body.forums[0].should.be.an('object').that.has.property('blacklist').that.is.a('array').that.is
+                        .empty
+                    res.body.forums[0].should.be.an('object').that.has.property('users').that.is.a('array').that.is
+                        .empty
                     res.body.forums[0].should.be.an('object').that.has.property('tags').that.is.a('array').that.is.empty
-                    res.body.forums[0].should.be.an('object').that.has.property('rating').that.is.a('number').that.is.equal(0)
+                    res.body.forums[0].should.be
+                        .an('object')
+                        .that.has.property('rating')
+                        .that.is.a('number')
+                        .that.is.equal(0)
                     res.body.forums[0].should.be
                         .an('object')
                         .that.has.property('_id')
@@ -135,6 +141,143 @@ describe('forumController tests', () => {
                     done()
                 })
         })
+    })
+    describe('/forum/subscribeToForum tests', () => {
+        it('should return with 404 status code and an error message', (done) => {
+            chai.request(server)
+                .post('/forum/subscribeToForum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_id: '507f1f77bcf86cd799439011' })
+                .end((err, res) => {
+                    res.should.have.status(404)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.is.equal('No forum found')
+                    done()
+                })
+        })
+        it('should return with 401 status code and an error message', (done) => {
+            chai.request(server)
+                .post('/forum/subscribeToForum')
+                .send({ forum_id: '507f1f77bcf86cd799439011' })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.is.equal('You have no permission to use path: /forum/subscribeToForum')
+                    done()
+                })
+        })
+        it('should return with 400 status code and an error message with the creator user', (done) => {
+            chai.request(server)
+                .post('/forum/subscribeToForum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_id: forumId })
+                .end((err, res) => {
+                    res.should.have.status(400)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.is.equal('You are already subscribed to this forum!')
+                    done()
+                })
+        })
+        it('should return with 200 status code and success message', (done) => {
+            chai.request(server)
+                .post('/forum/subscribeToForum')
+                .set({ authorization: 'Bearer ' + otherUserToken })
+                .send({ forum_id: forumId })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.is.equal('Subscribed to forum successfully!')
+                    done()
+                })
+        })
+        it('should return with 400 status code and an error message but with the other user', (done) => {
+            chai.request(server)
+                .post('/forum/subscribeToForum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_id: forumId })
+                .end((err, res) => {
+                    res.should.have.status(400)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.is.equal('You are already subscribed to this forum!')
+                    done()
+                })
+        })
+    })
+    describe('/forum/unsubscribeFromForum tests', () => {
+        it('should return with 404 status code and an error message', (done) => {
+            chai.request(server)
+                .post('/forum/unsubscribeFromForum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_id: '507f1f77bcf86cd799439011' })
+                .end((err, res) => {
+                    res.should.have.status(404)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.is.equal('No forum found')
+                    done()
+                })
+            })
+            it('should return with 401 status code and an error message', (done) => {
+                chai.request(server)
+                    .post('/forum/unsubscribeFromForum')
+                    .send({ forum_id: '507f1f77bcf86cd799439011' })
+                    .end((err, res) => {
+                        res.should.have.status(401)
+                        res.body.should.be
+                            .an('object')
+                            .that.has.property('message')
+                            .that.is.a('string')
+                            .that.is.equal('You have no permission to use path: /forum/unsubscribeFromForum')
+                        done()
+                    })
+            })
+            it('should return with 200 status code and success message', (done) => {
+                chai.request(server)
+                    .post('/forum/unsubscribeFromForum')
+                    .set({ authorization: 'Bearer ' + otherUserToken })
+                    .send({ forum_id: forumId })
+                    .end((err, res) => {
+                        res.should.have.status(200)
+                        res.body.should.be
+                            .an('object')
+                            .that.has.property('message')
+                            .that.is.a('string')
+                            .that.is.equal('Unsubscribed from forum successfully!')
+                        done()
+                    })
+            })
+            it('should return with 400 status code and an error message', (done) => {
+                chai.request(server)
+                    .post('/forum/unsubscribeFromForum')
+                    .set({ authorization: 'Bearer ' + otherUserToken })
+                    .send({ forum_id: forumId })
+                    .end((err, res) => {
+                        res.should.have.status(400)
+                        res.body.should.be
+                            .an('object')
+                            .that.has.property('message')
+                            .that.is.a('string')
+                            .that.is.equal('You are not subscribed to this forum!')
+                        done()
+                    })
+            })
     })
     describe('/forum/getAllThreads/:forumId GET route tests while the forum has no threads', () => {
         it('should return with 200 status code and an empty array', (done) => {
@@ -631,7 +774,7 @@ describe('forumController tests', () => {
                         .an('object')
                         .that.has.property('message')
                         .that.is.a('string')
-                        .equals('No forum found with this name: undefined')
+                        .equals('No forum found')
                     done()
                 })
         })

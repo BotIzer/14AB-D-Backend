@@ -29,7 +29,7 @@ const unsubscribeFromForum = tryCatchWrapper(async (req, res) => {
         }
     }
     if (!isContains) {
-        res.status(StatusCodes.OK).json({
+        res.status(StatusCodes.BAD_REQUEST).json({
             message: 'You are not subscribed to this forum!',
         })
         return
