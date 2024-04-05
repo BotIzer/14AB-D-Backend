@@ -26,12 +26,13 @@ const subscribeToForum = tryCatchWrapper(async (req, res) => {
             throw new youAreBannedFromThisForumError()
         }
     }
-    // TODO: FIX THIS
-    if(forum.users.length > 0){
-        if (
-            forum.users.map((user) => user._id.toString()).includes(id.toString()) ||
-            forum._id.creator_id.toString() == id.toString()
-        ) {
+    if(forum.users.length > 0){      
+        for (const user of forum.users) {
+            if (user._id.toString() == id.toString()) {
+                throw new youAreAlreadySubscribedToThisForumError()
+            }
+        }
+        if (forum._id.creator_id.toString() == id.toString()) {
             throw new youAreAlreadySubscribedToThisForumError()
         }
     }
