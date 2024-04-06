@@ -24,6 +24,7 @@ const jwt = require('jsonwebtoken')
 const { Realtime } = require('ably')
 const Forum = require('./models/forumModel')
 const getForumById = require('./controllers/forumControllers/getForumByIdController')
+const { getUserProfileByUsername } = require('./controllers/userControllers/userController')
 
 const app = express()
 app.set('trust proxy', 1)
@@ -98,17 +99,15 @@ const startServer = async () => {
                                     updateMessage += ' Updated fields are:';
                                 updateMessage += ` ${otherUpdatedFields.join(', ')}`;
                             }
-                    // TODO: send notifications to offline people too
-                    for (const user in users) {
-                        
-                        if (connectedClients[user] !== undefined) {
-                            
-                            
-                            connectedClients[user].emit('forumUpdate', {updateMessage});
+                    for (const username of users) {
+                        if (connectedClients[username] !== undefined) {
+                            connectedClients[username].emit('forumUpdate', { updateMessage });
                         }
+                        sendNotification(username,updateMessage);
                     }
                     if(connectedClients[creatorName] !== undefined){
                         connectedClients[creatorName].emit('forumUpdate', {updateMessage});
+                        sendNotification(username,updateMessage);
                     }
                 } 
                 else if(change.operationType === 'delete')
@@ -160,5 +159,18 @@ const getForumsUsersById = async (forum_id) => {
         console.log(error)
     }
 }
-
+const sendNotification = (async (username, updateMessage) => {
+    const userId = await User.findOne({username: username}).select('_id')
+    console.log(userId)
+    let user = await User.findById(userId)
+    if (!user) {
+        throw new noUserFoundError()
+    }
+    if (!updateMessage || updateMessage.length == 0) {
+        throw new notificationTextRequiredError()
+    }
+    user.notifications.push({ text: updateMessage })
+    await user.save()
+    return
+})
 module.exports = app
