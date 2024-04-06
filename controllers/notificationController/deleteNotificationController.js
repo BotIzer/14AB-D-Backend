@@ -12,7 +12,7 @@ const deleteNotification = tryCatchWrapper(async (req, res) => {
         throw new noUserFoundError()
     }
     const notificationId = req.params.notificationId
-    const notificationIndex = user.notifications.findIndex((notification) => notification._id == notificationId)
+    const notificationIndex = user.notifications.findIndex((notification) => notification._id.toString() == notificationId.toString())
     if (notificationIndex == -1) {
         throw new notificationNotFoundError()
     }
