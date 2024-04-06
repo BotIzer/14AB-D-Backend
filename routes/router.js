@@ -66,6 +66,7 @@ const {
     createNotification,
     deleteNotification,
     getUsersNotifications,
+    updateNotification,
 } = require('../controllers/notificationController/notificationsController')
 
 let maxLoginAttempts
@@ -127,7 +128,7 @@ router.route('/friend/:friendName').post(protectPath, makeFriendRequest).delete(
 router.route('/acceptFriendRequest/:requestCreatorName').post(protectPath, acceptFriendRequest)
 router.route('/declineFriendRequest/:requestCreatorName').post(protectPath, declineFriendRequest)
 
-router.route('/notification').get(protectPath, getUsersNotifications).post(protectPath, createNotification)
+router.route('/notification').get(protectPath, getUsersNotifications).post(protectPath, createNotification).put(protectPath, updateNotification) //SWAGGER!
 router.route('/notification/:notificationId').delete(protectPath, deleteNotification)
 
 module.exports = router
