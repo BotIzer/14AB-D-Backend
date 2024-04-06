@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'To add email is required!'],
         unique: true,
-        match: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, 'Please add a valid email address!'],
+        match: [/[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim, 'Please add a valid email address!'],
     },
     profile_image: {
         type: String,
