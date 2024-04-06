@@ -15,7 +15,7 @@ const getUsersNotifications = tryCatchWrapper(async (req, res) => {
     const page = req.query.page || 0
     const limit = req.query.limit || 10
     const skip = page * 10
-    notifications = notifications.slice(skip, limit).reverse()
+    notifications = notifications.slice(skip, limit)
     res.status(StatusCodes.OK).json({ notificationsPageCount, notifications })
     return
 })
