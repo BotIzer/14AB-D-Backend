@@ -6,7 +6,7 @@ const { StatusCodes } = require('http-status-codes')
 const { notificationNotFoundError } = require('../../errors/notificationErrors/notificationErrors')
 
 const updateNotification = tryCatchWrapper(async (req, res) => {
-    const { text: text, seen: seen } = req.body
+    const seen = req.body.seen
     const userId = await getCreatorIdFromHeaders(req.headers)
     let user = await User.findById(userId)
     if (!user) {
@@ -18,9 +18,6 @@ const updateNotification = tryCatchWrapper(async (req, res) => {
     )
     if (notificationIndex == -1) {
         throw new notificationNotFoundError()
-    }
-    if (text) {
-        user.notifications[notificationIndex].text = text
     }
     if (seen) {
         user.notifications[notificationIndex].seen = seen
