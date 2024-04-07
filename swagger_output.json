@@ -89,7 +89,7 @@
                                                     "type": "boolean",
                                                     "example": false
                                                 },
-                                                "roles": {
+                                                "role": {
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string",
@@ -208,7 +208,7 @@
                                                     "type": "boolean",
                                                     "example": false
                                                 },
-                                                "roles": {
+                                                "role": {
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string",
@@ -262,6 +262,73 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "The user in not verified yet",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Please verify your email address"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/verifyEmail/:emailToken": {
+            "get": {
+                "tags": ["auth"],
+                "description": "Verify user email address",
+                "parameters": [
+                    {
+                        "name": "emailToken",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "7499d9123a6679274fbd990c46ad8c9910ff43931b1c7ed823c5bc7b1e82377eec0ee0ffccb2b65bc03003e19e03ccb7a66e0910d1c9c3ff9c2734c6e2cce8d2"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email address verified successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email verified successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid email token given",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid email token"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -269,6 +336,24 @@
         "/search": {
             "post": {
                 "tags": ["search"],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 2
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 5
+                        }
+                    }
+                ],
                 "description": "Search after forums and users, is noting is found, returns an [ [], [] ]",
                 "requestBody": {
                     "required": true,
@@ -430,7 +515,7 @@
                                                     "type": "boolean",
                                                     "example": false
                                                 },
-                                                "roles": {
+                                                "role": {
                                                     "type": "string",
                                                     "example": "user"
                                                 },
@@ -472,7 +557,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -558,7 +643,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "Wrong credentials",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -624,49 +709,92 @@
                                                         "type": "string",
                                                         "example": "65cfb05bbd7448340f8993e2"
                                                     }
+                                                },
+                                                "profile_image": {
+                                                    "type": "string",
+                                                    "example": "default"
+                                                },
+                                                "custom_ui": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "role": {
+                                                    "type": "string",
+                                                    "example": "user"
+                                                },
+                                                "username": {
+                                                    "type": "string",
+                                                    "example": "pista"
+                                                },
+                                                "friends": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "65cfb05bbd7448340f8993e2"
+                                                    }
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2020-07-07T13:31:16.371Z",
+                                                    "format": "date-time"
+                                                },
+                                                "friend_requests": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "randomUsername"
+                                                    }
+                                                },
+                                                "hobbies": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "sports"
+                                                    }
+                                                },
+                                                "notifications": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "65cfb05bbd7448340f8993e2"
+                                                            },
+                                                            "text": {
+                                                                "type": "string",
+                                                                "example": "Random notification text 12345"
+                                                            },
+                                                            "seen": {
+                                                                "type": "boolean",
+                                                                "example": false
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "sent_friend_requests": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "randomUsername"
+                                                    }
+                                                },
+                                                "isVerified": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "reset_password": {
+                                                    "type": "string",
+                                                    "example": null
+                                                },
+                                                "reset_password_token": {
+                                                    "type": "string",
+                                                    "example": null
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Hello! This is my profile!"
                                                 }
-                                            }
-                                        },
-                                        "profile_image": {
-                                            "type": "string",
-                                            "example": "default"
-                                        },
-                                        "custom_ui": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "roles": {
-                                            "type": "string",
-                                            "example": "user"
-                                        },
-                                        "username": {
-                                            "type": "string",
-                                            "example": "pista"
-                                        },
-                                        "friends": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "example": "65cfb05bbd7448340f8993e2"
-                                            }
-                                        },
-                                        "created_at": {
-                                            "type": "string",
-                                            "example": "2020-07-07T13:31:16.371Z",
-                                            "format": "date-time"
-                                        },
-                                        "friend_requests": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "example": "randomUsername"
-                                            }
-                                        },
-                                        "hobbies": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string",
-                                                "example": "sports"
                                             }
                                         }
                                     }
@@ -723,7 +851,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -760,6 +888,24 @@
         "/user/friends/sentRequests": {
             "get": {
                 "tags": ["user"],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 2
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 5
+                        }
+                    }
+                ],
                 "description": "Get users sent friend requests. LOGIN REQUIRED",
                 "security": [
                     {
@@ -787,7 +933,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -812,6 +958,158 @@
                                         "message": {
                                             "type": "string",
                                             "example": "User not found with id: 65ca57ef7b4f2295c385b4f9"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/changePassword": {
+            "post": {
+                "tags": ["user"],
+                "description": "Change user password. LOGIN REQUIRED",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "old_password": {
+                                        "type": "string",
+                                        "example": "RandomPass1234!"
+                                    },
+                                    "new_password": {
+                                        "type": "string",
+                                        "example": "RandomNewPass1234!"
+                                    },
+                                    "new_password2": {
+                                        "type": "string",
+                                        "example": "RandomNewPass1234!"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Your password changing request sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password changing verification email sent to: randomemail@mail.com!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Your request data is invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "New passwords do not match"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: POST /user/changePassword"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No user found error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found with id: 65ca57ef7b4f2295c385b4f9"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/verifyNewPassword/{passwordToken}": {
+            "get": {
+                "tags": ["user"],
+                "description": "Verify your new password via email.",
+                "parameters": [
+                    {
+                        "required": true,
+                        "name": "passwordToken",
+                        "in": "path",
+                        "schema": {
+                            "type": "string",
+                            "example": "7499d9123a6679274fbd990c46ad8c9910ff43931b1c7ed823c5bc7b1e82377eec0ee0ffccb2b65bc03003e19e03ccb7a66e0910d1c9c3ff9c2734c6e2cce8d2"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Password changed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password changed successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password token is invalid"
                                         }
                                     }
                                 }
@@ -904,6 +1202,24 @@
         "/forum": {
             "get": {
                 "tags": ["forum"],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 2
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 5
+                        }
+                    }
+                ],
                 "description": "Get all forums",
                 "responses": {
                     "200": {
@@ -1359,6 +1675,190 @@
                 }
             }
         },
+        "/forum/subscribeToForum": {
+            "post": {
+                "tags": ["forum"],
+                "description": "Subscribe to a forum. LOGIN REQUIRED",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "forum_id": {
+                                        "type": "string",
+                                        "example": "65c1e3930ed4497f8cafdac0"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Forum subscribed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Forum subscribed successfully!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "You have already subscribed to this forum",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have already subscribed to this forum!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not logged in!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: POST /forum/subscribeToForum"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No forum found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No forum found!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/forum/leaveForum": {
+            "post": {
+                "tags": ["forum"],
+                "description": "Leave a forum. LOGIN REQUIRED",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "forum_id": {
+                                        "type": "string",
+                                        "example": "65c1e3930ed4497f8cafdac0"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Forum left successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Forum left successfully!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "You are not a member of this forum",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You are not in this forum!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not logged in!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: POST /forum/leaveForum"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No forum found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No forum found!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/forum/ban": {
             "post": {
                 "tags": ["forum"],
@@ -1421,7 +1921,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1515,7 +2015,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1809,6 +2309,103 @@
                 }
             }
         },
+        "/forum/recommendForums": {
+            "get": {
+                "tags": ["forum"],
+                "description": "Get recommended forums. By default it is 5 forums. If you want to get more, you can specify the number of forums you want to get in the query parameters",
+                "parameters": [
+                    {
+                        "name": "numberOfForums",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get recommended forums",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "_id": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "creator_id": {
+                                                        "type": "string",
+                                                        "example": "657b7d6d0064424d0daad81a"
+                                                    },
+                                                    "forum_id": {
+                                                        "type": "string",
+                                                        "example": "65c1e3930ed4497f8cafdac0"
+                                                    }
+                                                }
+                                            },
+                                            "forum_name": {
+                                                "type": "string",
+                                                "example": "Chit-chat"
+                                            },
+                                            "creation_date": {
+                                                "type": "string",
+                                                "example": "2024-02-06T07:45:23.984+00:00",
+                                                "format": "date-time"
+                                            },
+                                            "banner": {
+                                                "type": "string",
+                                                "example": "https://i.imgur.com/d2d234.png"
+                                            },
+                                            "blacklist": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "example": "65c1e3930ed4497f8cafdec4"
+                                                }
+                                            },
+                                            "users": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "user_id": {
+                                                            "type": "string",
+                                                            "example": "657b7d6d0064424d0daad81a"
+                                                        },
+                                                        "is_moderator": {
+                                                            "type": "boolean",
+                                                            "example": false
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "rating": {
+                                                "type": "number",
+                                                "example": 4.5
+                                            },
+                                            "tags": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "example": "fun"
+                                                }
+                                            },
+                                            "topthread": {
+                                                "type": "string",
+                                                "example": "65c1e3930ed4497f8cafdac0"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/thread": {
             "post": {
                 "tags": ["thread"],
@@ -1883,7 +2480,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1918,6 +2515,298 @@
             }
         },
         "/thread/{threadId}": {
+            "get": {
+                "tags": ["thread"],
+                "description": "Get thread by id",
+                "parameters": [
+                    {
+                        "name": "threadId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thread found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "_id": {
+                                            "type": "object",
+                                            "properties": {
+                                                "forum_id": {
+                                                    "type": "string",
+                                                    "example": "5f6783e14876940017d7b008"
+                                                },
+                                                "creator_id": {
+                                                    "type": "string",
+                                                    "example": "5f6783e14876940017d7b007"
+                                                },
+                                                "thread_id": {
+                                                    "type": "string",
+                                                    "example": "5f6783e14876940017d7b009"
+                                                }
+                                            }
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Random thread"
+                                        },
+                                        "likes": {
+                                            "type": "object",
+                                            "properties": {
+                                                "count": {
+                                                    "type": "number",
+                                                    "example": 2
+                                                },
+                                                "users": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "sanyi"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "dislikes": {
+                                            "type": "object",
+                                            "properties": {
+                                                "count": {
+                                                    "type": "number",
+                                                    "example": 7
+                                                },
+                                                "users": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "sanyi2"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "content": {
+                                            "type": "string",
+                                            "example": "Random thread content"
+                                        },
+                                        "creation_date": {
+                                            "type": "string",
+                                            "example": "2020-09-10T17:29:50.278Z"
+                                        },
+                                        "editors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "sanyi"
+                                            }
+                                        },
+                                        "emoticons": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "😀"
+                                            }
+                                        },
+                                        "image_array": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "https://i.imgur.com/123456.png"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Thread not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No thread found."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": ["thread"],
+                "description": "Update a thread. LOGIN REQUIRED",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "threadId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "New name"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "New content"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Thread found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "_id": {
+                                            "type": "object",
+                                            "properties": {
+                                                "forum_id": {
+                                                    "type": "string",
+                                                    "example": "5f6783e14876940017d7b008"
+                                                },
+                                                "creator_id": {
+                                                    "type": "string",
+                                                    "example": "5f6783e14876940017d7b007"
+                                                },
+                                                "thread_id": {
+                                                    "type": "string",
+                                                    "example": "5f6783e14876940017d7b009"
+                                                }
+                                            }
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "New name"
+                                        },
+                                        "likes": {
+                                            "type": "object",
+                                            "properties": {
+                                                "count": {
+                                                    "type": "number",
+                                                    "example": 2
+                                                },
+                                                "users": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "sanyi"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "dislikes": {
+                                            "type": "object",
+                                            "properties": {
+                                                "count": {
+                                                    "type": "number",
+                                                    "example": 7
+                                                },
+                                                "users": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "sanyi2"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "content": {
+                                            "type": "string",
+                                            "example": "New content"
+                                        },
+                                        "creation_date": {
+                                            "type": "string",
+                                            "example": "2020-09-10T17:29:50.278Z"
+                                        },
+                                        "editors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "sanyi"
+                                            }
+                                        },
+                                        "emoticons": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "😀"
+                                            }
+                                        },
+                                        "image_array": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "https://i.imgur.com/123456.png"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "There is a filed given which cannod be changed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You are not allowed to update the creation date."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Thread not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No thread found."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "delete": {
                 "tags": ["thread"],
                 "description": "Delete a thread. LOGIN REQUIRED",
@@ -1954,7 +2843,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2058,7 +2947,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2108,7 +2997,7 @@
                         "required": true,
                         "schema": {
                             "type": "string",
-                            "example": "65dc8b87ea70db4fabe4adb6"
+                            "example": "65cfb05bbd7448340f8993e2"
                         }
                     }
                 ],
@@ -2195,7 +3084,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2226,7 +3115,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "65cfb05bbd7448340f8993e2"
                         }
                     }
                 ],
@@ -2248,7 +3138,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2398,7 +3288,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2492,7 +3382,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2588,7 +3478,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2626,6 +3516,40 @@
         "/chats": {
             "get": {
                 "tags": ["chat"],
+                "parameters": [
+                    {
+                        "name": "private_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 2
+                        }
+                    },
+                    {
+                        "name": "private_limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 5
+                        }
+                    },
+                    {
+                        "name": "public_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 2
+                        }
+                    },
+                    {
+                        "name": "public_limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 5
+                        }
+                    }
+                ],
                 "description": "Return the chats of the user who is logged in. LOGIN REQUIRED",
                 "security": [
                     {
@@ -2665,7 +3589,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2765,7 +3689,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2843,7 +3767,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2963,7 +3887,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3033,7 +3957,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3068,6 +3992,22 @@
                         "schema": {
                             "type": "string",
                             "example": "65dc8b87ea70db4fabe4adb6"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 0
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 2
                         }
                     }
                 ],
@@ -3162,7 +4102,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3183,6 +4123,24 @@
         "/friends": {
             "get": {
                 "tags": ["friend"],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 2
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 5
+                        }
+                    }
+                ],
                 "description": "Retrieves all the friends of the user. LOGIN REQUIRED",
                 "security": [
                     {
@@ -3210,7 +4168,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3259,7 +4217,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "sanyi"
                         }
                     }
                 ],
@@ -3297,7 +4256,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3344,7 +4303,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "sanyi"
                         }
                     }
                 ],
@@ -3366,7 +4326,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3415,7 +4375,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "sanyi"
                         }
                     }
                 ],
@@ -3453,7 +4414,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3486,7 +4447,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "sanyi"
                         }
                     }
                 ],
@@ -3524,7 +4486,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "You are not logged in!",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3533,6 +4495,278 @@
                                         "message": {
                                             "type": "string",
                                             "example": "You have no permission to use path: POST /declineFriendRequest/{requestCreatorName}"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notification": {
+            "get": {
+                "tags": ["notification"],
+                "description": "Get all notifications. LOGIN REQUIRED",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "number",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notifications",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "notificationsPageCount": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "notifications": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "615576804757352448"
+                                                    },
+                                                    "seen": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "example": "Some notification text"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not logged in!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: GET /notification"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No user found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No user found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["notification"],
+                "description": "Create notification",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string",
+                                "example": "Some notification text"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Notification created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "notifications": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "615576804757352448"
+                                                    },
+                                                    "seen": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "example": "Some notification text"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request body does not contain text field",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Notification text is required!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not logged in!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: POST /notification"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No user found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No user found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notification/{notificationId}": {
+            "delete": {
+                "tags": ["notification"],
+                "description": "Delete notification",
+                "parameters": [
+                    {
+                        "name": "notificationId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "615576804757352448"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notification deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Notification deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not logged in!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You have no permission to use path: DELETE /notification/{notificationId}"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Notification not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Notification not found!"
                                         }
                                     }
                                 }

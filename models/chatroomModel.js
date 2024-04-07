@@ -22,6 +22,7 @@ const chatroomSchema = new mongoose.Schema({
             _id: false,
             user_id: {
                 type: mongoose.ObjectId,
+                ref: 'User',
                 required: true,
             },
             is_moderator: {
@@ -47,10 +48,10 @@ const chatroomSchema = new mongoose.Schema({
     },
 })
 
-chatroomSchema.virtual('comments', {
-    ref: 'Comment',
-    localField: '_id',
-    foreignField: '_id.room_id',
+chatroomSchema.virtual('getUsers', {
+    ref: 'User',
+    localField: 'users.user_id',
+    foreignField: '_id',
     justOne: false,
 })
 

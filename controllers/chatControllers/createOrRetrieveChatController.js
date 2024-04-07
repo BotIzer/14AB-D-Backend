@@ -8,7 +8,6 @@ const { StatusCodes } = require('http-status-codes')
 
 const checkMutualChat = tryCatchWrapper(async (req, res, next) => {
     const { friend: friendName } = req.body
-
     const myId = await getCreatorIdFromHeaders(req.headers)
     const myFriends = (await User.findById(myId).select('friends -_id')).friends
     const friend = await User.findOne({ username: friendName })
@@ -21,7 +20,6 @@ const checkMutualChat = tryCatchWrapper(async (req, res, next) => {
         throw new youHaveNoFriendWithThisNameError(friendName)
     }
 
-    // Check if mutual chat exists
     const mutualChat = await Chat.aggregate([
         {
             $match: {

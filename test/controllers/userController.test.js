@@ -6,14 +6,15 @@ const server = require('../../index.js')
 const User = require('../../models/userModel.js')
 
 chai.use(chaiHttp)
-
-describe("userController's tests", () => {
+describe("userController's tests", async () => {
     let userToken
+    const ids = []
+    const emailTokens = []
     before(async () => {
         await User.deleteMany({})
+        await chai.request('http://localhost:8090/api/messages/*').delete('/')
     })
-
-    describe('/register route test', () => {
+    describe('/register route test', async () => {
         it('should return with 201 statuscode and a token', (done) => {
             chai.request(server)
                 .post('/register')
@@ -28,8 +29,30 @@ describe("userController's tests", () => {
                     res.body.should.have.property('token')
                     res.body.should.have.property('success')
                     expect(res.body.success).to.be.equal(true)
+                    new Promise((r) => setTimeout(r, 2000))
                     done()
                 })
+        })
+        it('should return the emails ids', (done) => {
+            chai.request('http://localhost:8090/api/messages')
+                .get('/')
+                .end((err, res) => {
+                    for (const email of res.body) {
+                        ids.push(email.id)
+                    }
+                    done()
+                })
+        })
+        it('should make the ids readable to the backend', async () => {
+            for (const id of ids) {
+                const res = await chai.request('http://localhost:8090/api/messages/' + id + '/raw').get('/')
+                emailTokens.push(res.text.split('verifyEmail/')[1].split('"')[0].replace(/=\r\n/g, ''))
+            }
+        })
+        it('should now validate all the users', async () => {
+            for (const emailToken of emailTokens) {
+                const valRes = await chai.request(server).get('/verifyEmail/' + emailToken)
+            }
         })
         it('should return with 409 and user already exists error', (done) => {
             chai.request(server)
@@ -133,8 +156,7 @@ describe("userController's tests", () => {
                     res.body.should.have.property('user')
                     res.body.user.should.have.property('chats')
                     res.body.user.should.have.property('profile_image')
-                    res.body.user.should.have.property('custom_ui')
-                    res.body.user.should.have.property('roles')
+                    res.body.user.should.have.property('role')
                     res.body.user.should.have.property('username')
                     res.body.user.should.have.property('friends')
                     res.body.user.should.have.property('friend_requests')
@@ -147,10 +169,8 @@ describe("userController's tests", () => {
                     expect(res.body.user.chats).to.be.a('array').that.is.empty
                     expect(res.body.user.profile_image).to.be.a('string')
                     expect(res.body.user.profile_image).to.be.equal('default')
-                    expect(res.body.user.custom_ui).to.be.a('boolean')
-                    expect(res.body.user.custom_ui).to.be.equal(false)
-                    expect(res.body.user.roles).to.be.a('string')
-                    expect(res.body.user.roles).to.be.equal('user')
+                    expect(res.body.user.role).to.be.a('string')
+                    expect(res.body.user.role).to.be.equal('user')
                     expect(res.body.user.friends).to.be.a('array').that.is.empty
                     expect(res.body.user.friend_requests).to.be.a('array').that.is.empty
                     expect(res.body.user.sent_friend_requests).to.be.a('array').that.is.empty
@@ -166,7 +186,7 @@ describe("userController's tests", () => {
             chai.request(server)
                 .post('/login')
                 .send({
-                    username: 'sanyiiiii',
+                    email: 'sanyiiiii',
                     password: 'iNVALIDpASSWORD4312!',
                 })
                 .end((err, res) => {
@@ -193,8 +213,7 @@ describe("userController's tests", () => {
                     expect(res.body.success).to.be.equal(true)
                     res.body.should.have.property('userInfo')
                     res.body.userInfo.should.have.property('profile_image').that.is.a('string')
-                    res.body.userInfo.should.have.property('custom_ui').that.is.a('boolean')
-                    res.body.userInfo.should.have.property('roles').that.is.a('string')
+                    res.body.userInfo.should.have.property('role').that.is.a('string')
                     res.body.userInfo.should.have.property('username').that.is.a('string')
                     res.body.userInfo.should.have.property('created_at').that.is.a('string')
                     userToken = res.body.token

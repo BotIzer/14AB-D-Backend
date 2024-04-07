@@ -12,24 +12,42 @@ describe('forumController tests', () => {
     let otherUserToken
     let forumId
     let threadId
+    let ids = []
+    let emailTokens = []
     before(async () => {
         await User.deleteMany({})
         await Forum.deleteMany({})
+        await chai.request('http://localhost:8090/api/messages/*').delete('/')
         await chai.request(server).post('/register').send({
             username: 'randomTestUser',
             email: 'randomTestUser@randomTestUser.com',
             password: 'StrongTestPassword1234!',
         })
-        const loginRes = await chai.request(server).post('/login').send({
-            email: 'randomTestUser@randomTestUser.com',
-            password: 'StrongTestPassword1234!',
-        })
-        userToken = loginRes.body.token
         await chai.request(server).post('/register').send({
             username: 'otherTestUser',
             email: 'otherTestUser@otherTestUser.com',
             password: 'StrongTestPassword1234!',
         })
+        await chai
+            .request('http://localhost:8090/api/messages')
+            .get('/')
+            .then(async (res) => {
+                for (const email of res.body) {
+                    ids.push(email.id)
+                }
+                for (const id of ids) {
+                    const res = await chai.request('http://localhost:8090/api/messages/' + id + '/raw').get('/')
+                    emailTokens.push(res.text.split('verifyEmail/')[1].split('"')[0].replace(/=\r\n/g, ''))
+                }
+                for await (const emailToken of emailTokens) {
+                    await chai.request(server).get('/verifyEmail/' + emailToken)
+                }
+            })
+        const loginRes = await chai.request(server).post('/login').send({
+            email: 'randomTestUser@randomTestUser.com',
+            password: 'StrongTestPassword1234!',
+        })
+        userToken = loginRes.body.token
         const otherLoginRes = await chai.request(server).post('/login').send({
             email: 'otherTestUser@otherTestUser.com',
             password: 'StrongTestPassword1234!',
@@ -42,7 +60,9 @@ describe('forumController tests', () => {
                 .get('/forum')
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.be.an('array').and.is.empty
+                    res.body.should.be.an('object')
+                    res.body.pagesCount.should.be.a('number').that.equals(0)
+                    res.body.forums.should.be.an('array').that.has.lengthOf(0)
                     done()
                 })
         })
@@ -80,27 +100,33 @@ describe('forumController tests', () => {
                 .get('/forum')
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.be.an('array').lengthOf(1)
-                    res.body[0].should.be
+                    res.body.should.be.an('object')
+                    res.body.forums[0].should.be
                         .an('object')
                         .that.has.property('forum_name')
                         .that.is.a('string')
                         .that.equals('testForum')
-                    res.body[0].should.be.an('object').that.has.property('blacklist').that.is.a('array').that.is.empty
-                    res.body[0].should.be.an('object').that.has.property('users').that.is.a('array').that.is.empty
-                    res.body[0].should.be.an('object').that.has.property('tags').that.is.a('array').that.is.empty
-                    res.body[0].should.be.an('object').that.has.property('rating').that.is.a('number').that.is.equal(0)
-                    res.body[0].should.be
+                    res.body.forums[0].should.be.an('object').that.has.property('blacklist').that.is.a('array').that.is
+                        .empty
+                    res.body.forums[0].should.be.an('object').that.has.property('users').that.is.a('array').that.is
+                        .empty
+                    res.body.forums[0].should.be.an('object').that.has.property('tags').that.is.a('array').that.is.empty
+                    res.body.forums[0].should.be
+                        .an('object')
+                        .that.has.property('rating')
+                        .that.is.a('number')
+                        .that.is.equal(0)
+                    res.body.forums[0].should.be
                         .an('object')
                         .that.has.property('_id')
                         .that.is.a('object')
                         .that.has.property('creator_id')
-                    res.body[0].should.be
+                    res.body.forums[0].should.be
                         .an('object')
                         .that.has.property('_id')
                         .that.is.a('object')
                         .that.has.property('forum_id')
-                    forumId = res.body[0]._id.forum_id
+                    forumId = res.body.forums[0]._id.forum_id
                     done()
                 })
         })
@@ -115,6 +141,143 @@ describe('forumController tests', () => {
                     done()
                 })
         })
+    })
+    describe('/forum/subscribeToForum tests', () => {
+        it('should return with 404 status code and an error message', (done) => {
+            chai.request(server)
+                .post('/forum/subscribeToForum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_id: '507f1f77bcf86cd799439011' })
+                .end((err, res) => {
+                    res.should.have.status(404)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.is.equal('No forum found')
+                    done()
+                })
+        })
+        it('should return with 401 status code and an error message', (done) => {
+            chai.request(server)
+                .post('/forum/subscribeToForum')
+                .send({ forum_id: '507f1f77bcf86cd799439011' })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.is.equal('You have no permission to use path: /forum/subscribeToForum')
+                    done()
+                })
+        })
+        it('should return with 400 status code and an error message with the creator user', (done) => {
+            chai.request(server)
+                .post('/forum/subscribeToForum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_id: forumId })
+                .end((err, res) => {
+                    res.should.have.status(400)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.is.equal('You are already subscribed to this forum!')
+                    done()
+                })
+        })
+        it('should return with 200 status code and success message', (done) => {
+            chai.request(server)
+                .post('/forum/subscribeToForum')
+                .set({ authorization: 'Bearer ' + otherUserToken })
+                .send({ forum_id: forumId })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.is.equal('Subscribed to forum successfully!')
+                    done()
+                })
+        })
+        it('should return with 400 status code and an error message but with the other user', (done) => {
+            chai.request(server)
+                .post('/forum/subscribeToForum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_id: forumId })
+                .end((err, res) => {
+                    res.should.have.status(400)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.is.equal('You are already subscribed to this forum!')
+                    done()
+                })
+        })
+    })
+    describe('/forum/leaveForum tests', () => {
+        it('should return with 404 status code and an error message', (done) => {
+            chai.request(server)
+                .post('/forum/leaveForum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_id: '507f1f77bcf86cd799439011' })
+                .end((err, res) => {
+                    res.should.have.status(404)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.is.equal('No forum found')
+                    done()
+                })
+            })
+            it('should return with 401 status code and an error message', (done) => {
+                chai.request(server)
+                    .post('/forum/leaveForum')
+                    .send({ forum_id: '507f1f77bcf86cd799439011' })
+                    .end((err, res) => {
+                        res.should.have.status(401)
+                        res.body.should.be
+                            .an('object')
+                            .that.has.property('message')
+                            .that.is.a('string')
+                            .that.is.equal('You have no permission to use path: /forum/leaveForum')
+                        done()
+                    })
+            })
+            it('should return with 200 status code and success message', (done) => {
+                chai.request(server)
+                    .post('/forum/leaveForum')
+                    .set({ authorization: 'Bearer ' + otherUserToken })
+                    .send({ forum_id: forumId })
+                    .end((err, res) => {
+                        res.should.have.status(200)
+                        res.body.should.be
+                            .an('object')
+                            .that.has.property('message')
+                            .that.is.a('string')
+                            .that.is.equal('Forum left successfully!')
+                        done()
+                    })
+            })
+            it('should return with 400 status code and an error message', (done) => {
+                chai.request(server)
+                    .post('/forum/leaveForum')
+                    .set({ authorization: 'Bearer ' + otherUserToken })
+                    .send({ forum_id: forumId })
+                    .end((err, res) => {
+                        res.should.have.status(400)
+                        res.body.should.be
+                            .an('object')
+                            .that.has.property('message')
+                            .that.is.a('string')
+                            .that.is.equal('You are not in this forum!')
+                        done()
+                    })
+            })
     })
     describe('/forum/getAllThreads/:forumId GET route tests while the forum has no threads', () => {
         it('should return with 200 status code and an empty array', (done) => {
@@ -306,6 +469,154 @@ describe('forumController tests', () => {
                 .end((err, res) => {
                     res.should.have.status(200)
                     res.body.should.be.an('array').lengthOf(0)
+                    done()
+                })
+        })
+    })
+    describe('/forum/recommendForums route test', () => {
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum2' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum3' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum4' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum5' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum6' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum7' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum8' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum9' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum10' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 201 status code and success true', (done) => {
+            chai.request(server)
+                .post('/forum')
+                .set({ authorization: 'Bearer ' + userToken })
+                .send({ forum_name: 'testForum11' })
+                .end((err, res) => {
+                    res.should.have.status(201)
+                    res.body.should.be.an('object').that.has.property('success').that.is.a('boolean').that.equals(true)
+                    done()
+                })
+        })
+        it('should return with 200 status code and an array with 5 forums', (done) => {
+            chai.request(server)
+                .get('/forum/recommendForums')
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').lengthOf(5)
+                    done()
+                })
+        })
+        it('should return with 200 status code and an array with 2 forums', (done) => {
+            chai.request(server)
+                .get('/forum/recommendForums?numberOfForums=2')
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').lengthOf(2)
+                    done()
+                })
+        })
+        it('should return with 200 status code and an array with 9 forums', (done) => {
+            chai.request(server)
+                .get('/forum/recommendForums?numberOfForums=9')
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').lengthOf(9)
+                    done()
+                })
+        })
+        it('should return with 200 status code and an array with 11 forums', (done) => {
+            chai.request(server)
+                .get('/forum/recommendForums?numberOfForums=100')
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be.an('array').lengthOf(11)
                     done()
                 })
         })

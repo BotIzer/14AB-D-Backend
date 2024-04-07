@@ -12,10 +12,13 @@ describe("chatController's tests", () => {
     let userToken
     let chatId
     let commentId
+    let ids = []
+    let emailTokens = []
     before(async () => {
         await User.deleteMany({})
         await Chatroom.deleteMany({})
         await Comment.deleteMany({})
+        await chai.request('http://localhost:8090/api/messages/*').delete('/')
         await chai.request(server).post('/register').send({
             username: 'randomTestUser',
             email: 'randomTestUser@randomTestUser.com',
@@ -26,6 +29,21 @@ describe("chatController's tests", () => {
             email: 'otherTestUser@otherTestUser.com',
             password: 'StrongTestPassword1234!',
         })
+        await chai
+            .request('http://localhost:8090/api/messages')
+            .get('/')
+            .then(async (res) => {
+                for (const email of res.body) {
+                    ids.push(email.id)
+                }
+                for (const id of ids) {
+                    const res = await chai.request('http://localhost:8090/api/messages/' + id + '/raw').get('/')
+                    emailTokens.push(res.text.split('verifyEmail/')[1].split('"')[0].replace(/=\r\n/g, ''))
+                }
+                for await (const emailToken of emailTokens) {
+                    await chai.request(server).get('/verifyEmail/' + emailToken)
+                }
+            })
         const loginRes = await chai.request(server).post('/login').send({
             email: 'randomTestUser@randomTestUser.com',
             password: 'StrongTestPassword1234!',
@@ -205,8 +223,13 @@ describe("chatController's tests", () => {
                     text: 'randfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffomTestCommentwertwertwertw12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345randomTestComment12345',
                 })
                 .end((err, res) => {
-                    res.should.have.status(400)
-                    res.body.should.have.property('message').that.is.a('string').that.is.equal('Comment too long')
+                    res.should.have.status(413)
+                    res.body.should.have
+                        .property('message')
+                        .that.is.a('string')
+                        .that.is.equal(
+                            'Too many characters in the comment (2090).The max comment length is 2000 characters!'
+                        )
                     done()
                 })
         })
@@ -304,8 +327,8 @@ describe("chatController's tests", () => {
                     authorization: 'Bearer ' + userToken,
                 })
                 .end((err, res) => {
-                    res.should.have.status(404)
-                    res.body.should.have.property('message').that.is.a('string').that.is.equal('No chat found.')
+                    res.should.have.status(404)                 
+                    res.body.should.have.property('message').that.is.a('string').that.is.equal('No chat found with id: undefined')
                     done()
                 })
         })
@@ -343,7 +366,6 @@ describe("chatController's tests", () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(200)
-                    res.body.should.have.property('success').that.is.a('boolean').that.is.equal(true)
                     res.body.should.have
                         .property('message')
                         .that.is.a('string')
@@ -364,7 +386,6 @@ describe("chatController's tests", () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(400)
-                    res.body.should.have.property('success').that.is.a('boolean').that.is.equal(false)
                     res.body.should.have
                         .property('message')
                         .that.is.a('string')
@@ -415,7 +436,6 @@ describe("chatController's tests", () => {
                     chat_id: chatId,
                 })
             res.should.have.status(200)
-            res.body.should.have.property('success').that.is.a('boolean').that.is.equal(true)
             res.body.should.have.property('message').that.is.a('string').that.is.equal('Chat left successfully!')
         })
     })

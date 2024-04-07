@@ -1,6 +1,5 @@
 const Chat = require('../../models/chatroomModel')
 const Comment = require('../../models/commentModel')
-const User = require('../../models/userModel')
 const { StatusCodes } = require('http-status-codes')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { noChatFoundError } = require('../../errors/chatErrors/chatErrors')
@@ -8,10 +7,13 @@ const mongoose = require('mongoose')
 
 const getChatsComments = tryCatchWrapper(async (req, res) => {
     const chat = await Chat.findById(req.params.chatId)
+    const page = parseInt(req.query.page) || 0
+    const limit = parseInt(req.query.limit) || 10
+    const skip = page * 10
     if (!chat) {
         throw new noChatFoundError(req.params.chatId)
     }
-    const comments = await Comment.aggregate([
+    let comments = await Comment.aggregate([
         {
             $match: {
                 '_id.room_id': new mongoose.Types.ObjectId(chat._id),
@@ -39,12 +41,14 @@ const getChatsComments = tryCatchWrapper(async (req, res) => {
             $project: {
                 creator: 0,
                 _id: {
-                    creator_id: 0
+                    creator_id: 0,
                 },
             },
-        },
+        }
     ])
-    res.status(StatusCodes.OK).json({ comments })
+    const pagesCount = Math.ceil(comments.length / 10)
+    comments = comments.slice(skip, limit)
+    res.status(StatusCodes.OK).json({ pagesCount, comments })
     return
 })
 

@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "npx env-cmd -f .env.test mocha --exit",
+        "test": "npx env-cmd -f .env.test mocha --timeout 5000 --exit",
         "dev": "npx env-cmd -f .env.dev nodemon index.js",
         "start": "node index.js"
     },

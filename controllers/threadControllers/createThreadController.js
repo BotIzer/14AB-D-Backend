@@ -43,7 +43,7 @@ const createThread = tryCatchWrapper(async (req, res) => {
     images.forEach((image) => {
         newThread.image_array.push(image)
     })
-    newThread.save()
+    await newThread.save()
     res.status(StatusCodes.CREATED).json({ success: true })
     return
 })

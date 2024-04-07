@@ -11,5 +11,5 @@ module.exports = {
     checkMutualChat,
     getChatsComments,
     deleteChat,
-    leaveChat
+    leaveChat,
 }

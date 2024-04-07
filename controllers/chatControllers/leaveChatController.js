@@ -2,6 +2,8 @@ const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const User = require('../../models/userModel')
 const Chat = require('../../models/chatroomModel')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
+const { StatusCodes } = require('http-status-codes')
+const { youAreNotInThisChatError } = require('../../errors/chatErrors/chatErrors')
 
 const updaterOptions = {
     new: true,
@@ -15,10 +17,9 @@ const leaveChat = tryCatchWrapper(async (req, res) => {
     if (user.chats.map((chat) => chat.toString()).includes(chatId)) {
         if (chat.owner.toString() != decodedId.toString()) {
             user.chats.pull(chatId)
-            user.save()
+            await user.save()
             chat = await Chat.updateOne({ _id: chatId }, { $pull: { users: { user_id: decodedId } } }, updaterOptions)
-            res.status(200).json({
-                success: true,
+            res.status(StatusCodes.OK).json({
                 message: 'Chat left successfully!'
             })
             return
@@ -26,29 +27,23 @@ const leaveChat = tryCatchWrapper(async (req, res) => {
         if (chat.users.length == 0) {
             await Chat.deleteOne({ _id: chatId })
             user.chats.pull(chatId)
-            user.save()
-            res.status(200).json({
-                success: true,
+            await user.save()
+            res.status(StatusCodes.OK).json({
                 message: 'Chat left successfully!',
             })
             return
         }
         chat.owner = chat.users[0].user_id
         chat.users.shift()
-        chat.save()
+        await chat.save()
         user.chats.pull(chatId)
-        user.save()
-        res.status(200).json({
-            success: true,
-            message: 'Chat left successfully!'
+        await user.save()
+        res.status(StatusCodes.OK).json({
+            message: 'Chat left successfully!',
         })
         return
     }
-    res.status(400).json({
-        success: false,
-        message: 'You are not in this chat!',
-    })
-    return
+    throw new youAreNotInThisChatError()
 })
 
 module.exports = leaveChat

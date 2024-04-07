@@ -13,7 +13,7 @@ const deleteThreadConroller = tryCatchWrapper(async (req, res) => {
     if (!deleter) throw new noUserFoundError(deleterId)
     const thread = await Thread.findOne({ '_id.thread_id': threadId })
     if (!thread) return res.status(StatusCodes.NOT_FOUND).json({ message: 'No thread found.' })
-    if (deleter.roles == 'admin' || thread._id.creator_id == deleterId) {
+    if (deleter.role == 'admin' || thread._id.creator_id == deleterId) {
         await Forum.updateMany({ threads: { $in: [threadId] } }, { $pull: { threads: threadId } })
         await Thread.deleteOne({ '_id.thread_id': threadId })
         return res.status(StatusCodes.OK).json({ message: 'Thread deleted successfully.' })

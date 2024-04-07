@@ -14,7 +14,6 @@ const createComment = tryCatchWrapper(async (req, res) => {
         parent_comment_id: parentCommentId,
         sequential_number: sequentialNumber,
     } = req.body
-    // roomId = '65cfac68204afe2cd1e6faa6' //just in case
     if (!(await Chatroom.findById(roomId))) {
         throw new noChatFoundError(roomId)
     }
@@ -41,7 +40,7 @@ const createComment = tryCatchWrapper(async (req, res) => {
             sequential_number: sequentialNumber,
         },
     })
-    newComment.save()
+    await newComment.save()
     res.status(StatusCodes.CREATED).json({ success: true })
     return
 })

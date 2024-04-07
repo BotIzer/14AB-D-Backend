@@ -36,27 +36,24 @@ const userSchema = new mongoose.Schema({
         type: String,
         maxlength: [5000, 'The description cannot be more than 5000 characters!'],
         trim: true,
+        default: '',
     },
     email: {
         type: String,
         required: [true, 'To add email is required!'],
         unique: true,
-        match: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, 'Please add a valid email address!'],
+        match: [/[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim, 'Please add a valid email address!'],
     },
     profile_image: {
         type: String,
         default: 'default',
         trim: true,
     },
-    custom_ui: {
-        type: Boolean,
-        default: false,
-    },
-    roles: {
+    role: {
         type: String,
         default: 'user',
         trim: true,
-        enum: ['user', 'owner', 'moderator', 'admin'],
+        enum: ['user', 'admin'],
     },
     username: {
         type: String,
@@ -93,7 +90,12 @@ const userSchema = new mongoose.Schema({
     },
     hobbies: [String],
     reset_password_token: String,
-    reset_password_expire: Date,
+    reset_password: String,
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    emailToken: String,
 })
 userSchema.methods.generateHash = (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
@@ -113,4 +115,10 @@ userSchema.methods.getSignedJwtToken = function () {
     })
 }
 
+userSchema.virtual('getChatrooms', {
+    ref: 'Chatroom',
+    localField: 'chats',
+    foreignField: 'users.user_id',
+    justOne: false,
+})
 module.exports = mongoose.model('User', userSchema, 'Users')

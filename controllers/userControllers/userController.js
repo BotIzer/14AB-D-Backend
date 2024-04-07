@@ -10,11 +10,6 @@ const updaterOptions = {
     runValidators: true,
 }
 
-const getUserIdFromUrl = (params) => {
-    const { userId: userId } = params
-    return userId
-}
-
 const getAllUsers = tryCatchWrapper(async (req, res) => {
     const users = await User.find().select('-email -_id')
     if (!users) {
@@ -38,7 +33,7 @@ const getUserInfoFromToken = tryCatchWrapper(async (token) => {
     const userInfoObject = {
         profile_image: userInformation.profile_image,
         custom_ui: userInformation.custom_ui,
-        roles: userInformation.roles,
+        role: userInformation.role,
         username: userInformation.username,
         created_at: userInformation.created_at,
         full_name: userInformation.full_name,
@@ -48,7 +43,7 @@ const getUserInfoFromToken = tryCatchWrapper(async (token) => {
 
 const getUserProfileByUsername = tryCatchWrapper(async (req, res) => {
     const { username: username } = req.params
-    const user = await User.findOne({ username: username }).select('-email -_id -password')
+    const user = await User.findOne({ username: username }).select('-email -password')
     if (!user) throw new noUserFoundError(username)
     res.status(StatusCodes.OK).json({ user })
     return
@@ -82,6 +77,7 @@ const updateUser = tryCatchWrapper(async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ message: 'Description cannot be longer than 5000 characters!' })
         return
     }
+    console.log(req.body)
     const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions).select('-email -_id -password')
     if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })
@@ -97,7 +93,7 @@ const deleteUser = tryCatchWrapper(async (req, res) => {
         return
     }
     const deletedUsername =
-        'deletedUser_' + (await User.find({ username: { $regex: `^deletedUser`, $options: 'i' } })).length
+        'deletedUser_' + (await User.find({ username: { $regex: `^deletedUser`, $options: 'i' } })).length + 10
     user.username = deletedUsername
     user.generateHash(generateRandomString(10) + 'Pass12345%!')
     user.full_name = 'Deleted User'
@@ -130,11 +126,12 @@ const getUserRequests = tryCatchWrapper(async (req, res) => {
     const user = await User.findById(userId)
     if (!user) throw new noUserFoundError(userId)
     const requests = user.friend_requests
-    const page = parseInt(req.query.page) || 1
+    const requestsPageCount = Math.ceil(requests.length / 10)
+    const page = parseInt(req.query.page) || 0
     const limit = parseInt(req.query.limit) || 10
-    const skip = (page - 1) * limit
+    const skip = page * 10
     const returnRequests = requests.slice(skip, skip + limit)
-    res.status(StatusCodes.OK).json({ returnRequests })
+    res.status(StatusCodes.OK).json({ requestsPageCount, returnRequests })
     return
 })
 
@@ -149,12 +146,12 @@ const getUsersSentRequests = tryCatchWrapper(async (req, res) => {
 
 function generateRandomString(length) {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()'
-    const specialChar = chars[Math.floor(Math.random() * (chars.length - 10)) + 52] // Choose a special character
+    const specialChar = chars[Math.floor(Math.random() * (chars.length - 10)) + 52]
     let password = ''
     for (let i = 0; i < length - 1; i++) {
         password += chars.charAt(Math.floor(Math.random() * chars.length))
     }
-    password += specialChar // Add the special character
+    password += specialChar
     return password
 }
 
