@@ -115,8 +115,6 @@ const startServer = async () => {
             const connectedClients = {}
             const ably = new Realtime(process.env.ABLY_API_KEY)
             console.log('Ably connected')
-            const connection = ably.channels.get('connect')
-            connection.publish('connect')
             commentChangeStream.on('change', async (change) => {
                 const channel = ably.channels.get('commentChanges')
                 channel.publish('commentChanges', await createEmitResponse(change))
