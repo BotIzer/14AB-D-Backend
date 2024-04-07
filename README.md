@@ -4,7 +4,7 @@
 
 To run tests you need [Docker](https://www.docker.com/), [Smtp4dev](https://github.com/rnwood/smtp4dev) and some kind of command prompt.
 
-With our script the `smtp server runs on the localhost:8090`, and the `pop3 is on the localhost:2525`
+With our script the `smtp server runs on the localhost:8090`, and the `imap is on the localhost:2525`
 
 ```cmd
 docker run --rm -it -p 8090:80 -p 2525:25 rnwood/smtp4dev
