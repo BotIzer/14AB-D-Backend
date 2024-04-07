@@ -11,6 +11,7 @@ const forumNameTooLongError = require('./forumNameTooLongError')
 const forumNameIsTooShortError = require('./forumNameIsTooShortError')
 const forumDescriptionIsTooLongError = require('./forumDescriptionIsTooLongError')
 const youCannotEditThisFieldError = require('./youCannotEditThisFieldError')
+
 module.exports = {
     forumAlreadyExistsError,
     noForumFoundError,

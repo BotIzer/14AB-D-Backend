@@ -282,7 +282,7 @@
                 }
             }
         },
-        "/verifyEmail/:emailToken": {
+        "/verifyEmail/{emailToken}": {
             "get": {
                 "tags": ["auth"],
                 "description": "Verify user email address",

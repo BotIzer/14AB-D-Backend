@@ -106,7 +106,7 @@ router.route('/forum/ban').post(protectPath, banUserFromForum).put(protectPath, 
 router.route('/forum/recommendForums').get(recommendForums)
 router.route('/forum/leaveForum').post(protectPath, leaveForum)
 router.route('/forum/subscribeToForum').post(protectPath, subscribeToForum)
-router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum)
+router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum) //short and long name test
 
 router.route('/thread').post(protectPath, createThread)
 router.route('/thread/:threadId').get(getThreadById).put(protectPath, updateThread).delete(protectPath, deleteThreadConroller)
@@ -128,7 +128,7 @@ router.route('/friend/:friendName').post(protectPath, makeFriendRequest).delete(
 router.route('/acceptFriendRequest/:requestCreatorName').post(protectPath, acceptFriendRequest)
 router.route('/declineFriendRequest/:requestCreatorName').post(protectPath, declineFriendRequest)
 
-router.route('/notification').get(protectPath, getUsersNotifications).post(protectPath, createNotification) //SWAGGER!
+router.route('/notification').get(protectPath, getUsersNotifications).post(protectPath, createNotification)
 router.route('/notification/:notificationId').delete(protectPath, deleteNotification).put(protectPath, updateNotification)
 
 module.exports = router
