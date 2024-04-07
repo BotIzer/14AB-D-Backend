@@ -2821,7 +2821,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "5f623755f81c562450699156"
                         }
                     }
                 ],
