@@ -7,6 +7,7 @@ const notAuthorizedToDeleteForumError = require('./notAuthorizedToDeleteForumErr
 const youAreNotInThisForumError = require('./youAreNotInThisForumError')
 const youAreAlreadySubscribedToThisForumError = require('./youAreAlreadySubscribedToThisForumError')
 const youAreBannedFromThisForumError = require('./youAreBannedFromThisForumError')
+const forumNameTooLongError = require('./forumNameTooLongError')
 
 module.exports = {
     forumAlreadyExistsError,
@@ -17,5 +18,6 @@ module.exports = {
     notAuthorizedToDeleteForumError,
     youAreNotInThisForumError,
     youAreAlreadySubscribedToThisForumError,
-    youAreBannedFromThisForumError
+    youAreBannedFromThisForumError,
+    forumNameTooLongError
 }
