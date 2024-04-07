@@ -112,18 +112,14 @@ const startServer = async () => {
                 }})
         }
         else {
-            const connectedClients = {}
             const ably = new Realtime(process.env.ABLY_API_KEY)
             console.log('Ably connected')
-            const connection = ably.channels.get('connect')
-            connection.publish('connect')
             commentChangeStream.on('change', async (change) => {
                 const channel = ably.channels.get('commentChanges')
                 channel.publish('commentChanges', await createEmitResponse(change))
             })
-            forumChangeStream.on('change', async (change) => { 
-                if(change.operationType === 'update') 
-                { 
+            forumChangeStream.on('change', async (change) => {
+                if (change.operationType === 'update') {
                     console.log('Forum updated');
                     const users = await getForumsUsersById(change.documentKey._id.forum_id)
                     const creatorId = change.documentKey._id.creator_id
@@ -132,23 +128,19 @@ const startServer = async () => {
                     const forumName = (await Forum.findById(forumId)).forum_name
                     const updatedData = change.updateDescription.updatedFields
                     let updateMessage = `A forum you have subscribed to (${forumName}) has changed their data!`
+                    console.log(updatedData)
                     updatedData.forum_name !== undefined && (updateMessage += ` Their new name is: ${updatedData.forum_name}`)
-                            const otherUpdatedFields = Object.keys(updatedData).filter(key => key !== 'forum_name');
-                            if (otherUpdatedFields.length > 0) {
-                                    updateMessage += ' Updated fields are:';
-                                updateMessage += ` ${otherUpdatedFields.join(', ')}`;
-                            }
+                    const otherUpdatedFields = Object.keys(updatedData).filter(key => key !== 'forum_name');
+                    if (otherUpdatedFields.length > 0) {
+                        updateMessage += ' Updated fields are:';
+                        updateMessage += ` ${otherUpdatedFields.join(', ')}`;
+                    }
                     for (const username of users) {
-                        if (connectedClients[username] !== undefined) {
-                            connectedClients[username].emit('forumUpdate', { updateMessage });
-                        }
                         sendNotification(username, updateMessage);
                     }
-                    if(connectedClients[creatorName] !== undefined){
-                        connectedClients[creatorName].emit('forumUpdate', {updateMessage});
-                        sendNotification(creatorName,updateMessage);
-                    }
-                }})
+                    sendNotification(creatorName, updateMessage);
+                }
+            })
         }
         server.listen(port, () => console.log(`Server is listening on port: ${port}...`))
     } catch (error) {
