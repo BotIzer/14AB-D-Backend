@@ -91,7 +91,7 @@ const startServer = async () => {
                     const forumId = change.documentKey._id
                     const forumName = (await Forum.findById(forumId)).forum_name
                     const updatedData = change.updateDescription.updatedFields
-                    let updateMessage = 'A forum you have subscribed to has changed their data!'
+                    let updateMessage = `A forum you have subscribed to (${forumName}) has changed their data!`
                     console.log(updatedData)
                     updatedData.forum_name !== undefined && (updateMessage += ` Their new name is: ${updatedData.forum_name}`)
                             const otherUpdatedFields = Object.keys(updatedData).filter(key => key !== 'forum_name');
@@ -103,16 +103,12 @@ const startServer = async () => {
                         if (connectedClients[username] !== undefined) {
                             connectedClients[username].emit('forumUpdate', { updateMessage });
                         }
-                        sendNotification(username,updateMessage);
+                        sendNotification(username, updateMessage);
                     }
                     if(connectedClients[creatorName] !== undefined){
                         connectedClients[creatorName].emit('forumUpdate', {updateMessage});
-                        sendNotification(username,updateMessage);
+                        sendNotification(creatorName,updateMessage);
                     }
-                } 
-                else if(change.operationType === 'delete')
-                { 
-                    console.log('Forum deleted') 
                 }})
         }
         else {
@@ -121,6 +117,29 @@ const startServer = async () => {
             commentChangeStream.on('change', async (change) => {
                 const channel = ably.channels.get('commentChanges')
                 channel.publish('commentChanges', await createEmitResponse(change))
+            })
+            forumChangeStream.on('change', async (change) => {
+                if (change.operationType === 'update') {
+                    console.log('Forum updated');
+                    const users = await getForumsUsersById(change.documentKey._id.forum_id)
+                    const creatorId = change.documentKey._id.creator_id
+                    const creatorName = (await User.findById(creatorId)).username
+                    const forumId = change.documentKey._id
+                    const forumName = (await Forum.findById(forumId)).forum_name
+                    const updatedData = change.updateDescription.updatedFields
+                    let updateMessage = `A forum you have subscribed to (${forumName}) has changed their data!`
+                    console.log(updatedData)
+                    updatedData.forum_name !== undefined && (updateMessage += ` Their new name is: ${updatedData.forum_name}`)
+                    const otherUpdatedFields = Object.keys(updatedData).filter(key => key !== 'forum_name');
+                    if (otherUpdatedFields.length > 0) {
+                        updateMessage += ' Updated fields are:';
+                        updateMessage += ` ${otherUpdatedFields.join(', ')}`;
+                    }
+                    for (const username of users) {
+                        sendNotification(username, updateMessage);
+                    }
+                    sendNotification(creatorName, updateMessage);
+                }
             })
         }
         server.listen(port, () => console.log(`Server is listening on port: ${port}...`))
