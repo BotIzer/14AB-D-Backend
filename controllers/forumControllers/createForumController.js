@@ -2,12 +2,15 @@ const Forum = require('../../models/forumModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
-const { forumAlreadyExistsError, noForumNameGivenError, forumNameTooLongError } = require('../../errors/forumErrors/forumErrors')
+const { forumAlreadyExistsError, noForumNameGivenError, forumNameTooLongError, forumNameIsTooShortError } = require('../../errors/forumErrors/forumErrors')
 
 const createForum = tryCatchWrapper(async (req, res) => {
     const { forum_name: forumName, banner: banner, tags: tags, description: description } = req.body
     if (!forumName) {
         throw new noForumNameGivenError()
+    }
+    if (forumName.length < 4) {
+        throw new forumNameIsTooShortError()
     }
     if (forumName.length > 40) {
         throw new forumNameTooLongError()

@@ -22,6 +22,7 @@ const forumSchema = new mongoose.Schema({
         required: true,
         unique: true,
         maxlength: [40, 'The forum name cannot be more than 40 characters!'],
+        minlength: [4, 'The forum name cannot be less than 4 characters!'],
     },
     creation_date: {
         type: Date,

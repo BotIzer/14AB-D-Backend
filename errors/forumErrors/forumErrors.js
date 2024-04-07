@@ -8,7 +8,9 @@ const youAreNotInThisForumError = require('./youAreNotInThisForumError')
 const youAreAlreadySubscribedToThisForumError = require('./youAreAlreadySubscribedToThisForumError')
 const youAreBannedFromThisForumError = require('./youAreBannedFromThisForumError')
 const forumNameTooLongError = require('./forumNameTooLongError')
-
+const forumNameIsTooShortError = require('./forumNameIsTooShortError')
+const forumDescriptionIsTooLongError = require('./forumDescriptionIsTooLongError')
+const youCannotEditThisFieldError = require('./youCannotEditThisFieldError')
 module.exports = {
     forumAlreadyExistsError,
     noForumFoundError,
@@ -19,5 +21,8 @@ module.exports = {
     youAreNotInThisForumError,
     youAreAlreadySubscribedToThisForumError,
     youAreBannedFromThisForumError,
-    forumNameTooLongError
+    forumNameTooLongError,
+    forumNameIsTooShortError,
+    forumDescriptionIsTooLongError,
+    youCannotEditThisFieldError
 }
