@@ -85,6 +85,7 @@ const startServer = async () => {
                 if(change.operationType === 'update') 
                 { 
                     console.log('Forum updated');
+                    console.log("ably doesn't work")
                     const users = await getForumsUsersById(change.documentKey._id.forum_id)
                     const creatorId = change.documentKey._id.creator_id
                     const creatorName = (await User.findById(creatorId)).username
@@ -115,8 +116,16 @@ const startServer = async () => {
             const connectedClients = {}
             const ably = new Realtime(process.env.ABLY_API_KEY)
             console.log('Ably connected')
-            const connection = ably.channels.get('connect')
-            connection.publish('connect')
+            const connect = ably.channels.get('connect');
+            connect.subscribe('connect', async (message)=>{
+                console.log(`${JSON.parse(message.data.username).username} connected`)
+                console.log(message.connectionId)
+                connectedClients[JSON.parse(message.data.username).username] = message.connectionId
+            })
+            connect.subscribe('disconnect', async (message) => {
+                console.log(`${message.data.username} disconnected${message.data.username}`);
+                delete connectedClients[message.data.username];
+            });
             commentChangeStream.on('change', async (change) => {
                 const channel = ably.channels.get('commentChanges')
                 channel.publish('commentChanges', await createEmitResponse(change))
@@ -125,6 +134,7 @@ const startServer = async () => {
                 if(change.operationType === 'update') 
                 { 
                     console.log('Forum updated');
+                    console.log("ably works")
                     const users = await getForumsUsersById(change.documentKey._id.forum_id)
                     const creatorId = change.documentKey._id.creator_id
                     const creatorName = (await User.findById(creatorId)).username
@@ -135,19 +145,23 @@ const startServer = async () => {
                     updatedData.forum_name !== undefined && (updateMessage += ` Their new name is: ${updatedData.forum_name}`)
                             const otherUpdatedFields = Object.keys(updatedData).filter(key => key !== 'forum_name');
                             if (otherUpdatedFields.length > 0) {
-                                    updateMessage += ' Updated fields are:';
+                                updateMessage += ' Updated fields are:';
                                 updateMessage += ` ${otherUpdatedFields.join(', ')}`;
                             }
                     for (const username of users) {
                         if (connectedClients[username] !== undefined) {
-                            connectedClients[username].emit('forumUpdate', { updateMessage });
+                            const userChannel = ably.channels.get(`${username}forumUpdate`)
+                            userChannel.publish(`${username}forumUpdate`,{updateMessage})
+                            console.log(`${username}forumUpdate`)
                         }
                         sendNotification(username, updateMessage);
                     }
                     if(connectedClients[creatorName] !== undefined){
-                        connectedClients[creatorName].emit('forumUpdate', {updateMessage});
-                        sendNotification(creatorName,updateMessage);
+                        const userChannel = ably.channels.get(`${creatorName}forumUpdate`)
+                        userChannel.publish(`${creatorName}forumUpdate`,{updateMessage})
+                        console.log(`${creatorName}forumUpdate`)
                     }
+                    sendNotification(creatorName,updateMessage);
                 }})
         }
         server.listen(port, () => console.log(`Server is listening on port: ${port}...`))

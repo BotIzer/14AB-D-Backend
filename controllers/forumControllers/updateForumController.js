@@ -17,7 +17,7 @@ const updateForum = tryCatchWrapper(async (req, res) => {
         if (req.body.forum_name.length > 40) {
             throw new forumNameTooLongError()
         }
-        else if (req.body.forum_name.length > 4) {
+        else if (req.body.forum_name.length < 4) {
             throw new forumNameIsTooShortError()
         }
     }
