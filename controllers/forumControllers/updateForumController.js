@@ -2,7 +2,7 @@ const Forum = require('../../models/forumModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
-const { forumNameTooLongError } = require('../../errors/forumErrors/forumErrors')
+const { youCannotEditThisFieldError, forumNameTooLongError, forumNameIsTooShortError, forumDescriptionIsTooLongError } = require('../../errors/forumErrors/forumErrors')
 
 const updateForum = tryCatchWrapper(async (req, res) => {
     const userId = await getCreatorIdFromHeaders(req.headers)
@@ -13,8 +13,37 @@ const updateForum = tryCatchWrapper(async (req, res) => {
         })
         return
     }
-    if (req.body.forumName && req.body.forumName.length > 40) {
-        throw new forumNameTooLongError()
+    if (req.body.forum_name) {
+        if (req.body.forum_name.length > 40) {
+            throw new forumNameTooLongError()
+        }
+        else if (req.body.forum_name.length > 4) {
+            throw new forumNameIsTooShortError()
+        }
+    }
+    if (req.body.description && req.body.description.length > 5000) {
+        throw new forumDescriptionIsTooLongError()
+    }
+    if (req.body._id) {
+        throw new youCannotEditThisFieldError()
+    }
+    if (req.body.creator_id) {
+        throw new youCannotEditThisFieldError()
+    }
+    if (req.body.creation_date) {
+        throw new youCannotEditThisFieldError()
+    }
+    if (req.body.blacklist) {
+        throw new youCannotEditThisFieldError()
+    }
+    if (req.body.users) {
+        throw new youCannotEditThisFieldError()
+    }
+    if (req.body.rating) {
+        throw new youCannotEditThisFieldError()
+    }
+    if (req.body.topthread) {
+        throw new youCannotEditThisFieldError()
     }
     await Forum.updateOne({ '_id.forum_id': req.params.forumId }, req.body)
     res.status(StatusCodes.OK).json({
