@@ -4615,8 +4615,13 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "string",
-                                "example": "Some notification text"
+                                "type": "object",
+                                "properties": {
+                                   "text": {
+                                    "type": "string",
+                                    "example": "Some notification text"
+                                   }
+                                }
                             }
                         }
                     }
