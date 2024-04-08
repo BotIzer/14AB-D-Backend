@@ -28,7 +28,7 @@ Like this:
 ```
 
 The result should be something like this:
-![]('https://youtu.be/OyWecKKZy4o')
+![](https://youtu.be/OyWecKKZy4o)
 
 <video width="900" height="640" controls>
   <source src="https://www.youtube.com/watch?v=OyWecKKZy4o" type="video/mp4">
