@@ -29,7 +29,4 @@ Like this:
 
 The result should be something like this:
 
-https://www.youtube.com/watch?v=OyWecKKZy4o
-
-
-[![Running tests video](https://img.youtube.com/vi/OyWecKKZy4o/maxresdefault.jpg)](https://www.youtube.com/watch?v=OyWecKKZy4o)
+[![Running tests](https://img.youtube.com/vi/OyWecKKZy4o/maxresdefault.jpg)](https://www.youtube.com/watch?v=OyWecKKZy4o)
