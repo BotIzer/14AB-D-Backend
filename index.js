@@ -202,7 +202,6 @@ const getForumsUsersById = async (forum_id) => {
 }
 const sendNotification = (async (username, updateMessage) => {
     const userId = await User.findOne({username: username}).select('_id')
-    console.log(userId)
     let user = await User.findById(userId)
     if (!user) {
         throw new noUserFoundError()
