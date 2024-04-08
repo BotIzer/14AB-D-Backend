@@ -7,7 +7,7 @@ const { notificationTextRequiredError } = require('../../errors/notificationErro
 
 const createNotification = tryCatchWrapper(async (req, res) => {
     const userId = await getCreatorIdFromHeaders(req.headers)
-    const { text } = req.body
+    const { text } = req.body.text
     let user = await User.findById(userId)
     if (!user) {
         throw new noUserFoundError()
