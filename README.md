@@ -28,4 +28,5 @@ Like this:
 ```
 
 The result should be something like this:
-![Tests](https://www.youtube.com/watch?v=OyWecKKZy4o)
+
+<video src='https://www.youtube.com/watch?v=OyWecKKZy4o' width='100%'></video>
