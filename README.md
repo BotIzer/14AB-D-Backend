@@ -29,4 +29,7 @@ Like this:
 
 The result should be something like this:
 
-<video src='https://www.youtube.com/watch?v=OyWecKKZy4o' width='100%'></video>
+https://www.youtube.com/watch?v=OyWecKKZy4o
+
+
+[![Tests](http://img.youtube.com/vi/OyWecKKZy4o/0.jpg)](http://www.youtube.com/watch?v=OyWecKKZy4o "Running tests")
