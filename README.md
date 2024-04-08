@@ -32,4 +32,4 @@ The result should be something like this:
 https://www.youtube.com/watch?v=OyWecKKZy4o
 
 
-[![Tests](http://img.youtube.com/vi/OyWecKKZy4o/0.jpg)](http://www.youtube.com/watch?v=OyWecKKZy4o "Running tests")
+[![Running tests video](https://img.youtube.com/vi/OyWecKKZy4o/maxresdefault.jpg)](https://www.youtube.com/watch?v=OyWecKKZy4o)
