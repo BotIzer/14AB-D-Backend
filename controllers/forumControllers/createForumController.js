@@ -23,7 +23,7 @@ const createForum = tryCatchWrapper(async (req, res) => {
         },
         forum_name: forumName,
         banner: banner,
-        tags: tags,
+        tags: [...new Set(tags)],
         description: description,
     })
     newForum.save()

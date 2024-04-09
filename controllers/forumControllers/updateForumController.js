@@ -2,7 +2,12 @@ const Forum = require('../../models/forumModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
-const { youCannotEditThisFieldError, forumNameTooLongError, forumNameIsTooShortError, forumDescriptionIsTooLongError } = require('../../errors/forumErrors/forumErrors')
+const {
+    youCannotEditThisFieldError,
+    forumNameTooLongError,
+    forumNameIsTooShortError,
+    forumDescriptionIsTooLongError,
+} = require('../../errors/forumErrors/forumErrors')
 
 const updateForum = tryCatchWrapper(async (req, res) => {
     const userId = await getCreatorIdFromHeaders(req.headers)
@@ -16,8 +21,7 @@ const updateForum = tryCatchWrapper(async (req, res) => {
     if (req.body.forum_name) {
         if (req.body.forum_name.length > 40) {
             throw new forumNameTooLongError()
-        }
-        else if (req.body.forum_name.length < 4) {
+        } else if (req.body.forum_name.length < 4) {
             throw new forumNameIsTooShortError()
         }
     }
@@ -44,6 +48,9 @@ const updateForum = tryCatchWrapper(async (req, res) => {
     }
     if (req.body.topthread) {
         throw new youCannotEditThisFieldError()
+    }
+    if (req.body.tags) {
+        await Forum.updateOne({ '_id.forum_id': req.params.forumId }, { $addToSet: { tags: { $each: req.body.tags } } })
     }
     await Forum.updateOne({ '_id.forum_id': req.params.forumId }, req.body)
     res.status(StatusCodes.OK).json({
