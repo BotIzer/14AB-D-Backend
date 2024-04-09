@@ -106,7 +106,7 @@ router.route('/forum/ban').post(protectPath, banUserFromForum).put(protectPath, 
 router.route('/forum/recommendForums').get(recommendForums)
 router.route('/forum/leaveForum').post(protectPath, leaveForum)
 router.route('/forum/subscribeToForum').post(protectPath, subscribeToForum)
-router.route('/forum/:forumId').get(getForumById).put(/*protectPath, */updateForum) //short and long name test
+router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum) //short and long name test
 
 router.route('/thread').post(protectPath, createThread)
 router.route('/thread/:threadId').get(getThreadById).put(protectPath, updateThread).delete(protectPath, deleteThreadConroller)
