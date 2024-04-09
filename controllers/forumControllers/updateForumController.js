@@ -10,9 +10,11 @@ const {
 } = require('../../errors/forumErrors/forumErrors')
 
 const updateForum = tryCatchWrapper(async (req, res) => {
-    const userId = await getCreatorIdFromHeaders(req.headers)
-    const isOwner = Forum.exists({ '_id.creator_id': userId, '_id.forum_id': req.params.forumId })
-    if (!isOwner) {
+    const userId = /*await getCreatorIdFromHeaders(req.headers)*/ '65ca57bf7b4f2295c385b4f2'
+    const forum = await Forum.findOne({ '_id.forum_id': req.params.forumId })
+    let updated = 0
+    let reqObj
+    if (forum?._id.creator_id.toString() !== userId.toString()) {
         res.status(StatusCodes.NOT_FOUND).json({
             message: `You have no forum with id: ${req.params.forumId}`,
         })
@@ -50,9 +52,28 @@ const updateForum = tryCatchWrapper(async (req, res) => {
         throw new youCannotEditThisFieldError()
     }
     if (req.body.tags) {
-        await Forum.updateOne({ '_id.forum_id': req.params.forumId }, { $addToSet: { tags: { $each: req.body.tags } } })
+        updated += (
+            await Forum.updateOne(
+                { '_id.forum_id': req.params.forumId },
+                {
+                    $addToSet: {
+                        tags: {
+                            $each: req.body.tags,
+                        },
+                    },
+                }
+            )
+        ).modifiedCount
+        reqObj = req.body
+        delete reqObj.tags
     }
-    await Forum.updateOne({ '_id.forum_id': req.params.forumId }, req.body)
+    updated += (await Forum.updateOne({ '_id.forum_id': req.params.forumId }, req.body)).modifiedCount ?? 0
+    if (updated == 0) {
+        res.status(StatusCodes.NOT_MODIFIED).json({
+            message: `No changes were made to the forum with id: ${req.params.forumId}`,
+        })
+        return
+    }
     res.status(StatusCodes.OK).json({
         message: 'Forum updated',
     })

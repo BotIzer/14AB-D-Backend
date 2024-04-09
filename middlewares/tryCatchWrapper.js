@@ -3,7 +3,7 @@ const tryCatchWrapper = (fn) => {
         try {
             return await fn(...args)
         } catch (error) {
-            if (!process.env.NODE_ENV == 'testing') {
+            if (process.env.NODE_ENV == 'development') {
                 console.log(error)
             }
             if (typeof args[args.length - 1] === 'function') {
