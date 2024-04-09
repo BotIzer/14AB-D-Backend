@@ -42,7 +42,10 @@ const {
     deleteThreadConroller,
     likeDislikeStateChanged,
     getThreadById,
-    updateThread
+    updateThread,
+    createCommentToThread,
+    getThreadsComments,
+    deleteThreadComment
 } = require('../controllers/threadControllers/threadControllers')
 const {
     getChatDataById,
@@ -106,11 +109,14 @@ router.route('/forum/ban').post(protectPath, banUserFromForum).put(protectPath, 
 router.route('/forum/recommendForums').get(recommendForums)
 router.route('/forum/leaveForum').post(protectPath, leaveForum)
 router.route('/forum/subscribeToForum').post(protectPath, subscribeToForum)
-router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum) //short and long name test
+router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum)
 
 router.route('/thread').post(protectPath, createThread)
 router.route('/thread/:threadId').get(getThreadById).put(protectPath, updateThread).delete(protectPath, deleteThreadConroller)
 router.route('/thread/:threadId/likeDislike').post(protectPath, likeDislikeStateChanged)
+router.route('/thread/:threadId/comments').get(getThreadsComments)
+router.route('/thread/createComment').post(protectPath, createCommentToThread)
+router.route('/thread/deleteComment/:commentId').delete(protectPath, deleteThreadComment)
 
 router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)
 router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPath, deleteChat)
