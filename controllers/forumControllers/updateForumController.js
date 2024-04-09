@@ -10,7 +10,7 @@ const {
 } = require('../../errors/forumErrors/forumErrors')
 
 const updateForum = tryCatchWrapper(async (req, res) => {
-    const userId = /*await getCreatorIdFromHeaders(req.headers)*/ '65ca57bf7b4f2295c385b4f2'
+    const userId = await getCreatorIdFromHeaders(req.headers)
     const forum = await Forum.findOne({ '_id.forum_id': req.params.forumId })
     let updated = 0
     let reqObj
