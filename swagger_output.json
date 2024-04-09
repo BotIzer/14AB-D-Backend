@@ -3186,7 +3186,7 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "success": {
+                                        "message": {
                                             "type": "string",
                                             "example": "Comment deleted"
                                         }
@@ -3204,7 +3204,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Commentnot found"
+                                            "example": "Comment not found"
                                         }
                                     }
                                 }
