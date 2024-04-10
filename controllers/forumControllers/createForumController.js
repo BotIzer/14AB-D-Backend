@@ -2,7 +2,7 @@ const Forum = require('../../models/forumModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { StatusCodes } = require('http-status-codes')
 const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeaders')
-const { forumAlreadyExistsError, noForumNameGivenError, forumNameTooLongError, forumNameIsTooShortError } = require('../../errors/forumErrors/forumErrors')
+const { forumAlreadyExistsError, noForumNameGivenError, forumNameTooLongError, forumNameIsTooShortError, tagIsTooLongError } = require('../../errors/forumErrors/forumErrors')
 
 const createForum = tryCatchWrapper(async (req, res) => {
     const { forum_name: forumName, banner: banner, tags: tags, description: description } = req.body
@@ -14,6 +14,11 @@ const createForum = tryCatchWrapper(async (req, res) => {
     }
     if (forumName.length > 40) {
         throw new forumNameTooLongError()
+    }
+    for (const tag of tags) {
+        if (tag.length > 15) {
+            throw new tagIsTooLongError()
+        }
     }
     if (await Forum.findOne({ forum_name: forumName })) throw new forumAlreadyExistsError(forumName)
     const decodedCreatorId = await getCreatorIdFromHeaders(req.headers)

@@ -7,6 +7,7 @@ const {
     forumNameTooLongError,
     forumNameIsTooShortError,
     forumDescriptionIsTooLongError,
+    tagIsTooLongError
 } = require('../../errors/forumErrors/forumErrors')
 
 const updateForum = tryCatchWrapper(async (req, res) => {
@@ -52,6 +53,11 @@ const updateForum = tryCatchWrapper(async (req, res) => {
         throw new youCannotEditThisFieldError()
     }
     if (req.body.tags) {
+        for (const tag of req.body.tags) {
+            if (tag.length > 15) {
+                throw new tagIsTooLongError()
+            }
+        }
         updated += (
             await Forum.updateOne(
                 { '_id.forum_id': req.params.forumId },
