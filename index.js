@@ -92,7 +92,7 @@ const startServer = async () => {
                     console.log("bugs")
                     console.log(creatorId.toString())
                     console.log(await User.findById(creatorId.toString()))
-                    const creatorName = (await User.findById(creatorId)).username
+                    const creatorName = (await User.findById(creatorId.toString()))?.username
                     const forumId = change.documentKey._id
                     const forumName = (await Forum.findById(forumId)).forum_name
                     const updatedData = change.updateDescription.updatedFields
