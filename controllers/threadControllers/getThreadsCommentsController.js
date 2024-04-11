@@ -12,7 +12,7 @@ const getThreadsComments = tryCatchWrapper(async (req, res) => {
         })
         return
     }
-    const comments = await Comment.find({ '_id.room_id': threadId })
+    const comments = await Comment.find({ '_id.room_id': threadId }).populate('_id.creator_id').select('username -_id')
     res.status(StatusCodes.OK).json(comments)
     return
 })

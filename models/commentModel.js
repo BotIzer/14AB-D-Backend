@@ -10,6 +10,7 @@ const commentSchema = new mongoose.Schema({
         creator_id: {
             type: mongoose.ObjectId,
             required: true,
+            ref: 'User',
         },
         message_id: {
             type: mongoose.ObjectId,
