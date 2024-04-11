@@ -11,7 +11,12 @@ const recommendForums = tryCatchWrapper(async (req, res) => {
     const randomForums = []
     for (let i = 0; i < numberOfForums; i++) {
         const randomNumber = Math.floor(Math.random() * numberOfForums)
-        randomForums.push(await Forum.findOne().skip(randomNumber).limit(1))
+        const forum = await Forum.findOne().skip(randomNumber).limit(1)
+        while (randomForums.some((x) => x._id.forum_id == forum._id.forum_id)) {
+            randomNumber = Math.floor(Math.random() * numberOfForums)
+            forum = await Forum.findOne().skip(randomNumber).limit(1)
+        }
+        randomForums.push(forum)
     }
     return res.status(StatusCodes.OK).json(randomForums)
 })
