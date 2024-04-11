@@ -2,6 +2,7 @@ const Thread = require('../../models/threadModel')
 const Comment = require('../../models/commentModel')
 const tryCatchWrapper = require('../../middlewares/tryCatchWrapper')
 const { StatusCodes } = require('http-status-codes')
+const mongoose = require('mongoose')
 
 const getThreadsComments = tryCatchWrapper(async (req, res) => {
     const threadId = req.params.threadId
@@ -12,7 +13,27 @@ const getThreadsComments = tryCatchWrapper(async (req, res) => {
         })
         return
     }
-    const comments = await Comment.find({ '_id.room_id': threadId }).populate('_id.creator_id').select('username -_id')
+    const comments = await Comment.aggregate([
+        {
+            $match: { '_id.room_id': new mongoose.Types.ObjectId(threadId) },
+        },
+        {
+            $lookup: {
+                from: 'Users',
+                localField: '_id.creator_id',
+                foreignField: '_id',
+                as: 'creator',
+            },
+        },
+        {
+            $unwind: '$creator',
+        },
+        {
+            $addFields: {
+                creator: '$creator.username',
+            },
+        },
+    ])
     res.status(StatusCodes.OK).json(comments)
     return
 })
