@@ -87,11 +87,11 @@ const startServer = async () => {
                     // TODO: Benji help
                     console.log('Forum updated');
                     console.log("ably doesn't work")
-                    const users = await getForumsUsersById(change.documentKey._id.forum_id)
+                    const users = await getForumsUsersById(change.documentKey._id.forum_id.toString())
                     const creatorId = change.documentKey._id.creator_id
                     console.log("bugs")
-                    console.log(ObjectId.toString(creatorId))
-                    console.log(await User.findById(ObjectId.toString(creatorId)))
+                    console.log(creatorId.toString())
+                    console.log(await User.findById(creatorId.toString()))
                     const creatorName = (await User.findById(creatorId)).username
                     const forumId = change.documentKey._id
                     const forumName = (await Forum.findById(forumId)).forum_name
