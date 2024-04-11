@@ -87,17 +87,19 @@ const startServer = async () => {
                     // TODO: Benji help
                     console.log('Forum updated');
                     console.log("ably doesn't work")
+                    const updatedData = change.updateDescription.updatedFields
+                    console.log(updatedData.users)
+                    if(updatedData.users){
+                        return;
+                    }
                     const users = await getForumsUsersById(change.documentKey._id.forum_id.toString())
                     const creatorId = change.documentKey._id.creator_id
-                    console.log("bugs")
-                    console.log(creatorId.toString())
-                    console.log(await User.findById(creatorId.toString()))
                     const creatorName = (await User.findById(creatorId.toString()))?.username
                     const forumId = change.documentKey._id
                     const forumName = (await Forum.findById(forumId)).forum_name
-                    const updatedData = change.updateDescription.updatedFields
+                    
                     let updateMessage = `A forum you have subscribed to (${forumName}) has changed their data!`
-                    console.log(updatedData)
+                    
                     updatedData.forum_name !== undefined && (updateMessage += ` Their new name is: ${updatedData.forum_name}`)
                             const otherUpdatedFields = Object.keys(updatedData).filter(key => key !== 'forum_name');
                             if (otherUpdatedFields.length > 0) {
@@ -139,12 +141,16 @@ const startServer = async () => {
                 { 
                     console.log('Forum updated');
                     console.log("ably works")
+                    const updatedData = change.updateDescription.updatedFields
+                    console.log(updatedData.users)
+                    if(updatedData.users){
+                        return;
+                    }
                     const users = await getForumsUsersById(change.documentKey._id.forum_id)
                     const creatorId = change.documentKey._id.creator_id
                     const creatorName = (await User.findById(creatorId)).username
                     const forumId = change.documentKey._id
                     const forumName = (await Forum.findById(forumId)).forum_name
-                    const updatedData = change.updateDescription.updatedFields
                     let updateMessage = `A forum you have subscribed to (${forumName}) has changed their data!`
                     updatedData.forum_name !== undefined && (updateMessage += ` Their new name is: ${updatedData.forum_name}`)
                             const otherUpdatedFields = Object.keys(updatedData).filter(key => key !== 'forum_name');
