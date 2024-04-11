@@ -5,7 +5,7 @@ const { StatusCodes } = require('http-status-codes')
 
 const getThreadsComments = tryCatchWrapper(async (req, res) => {
     const threadId = req.params.threadId
-    const thread = await Thread.findById(threadId)
+    const thread = await Thread.findOne({ '_id.thread_id': threadId })
     if (!thread) {
         res.status(StatusCodes.NOT_FOUND).json({
             message: 'Thread not found',
