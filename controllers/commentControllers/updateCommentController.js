@@ -17,7 +17,6 @@ const updaterOptions = {
 const updateComment = tryCatchWrapper(async (req, res) => {
     const userId = await getCreatorIdFromHeaders(req.headers)
     const commentId = req.params.commentId
-
     const comment = await Comment.findOne({ '_id.message_id': commentId })
     if (!comment) {
         throw new noCommentFoundError()
@@ -31,8 +30,9 @@ const updateComment = tryCatchWrapper(async (req, res) => {
     if (req.body._id || req.body.creation_date || req.body.likes || req.body.dislikes || req.body.emoticons) {
         throw new cannotEditFieldError()
     }
-    const newComment = await Comment.updateOne({ '_id.message_id': commentId }, req.body, updaterOptions)
-    if (newComment.modifiedCount == 0) {
+    const editedCount = (await Comment.updateOne({ '_id.message_id': commentId }, req.body, updaterOptions))?.modifiedCount
+    console.log(editedCount)
+    if (editedCount == 0) {
         res.status(StatusCodes.NOT_MODIFIED).json({ message: 'No changes' })
         return
     }
