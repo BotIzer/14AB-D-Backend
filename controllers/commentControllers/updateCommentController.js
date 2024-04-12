@@ -31,7 +31,11 @@ const updateComment = tryCatchWrapper(async (req, res) => {
     if (req.body._id || req.body.creation_date || req.body.likes || req.body.dislikes || req.body.emoticons) {
         throw new cannotEditFieldError()
     }
-    await Comment.updateOne({ '_id.message_id': commentId }, req.body, updaterOptions)
+    const newComment = await Comment.updateOne({ '_id.message_id': commentId }, req.body, updaterOptions)
+    if (newComment.modifiedCount == 0) {
+        res.status(StatusCodes.NOT_MODIFIED).json({ message: 'No changes' })
+        return
+    }
     res.status(StatusCodes.OK).json({ message: 'Comment updated successfully' })
 })
 
