@@ -78,6 +78,11 @@ const startServer = async () => {
                 }
             })
             commentChangeStream.on('change', async (change) => {
+                console.log()
+                // TODO: fix this benji you heathen
+                if(await Thread.findById(change._id.room_id)){
+                    return;
+                }
                 io.emit('commentChange', change)
                 io.emit('message', await createEmitResponse(change))
             })
