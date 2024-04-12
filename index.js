@@ -77,7 +77,7 @@ const startServer = async () => {
                 }
             })
             commentChangeStream.on('change', async (change) => {
-                if (await Thread.findOne({ '_id.thread_id': change._id.room_id }) !== undefined) {
+                if (await Thread.findOne({ '_id.thread_id': change.documentKey._id.room_id })) {
                     return
                 }
                 io.emit('commentChange', change)
