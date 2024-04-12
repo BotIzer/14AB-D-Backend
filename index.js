@@ -59,7 +59,6 @@ app.use(errorHandlerMiddleware)
 const port = process.env.PORT || 3000
 const startServer = async () => {
     try {
-
         await connectDB(process.env.DB)
         console.log('MongoDB connected')
         const commentChangeStream = Comment.watch()
@@ -68,7 +67,7 @@ const startServer = async () => {
             const connectedClients = {}
             io.on('connect', (socket) => {
                 console.log('Socket IO connected')
-                if(socket.handshake.query.username !== "null" && socket.handshake.query.username !== undefined){
+                if (socket.handshake.query.username !== 'null' && socket.handshake.query.username !== undefined) {
                     console.log(JSON.parse(socket.handshake.query.username).username)
                     connectedClients[JSON.parse(socket.handshake.query.username).username] = socket
                     socket.on('disconnect', () => {
@@ -79,77 +78,75 @@ const startServer = async () => {
             })
             commentChangeStream.on('change', async (change) => {
                 console.log()
-                // TODO: fix this benji you heathen
-                if(await Thread.findById(change._id.room_id)){
-                    return;
+                if (await Thread.findOne({ '_id.thread_id': change._id.room_id })) {
+                    return
                 }
                 io.emit('commentChange', change)
                 io.emit('message', await createEmitResponse(change))
             })
-            forumChangeStream.on('change', async (change) => { 
-                if(change.operationType === 'update') 
-                { 
+            forumChangeStream.on('change', async (change) => {
+                if (change.operationType === 'update') {
                     // TODO: Benji help
-                    console.log('Forum updated');
+                    console.log('Forum updated')
                     console.log("ably doesn't work")
                     const updatedData = change.updateDescription.updatedFields
                     console.log(updatedData.users)
-                    if(updatedData.users){
-                        return;
+                    if (updatedData.users) {
+                        return
                     }
                     const users = await getForumsUsersById(change.documentKey._id.forum_id.toString())
                     const creatorId = change.documentKey._id.creator_id
                     const creatorName = (await User.findById(creatorId.toString()))?.username
                     const forumId = change.documentKey._id
                     const forumName = (await Forum.findById(forumId)).forum_name
-                    
+
                     let updateMessage = `A forum you have subscribed to (${forumName}) has changed their data!`
-                    
-                    updatedData.forum_name !== undefined && (updateMessage += ` Their new name is: ${updatedData.forum_name}`)
-                            const otherUpdatedFields = Object.keys(updatedData).filter(key => key !== 'forum_name');
-                            if (otherUpdatedFields.length > 0) {
-                                    updateMessage += ' Updated fields are:';
-                                updateMessage += ` ${otherUpdatedFields.join(', ')}`;
-                            }
+
+                    updatedData.forum_name !== undefined &&
+                        (updateMessage += ` Their new name is: ${updatedData.forum_name}`)
+                    const otherUpdatedFields = Object.keys(updatedData).filter((key) => key !== 'forum_name')
+                    if (otherUpdatedFields.length > 0) {
+                        updateMessage += ' Updated fields are:'
+                        updateMessage += ` ${otherUpdatedFields.join(', ')}`
+                    }
                     for (const username of users) {
                         if (connectedClients[username] !== undefined) {
-                            connectedClients[username].emit('forumUpdate', { updateMessage });
+                            connectedClients[username].emit('forumUpdate', { updateMessage })
                         }
-                        sendNotification(username, updateMessage);
+                        sendNotification(username, updateMessage)
                     }
-                    if(connectedClients[creatorName] !== undefined){
-                        connectedClients[creatorName].emit('forumUpdate', {updateMessage});
-                        sendNotification(creatorName,updateMessage);
+                    if (connectedClients[creatorName] !== undefined) {
+                        connectedClients[creatorName].emit('forumUpdate', { updateMessage })
+                        sendNotification(creatorName, updateMessage)
                     }
-                }})
-        }
-        else {
+                }
+            })
+        } else {
             const connectedClients = {}
             const ably = new Realtime(process.env.ABLY_API_KEY)
             console.log('Ably connected')
-            const connect = ably.channels.get('connect');
-            connect.subscribe('connect', async (message)=>{
+            const connect = ably.channels.get('connect')
+            connect.subscribe('connect', async (message) => {
                 console.log(`${JSON.parse(message.data.username).username} connected`)
                 console.log(message.connectionId)
                 connectedClients[JSON.parse(message.data.username).username] = message.connectionId
             })
             connect.subscribe('disconnect', async (message) => {
-                console.log(`${message.data.username} disconnected${message.data.username}`);
-                delete connectedClients[message.data.username];
-            });
+                console.log(`${message.data.username} disconnected${message.data.username}`)
+                delete connectedClients[message.data.username]
+            })
             commentChangeStream.on('change', async (change) => {
                 const channel = ably.channels.get('commentChanges')
                 channel.publish('commentChanges', await createEmitResponse(change))
             })
-            forumChangeStream.on('change', async (change) => { 
-                if(change.operationType === 'update') 
-                { 
-                    console.log('Forum updated');
-                    console.log("ably works")
+            forumChangeStream.on('change', async (change) => {
+                if (change.operationType === 'update') {
+                    console.log('Forum updated')
+                    console.log('ably works')
                     const updatedData = change.updateDescription.updatedFields
                     console.log(updatedData.users)
-                    if(updatedData.users){
-                        return;
+                    if (updatedData.users) {
+                        return
                     }
                     const users = await getForumsUsersById(change.documentKey._id.forum_id)
                     const creatorId = change.documentKey._id.creator_id
@@ -157,27 +154,29 @@ const startServer = async () => {
                     const forumId = change.documentKey._id
                     const forumName = (await Forum.findById(forumId)).forum_name
                     let updateMessage = `A forum you have subscribed to (${forumName}) has changed their data!`
-                    updatedData.forum_name !== undefined && (updateMessage += ` Their new name is: ${updatedData.forum_name}`)
-                            const otherUpdatedFields = Object.keys(updatedData).filter(key => key !== 'forum_name');
-                            if (otherUpdatedFields.length > 0) {
-                                updateMessage += ' Updated fields are:';
-                                updateMessage += ` ${otherUpdatedFields.join(', ')}`;
-                            }
+                    updatedData.forum_name !== undefined &&
+                        (updateMessage += ` Their new name is: ${updatedData.forum_name}`)
+                    const otherUpdatedFields = Object.keys(updatedData).filter((key) => key !== 'forum_name')
+                    if (otherUpdatedFields.length > 0) {
+                        updateMessage += ' Updated fields are:'
+                        updateMessage += ` ${otherUpdatedFields.join(', ')}`
+                    }
                     for (const username of users) {
                         if (connectedClients[username] !== undefined) {
                             const userChannel = ably.channels.get(`${username}forumUpdate`)
-                            userChannel.publish(`${username}forumUpdate`,{updateMessage})
+                            userChannel.publish(`${username}forumUpdate`, { updateMessage })
                             console.log(`${username}forumUpdate`)
                         }
-                        sendNotification(username, updateMessage);
+                        sendNotification(username, updateMessage)
                     }
-                    if(connectedClients[creatorName] !== undefined){
+                    if (connectedClients[creatorName] !== undefined) {
                         const userChannel = ably.channels.get(`${creatorName}forumUpdate`)
-                        userChannel.publish(`${creatorName}forumUpdate`,{updateMessage})
+                        userChannel.publish(`${creatorName}forumUpdate`, { updateMessage })
                         console.log(`${creatorName}forumUpdate`)
                     }
-                    sendNotification(creatorName,updateMessage);
-                }})
+                    sendNotification(creatorName, updateMessage)
+                }
+            })
         }
         server.listen(port, () => console.log(`Server is listening on port: ${port}...`))
     } catch (error) {
@@ -215,8 +214,8 @@ const getForumsUsersById = async (forum_id) => {
         console.log(error)
     }
 }
-const sendNotification = (async (username, updateMessage) => {
-    const userId = await User.findOne({username: username}).select('_id')
+const sendNotification = async (username, updateMessage) => {
+    const userId = await User.findOne({ username: username }).select('_id')
     let user = await User.findById(userId)
     if (!user) {
         throw new noUserFoundError()
@@ -227,5 +226,5 @@ const sendNotification = (async (username, updateMessage) => {
     user.notifications.push({ text: updateMessage })
     await user.save()
     return
-})
+}
 module.exports = app
