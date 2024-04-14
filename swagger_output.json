@@ -8,7 +8,7 @@
     "servers": [
         {
             "url": "http://localhost:3000",
-            "description": "Developement localhsot"
+            "description": "Development localhost"
         }
     ],
     "components": {

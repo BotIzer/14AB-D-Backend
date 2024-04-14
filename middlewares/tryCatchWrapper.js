@@ -6,7 +6,7 @@ const tryCatchWrapper = (fn) => {
             if (process.env.NODE_ENV == 'development') {
                 console.log(error)
             }
-            if (typeof args[args.length - 1] === 'function') {
+            if (typeof args[args.length - 1] == 'function') {
                 args[args.length - 1](error)
             }
         }
