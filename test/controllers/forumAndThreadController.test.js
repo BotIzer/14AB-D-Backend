@@ -233,51 +233,51 @@ describe('forumController tests', () => {
                         .that.is.equal('No forum found')
                     done()
                 })
-            })
-            it('should return with 401 status code and an error message', (done) => {
-                chai.request(server)
-                    .post('/forum/leaveForum')
-                    .send({ forum_id: '507f1f77bcf86cd799439011' })
-                    .end((err, res) => {
-                        res.should.have.status(401)
-                        res.body.should.be
-                            .an('object')
-                            .that.has.property('message')
-                            .that.is.a('string')
-                            .that.is.equal('You have no permission to use path: /forum/leaveForum')
-                        done()
-                    })
-            })
-            it('should return with 200 status code and success message', (done) => {
-                chai.request(server)
-                    .post('/forum/leaveForum')
-                    .set({ authorization: 'Bearer ' + otherUserToken })
-                    .send({ forum_id: forumId })
-                    .end((err, res) => {
-                        res.should.have.status(200)
-                        res.body.should.be
-                            .an('object')
-                            .that.has.property('message')
-                            .that.is.a('string')
-                            .that.is.equal('Forum left successfully!')
-                        done()
-                    })
-            })
-            it('should return with 400 status code and an error message', (done) => {
-                chai.request(server)
-                    .post('/forum/leaveForum')
-                    .set({ authorization: 'Bearer ' + otherUserToken })
-                    .send({ forum_id: forumId })
-                    .end((err, res) => {
-                        res.should.have.status(400)
-                        res.body.should.be
-                            .an('object')
-                            .that.has.property('message')
-                            .that.is.a('string')
-                            .that.is.equal('You are not in this forum!')
-                        done()
-                    })
-            })
+        })
+        it('should return with 401 status code and an error message', (done) => {
+            chai.request(server)
+                .post('/forum/leaveForum')
+                .send({ forum_id: '507f1f77bcf86cd799439011' })
+                .end((err, res) => {
+                    res.should.have.status(401)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.is.equal('You have no permission to use path: /forum/leaveForum')
+                    done()
+                })
+        })
+        it('should return with 200 status code and success message', (done) => {
+            chai.request(server)
+                .post('/forum/leaveForum')
+                .set({ authorization: 'Bearer ' + otherUserToken })
+                .send({ forum_id: forumId })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.is.equal('Forum left successfully!')
+                    done()
+                })
+        })
+        it('should return with 400 status code and an error message', (done) => {
+            chai.request(server)
+                .post('/forum/leaveForum')
+                .set({ authorization: 'Bearer ' + otherUserToken })
+                .send({ forum_id: forumId })
+                .end((err, res) => {
+                    res.should.have.status(400)
+                    res.body.should.be
+                        .an('object')
+                        .that.has.property('message')
+                        .that.is.a('string')
+                        .that.is.equal('You are not in this forum!')
+                    done()
+                })
+        })
     })
     describe('/forum/getAllThreads/:forumId GET route tests while the forum has no threads', () => {
         it('should return with 200 status code and an empty array', (done) => {
@@ -704,17 +704,14 @@ describe('forumController tests', () => {
                         done()
                     })
             })
-            it('should return with 401 status code and an error message', (done) => {
+            it('should return with 200 status code', (done) => {
                 chai.request(server)
                     .get('/forum/getAllThreads/' + forumId)
-                    .set({ authorization: 'Bearer ' })
+                    .set({ authorization: 'Bearer null' })
                     .end((err, res) => {
-                        res.should.have.status(401)
-                        res.body.should.be
-                            .an('object')
-                            .that.has.property('message')
-                            .that.is.a('string')
-                            .equals('You have no permission to use path: /forum/getAllThreads/' + forumId)
+                        res.should.have.status(200)
+                        res.body.should.be.an('array').that.has.lengthOf(1)
+                        res.body[0].should.be.an('object')
                         done()
                     })
             })

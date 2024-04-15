@@ -42,7 +42,10 @@ const {
     deleteThreadConroller,
     likeDislikeStateChanged,
     getThreadById,
-    updateThread
+    updateThread,
+    createCommentToThread,
+    getThreadsComments,
+    deleteThreadComment
 } = require('../controllers/threadControllers/threadControllers')
 const {
     getChatDataById,
@@ -100,7 +103,7 @@ router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/user/addHobby').post(protectPath, addHobby)
 
 router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(protectPath, deleteForum)
-router.route('/forum/getAllThreads/:forumId').get(protectPath, checkWetherBannedFromForum, getAllThreadsByForumId)
+router.route('/forum/getAllThreads/:forumId').get(checkWetherBannedFromForum, getAllThreadsByForumId)
 router.route('/forum/getForumsByTag/:tag').get(searchForumByTag)
 router.route('/forum/ban').post(protectPath, banUserFromForum).put(protectPath, unbanUserFromForum)
 router.route('/forum/recommendForums').get(recommendForums)
@@ -111,6 +114,9 @@ router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum)
 router.route('/thread').post(protectPath, createThread)
 router.route('/thread/:threadId').get(getThreadById).put(protectPath, updateThread).delete(protectPath, deleteThreadConroller)
 router.route('/thread/:threadId/likeDislike').post(protectPath, likeDislikeStateChanged)
+router.route('/thread/:threadId/comments').get(getThreadsComments)
+router.route('/thread/createComment').post(protectPath, createCommentToThread)
+router.route('/thread/deleteComment/:commentId').delete(protectPath, deleteThreadComment)
 
 router.route('/chat/:chatId/comments').get(protectPath, getChatsComments)
 router.route('/chat/:chatId').get(protectPath, getChatDataById).delete(protectPath, deleteChat)
@@ -128,7 +134,7 @@ router.route('/friend/:friendName').post(protectPath, makeFriendRequest).delete(
 router.route('/acceptFriendRequest/:requestCreatorName').post(protectPath, acceptFriendRequest)
 router.route('/declineFriendRequest/:requestCreatorName').post(protectPath, declineFriendRequest)
 
-router.route('/notification').get(protectPath, getUsersNotifications).post(protectPath, createNotification) //SWAGGER!
+router.route('/notification').get(protectPath, getUsersNotifications).post(protectPath, createNotification)
 router.route('/notification/:notificationId').delete(protectPath, deleteNotification).put(protectPath, updateNotification)
 
 module.exports = router

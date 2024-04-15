@@ -11,6 +11,8 @@ const forumNameTooLongError = require('./forumNameTooLongError')
 const forumNameIsTooShortError = require('./forumNameIsTooShortError')
 const forumDescriptionIsTooLongError = require('./forumDescriptionIsTooLongError')
 const youCannotEditThisFieldError = require('./youCannotEditThisFieldError')
+const tagIsTooLongError = require('./tagIsTooLongError')
+
 module.exports = {
     forumAlreadyExistsError,
     noForumFoundError,
@@ -24,5 +26,6 @@ module.exports = {
     forumNameTooLongError,
     forumNameIsTooShortError,
     forumDescriptionIsTooLongError,
-    youCannotEditThisFieldError
+    youCannotEditThisFieldError,
+    tagIsTooLongError,
 }

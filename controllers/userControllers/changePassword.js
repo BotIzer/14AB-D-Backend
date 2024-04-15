@@ -5,6 +5,7 @@ const getCreatorIdFromHeaders = require('../../middlewares/getCreatorIdFromHeade
 const { noUserFoundError } = require('../../errors/userErrors/userErrors')
 const nodemailer = require('nodemailer')
 const crypro = require('crypto')
+const fs = require('fs')
 
 const changePassword = tryCatchWrapper(async (req, res) => {
     const userId = await getCreatorIdFromHeaders(req.headers)
@@ -26,11 +27,11 @@ const changePassword = tryCatchWrapper(async (req, res) => {
     user.reset_password_token = crypro.randomBytes(64).toString('hex')
     user.reset_password = user.generateHash(newPasswd)
     await user.save()
-    await sendChangePasswordEmail(user.reset_password_token, user.email)
+    await sendChangePasswordEmail(user.reset_password_token, user.email,user.username)
     return res.status(StatusCodes.OK).json({ message: `Password changing verification email sent to: ${user.email}!` })
 })
 
-const sendChangePasswordEmail = tryCatchWrapper(async (passwordToken, userEmail) => {
+const sendChangePasswordEmail = tryCatchWrapper(async (passwordToken, userEmail, userName) => {
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         host: 'smtp.gmail.com',
@@ -39,12 +40,14 @@ const sendChangePasswordEmail = tryCatchWrapper(async (passwordToken, userEmail)
             pass: process.env.EMAIL_PASS,
         },
     })
-
+    const htmlContent = fs.readFileSync('change_password_template.html', 'utf8');
     var mailOptions = {
         from: { name: 'BlitzForFriends', address: process.env.EMAIL },
         to: userEmail,
-        subject: 'Verify your email password changing request',
-        html: `Click <a href="${process.env.BACKEND_URL}/user/verifyNewPassword/${passwordToken}">here</a> to verify your request`,
+        subject: 'Change Password',
+        html: htmlContent
+            .replace('{{verificationLink}}', `${process.env.FRONTEND_URL}/changepassword/${passwordToken}`)
+            .replace('{{username}}', userName),
     }
 
     transporter.sendMail(mailOptions, function (error, info) {

@@ -26,3 +26,7 @@ Like this:
 ```json
 "test": "npx env-cmd -f .env.test mocha --timeout 8000 --exit",
 ```
+
+The result should be something like this:
+
+[![Running tests](https://img.youtube.com/vi/OyWecKKZy4o/maxresdefault.jpg)](https://www.youtube.com/watch?v=OyWecKKZy4o)

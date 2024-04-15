@@ -77,7 +77,6 @@ const updateUser = tryCatchWrapper(async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ message: 'Description cannot be longer than 5000 characters!' })
         return
     }
-    console.log(req.body)
     const user = await User.findByIdAndUpdate(userId, req.body, updaterOptions).select('-email -_id -password')
     if (!user) throw new noUserFoundError(userId)
     res.status(StatusCodes.OK).json({ user })

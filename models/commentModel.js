@@ -10,6 +10,7 @@ const commentSchema = new mongoose.Schema({
         creator_id: {
             type: mongoose.ObjectId,
             required: true,
+            ref: 'User',
         },
         message_id: {
             type: mongoose.ObjectId,
@@ -42,12 +43,18 @@ const commentSchema = new mongoose.Schema({
         default: Date.now,
     },
     likes: {
-        type: Number,
-        default: 0,
+        count: {
+            type: Number,
+            default: 0,
+        },
+        users: [String],
     },
     dislikes: {
-        type: Number,
-        default: 0,
+        count: {
+            type: Number,
+            default: 0,
+        },
+        users: [String],
     },
     emoticons: [String],
 })

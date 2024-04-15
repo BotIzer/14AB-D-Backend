@@ -28,7 +28,7 @@ const subscribeToForum = tryCatchWrapper(async (req, res) => {
     }
     if(forum.users.length > 0){      
         for (const user of forum.users) {
-            if (user.user_id.toString() == id.toString()) {
+            if (user.user_id?.toString() == id?.toString()) {
                 throw new youAreAlreadySubscribedToThisForumError()
             }
         }

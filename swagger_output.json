@@ -7,8 +7,8 @@
     },
     "servers": [
         {
-            "url": "https://blitzforfriends-backend.cyclic.app",
-            "description": "Developement localhsot"
+            "url": "http://localhost:3000",
+            "description": "Development localhost"
         }
     ],
     "components": {
@@ -282,7 +282,7 @@
                 }
             }
         },
-        "/verifyEmail/:emailToken": {
+        "/verifyEmail/{emailToken}": {
             "get": {
                 "tags": ["auth"],
                 "description": "Verify user email address",
@@ -2821,7 +2821,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "5f623755f81c562450699156"
                         }
                     }
                 ],
@@ -2893,7 +2894,7 @@
                 }
             }
         },
-        "/thread/:threadId/likeDislike": {
+        "/thread/{threadId}/likeDislike": {
             "post": {
                 "tags": ["thread"],
                 "description": "Like or dislike a thread. LOGIN REQUIRED",
@@ -2972,6 +2973,238 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Thread not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/thread/{threadId}/comments": {
+            "get": {
+                "tags": ["thread"],
+                "description": "Returns the comments of the thread by id.",
+                "parameters": [
+                    {
+                        "name": "threadId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "65cfb05bbd7448340f8993e2"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thread comments",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "_id": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "room_id": {
+                                                        "type": "string",
+                                                        "example": "65dc8b87ea70db4fabe4adb6"
+                                                    },
+                                                    "message_id": {
+                                                        "type": "string",
+                                                        "example": "65df007759a021381425863f"
+                                                    }
+                                                }
+                                            },
+                                            "text": {
+                                                "type": "string",
+                                                "example": "Hi!"
+                                            },
+                                            "reply": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "is_reply": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    },
+                                                    "parent_comment_id": {
+                                                        "type": "string",
+                                                        "example": null
+                                                    },
+                                                    "sequential_number": {
+                                                        "type": "number",
+                                                        "example": 0
+                                                    }
+                                                }
+                                            },
+                                            "likes": {
+                                                "type": "number",
+                                                "example": 2
+                                            },
+                                            "dislikes": {
+                                                "type": "number",
+                                                "example": 0
+                                            },
+                                            "emoticons": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "example": "😀"
+                                                }
+                                            },
+                                            "creation_date": {
+                                                "type": "string",
+                                                "example": "2021-04-13T14:37:45.263Z",
+                                                "format": "date-time"
+                                            },
+                                            "creator_name": {
+                                                "type": "string",
+                                                "example": "sanyi"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Thread not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Thread not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/thread/createComment": {
+            "post": {
+                "tags": ["thread"],
+                "description": "Creates a new comment in the thread. LOGIN REQUIRED",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "thread_id": {
+                                        "type": "string",
+                                        "example": "65dc8b87ea70db4fabe4adb6"
+                                    },
+                                    "text": {
+                                        "type": "string",
+                                        "example": "Some text"
+                                    },
+                                    "is_reply": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Comment created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Thread not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Thread not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/thread/deleteComment/{commentId}": {
+            "delete": {
+                "tags": ["thread"],
+                "description": "Delete comment from thread",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "commentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "65cfb05bbd7448340f8993e2"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Comment deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Comment deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Comment not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Comment not found"
                                         }
                                     }
                                 }
@@ -4614,8 +4847,13 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "string",
-                                "example": "Some notification text"
+                                "type": "object",
+                                "properties": {
+                                    "text": {
+                                        "type": "string",
+                                        "example": "Some notification text"
+                                    }
+                                }
                             }
                         }
                     }
