@@ -12,9 +12,12 @@ const getFriends = tryCatchWrapper(async (req, res) => {
     }
     const friends = []
     for (const id of friendIds.friends) {
+        if (!friendIds.friends) {
+            break
+        }
         const friend = await User.findById(id)
         friends.push({
-            username: friend.username,
+            username: friend?.username,
         })
     }
     const page = parseInt(req.query.page) || 0
