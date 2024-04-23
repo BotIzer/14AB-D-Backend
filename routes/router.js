@@ -101,6 +101,7 @@ router.route('/user/changePassword').post(protectPath, changePassword)
 router.route('/user/verifyNewPassword/:passwordToken').get(confirmPasswordChange)
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/user/addHobby').post(protectPath, addHobby)
+router.route('/user/data/:id').get(protectPath,getUserDataById)
 
 router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(protectPath, deleteForum)
 router.route('/forum/getAllThreads/:forumId').get(checkWetherBannedFromForum, getAllThreadsByForumId)
