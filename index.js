@@ -68,7 +68,6 @@ const startServer = async () => {
             io.on('connect', (socket) => {
                 console.log('Socket IO connected')
                 if (socket.handshake.query.username !== 'null' && socket.handshake.query.username !== undefined) {
-                    console.log(JSON.parse(socket.handshake.query.username).username)
                     connectedClients[JSON.parse(socket.handshake.query.username).username] = socket
                     socket.on('disconnect', () => {
                         console.log('User disconnected')
@@ -85,11 +84,8 @@ const startServer = async () => {
             })
             forumChangeStream.on('change', async (change) => {
                 if (change.operationType === 'update') {
-                    // TODO: Benji help
                     console.log('Forum updated')
-                    console.log("ably doesn't work")
                     const updatedData = change.updateDescription.updatedFields
-                    console.log(updatedData.users)
                     if (updatedData.users) {
                         return
                     }

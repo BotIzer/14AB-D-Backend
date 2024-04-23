@@ -21,9 +21,11 @@ const getAllUsers = tryCatchWrapper(async (req, res) => {
 })
 
 const getUserDataById = tryCatchWrapper(async (req, res) => {
-    const user = req.user
+    const userId = req.params.id
+    const user = await User.findById(userId)
     if (!user) throw new noUserFoundError(userId)
-    res.status(StatusCodes.OK).json({ user })
+    res.status(StatusCodes.OK).json(user)
+    return
 })
 
 const getUserInfoFromToken = tryCatchWrapper(async (token) => {

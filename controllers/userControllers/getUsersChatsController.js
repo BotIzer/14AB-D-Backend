@@ -25,7 +25,7 @@ const getUsersChats = tryCatchWrapper(async (req, res) => {
                 friend_user_name:
                     (await User.findById(element.users[0].user_id)).username != myName
                         ? (await User.findById(element.users[0].user_id)).username
-                        : (await User.findById(element.owner)).username,
+                        : (await User.findById(element.owner))?.username,
             })
         } else {
             publicChats.push({

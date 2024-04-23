@@ -14,7 +14,6 @@ const updateForum = tryCatchWrapper(async (req, res) => {
     const userId = await getCreatorIdFromHeaders(req.headers)
     const forum = await Forum.findOne({ '_id.forum_id': req.params.forumId })
     let updated = 0
-    let reqObj
     if (forum?._id.creator_id.toString() !== userId.toString()) {
         res.status(StatusCodes.NOT_FOUND).json({
             message: `You have no forum with id: ${req.params.forumId}`,
@@ -58,20 +57,6 @@ const updateForum = tryCatchWrapper(async (req, res) => {
                 throw new tagIsTooLongError()
             }
         }
-        updated += (
-            await Forum.updateOne(
-                { '_id.forum_id': req.params.forumId },
-                {
-                    $addToSet: {
-                        tags: {
-                            $each: req.body.tags,
-                        },
-                    },
-                }
-            )
-        ).modifiedCount
-        reqObj = req.body
-        delete reqObj.tags
     }
     updated += (await Forum.updateOne({ '_id.forum_id': req.params.forumId }, req.body)).modifiedCount ?? 0
     if (updated == 0) {

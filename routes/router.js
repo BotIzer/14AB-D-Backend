@@ -45,7 +45,7 @@ const {
     updateThread,
     createCommentToThread,
     getThreadsComments,
-    deleteThreadComment
+    deleteThreadComment,
 } = require('../controllers/threadControllers/threadControllers')
 const {
     getChatDataById,
@@ -84,7 +84,9 @@ const loginLimiter = limiter({
     windowMs: 1000 * 60,
     max: maxLoginAttempts,
     handler: (req, res) => {
-        res.status(StatusCodes.TOO_MANY_REQUESTS).json({ message: 'Too many login requests! Please try again after a minute.' })
+        res.status(StatusCodes.TOO_MANY_REQUESTS).json({
+            message: 'Too many login requests! Please try again after a minute.',
+        })
     },
 })
 
@@ -101,6 +103,7 @@ router.route('/user/changePassword').post(protectPath, changePassword)
 router.route('/user/verifyNewPassword/:passwordToken').get(confirmPasswordChange)
 router.route('/user/:username').get(getUserProfileByUsername)
 router.route('/user/addHobby').post(protectPath, addHobby)
+router.route('/user/data/:id').get(protectPath, getUserDataById)
 
 router.route('/forum').get(getAllForums).post(protectPath, createForum).delete(protectPath, deleteForum)
 router.route('/forum/getAllThreads/:forumId').get(checkWetherBannedFromForum, getAllThreadsByForumId)
@@ -112,7 +115,11 @@ router.route('/forum/subscribeToForum').post(protectPath, subscribeToForum)
 router.route('/forum/:forumId').get(getForumById).put(protectPath, updateForum)
 
 router.route('/thread').post(protectPath, createThread)
-router.route('/thread/:threadId').get(getThreadById).put(protectPath, updateThread).delete(protectPath, deleteThreadConroller)
+router
+    .route('/thread/:threadId')
+    .get(getThreadById)
+    .put(protectPath, updateThread)
+    .delete(protectPath, deleteThreadConroller)
 router.route('/thread/:threadId/likeDislike').post(protectPath, likeDislikeStateChanged)
 router.route('/thread/:threadId/comments').get(getThreadsComments)
 router.route('/thread/createComment').post(protectPath, createCommentToThread)
@@ -135,6 +142,9 @@ router.route('/acceptFriendRequest/:requestCreatorName').post(protectPath, accep
 router.route('/declineFriendRequest/:requestCreatorName').post(protectPath, declineFriendRequest)
 
 router.route('/notification').get(protectPath, getUsersNotifications).post(protectPath, createNotification)
-router.route('/notification/:notificationId').delete(protectPath, deleteNotification).put(protectPath, updateNotification)
+router
+    .route('/notification/:notificationId')
+    .delete(protectPath, deleteNotification)
+    .put(protectPath, updateNotification)
 
 module.exports = router
