@@ -98,6 +98,7 @@ const sendRegisterEmail = tryCatchWrapper(async (userEmail, emailToken, userName
             console.log('Email sent: ' + info.response)
         }
     })
+    await new Promise((r) => setTimeout(r, 1000))
     if (process.env.NODE_ENV === 'testing') {
         await new Promise((r) => setTimeout(r, 1000))
     }
